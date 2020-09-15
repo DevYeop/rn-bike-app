@@ -19,13 +19,7 @@ class App extends React.Component {
       userInfo: {},
     }
   }
-
-  componentDidMount() {
-    {RequestLocationPermission}
-  }
-
-  componentWillUnmount() {
-  }
+ 
 
   parentFunction = (loggedIn, userInfo) => {
     console.log('로그인값 변경시작')
