@@ -5,7 +5,7 @@ import { createStore } from 'redux';
 import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import friendsReducer from './FriendsReducer';
+import friendsReducer from './src/reducers/FriendsReducer';
 import HomeScreen from './src/ui/HomeScreen';
 import FriendsScreen from './src/ui/FriendsScreen';
 
