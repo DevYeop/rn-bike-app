@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { StyleSheet, Text, View, Button } from 'react-native';
-import { addFriend } from '../actions/FriendsActions'
+import { addFriend, saveUserInfo } from '../actions/FriendsActions'
 
 class FriendsScreen extends React.Component {
   render() {
@@ -11,7 +11,7 @@ class FriendsScreen extends React.Component {
         <Text>Add friends here!</Text>
 
         {
-          this.props.friends.possible.map((friend, index) => (
+          this.props.friends2.possible.map((friend, index) => (
             <Button
               key={ friend }
               title={ `Add ${ friend }` }
@@ -42,21 +42,25 @@ const styles = StyleSheet.create({
   },
 });
 
+
 /**
  * makes friends available to the FriendsScreen.
  * @param {*} state state from Reducer
  */
 const mapStateToProps = (state) => {
-  const { friends } = state
-  return { friends }
+  const { friends2 } = state
+  return { friends2 }
 };
 
+/**
+ * 지금 위치의 컴포넌트가 props로 addFreind를 가질수 있도록 해줌.
+ * @param {*} dispatch 
+ */
 const mapDispatchToProps = dispatch => (
   bindActionCreators({
     addFriend,
   }, dispatch)
 );
 
-// export default FriendsScreen;
 export default connect(mapStateToProps, mapDispatchToProps)(FriendsScreen);
 

@@ -1,3 +1,5 @@
+import { ADD_FRIEND, SAVE_USER_INFO } from '../types'
+
 /**
  * Actions are JavaScript objects that represent payloads of information that send data from your application to the Redux store.
  * 
@@ -10,7 +12,14 @@
  */
 export const addFriend = friendsIndex => (
     {
-        type: 'ADD_FRIEND',
-        payload: friendsIndex,
-    }
+        type: ADD_FRIEND,
+        payload: friendsIndex, 
+    } 
+)
+
+export const saveUserInfo = userInfo => (
+    {
+        type: SAVE_USER_INFO,
+        payload: userInfo, 
+    } 
 )

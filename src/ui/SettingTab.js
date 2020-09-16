@@ -2,8 +2,11 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Text, StyleSheet, View, StatusBar, SafeAreaView, Button, Image, TouchableOpacity } from 'react-native';
 import { Title } from 'react-native-paper';
-import FormInput from '../settingScreen/FormInput';
-import FormButton from '../settingScreen/FormButton';
+import FormInput from './settingScreen/FormInput';
+import FormButton from './settingScreen/FormButton';
+import { connect } from 'react-redux';
+import { saveUserInfo } from '../actions/FriendsActions'
+import { bindActionCreators } from 'redux';
 
 import {
   GoogleSignin,
@@ -13,13 +16,11 @@ import {
 
 const Stack = createStackNavigator();
 
-
-export default class SettingTap extends React.Component {
+class SettingTap extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      userInfo: {},
       pushData: [],
       loggedIn: false,
       email: '',
@@ -34,28 +35,29 @@ export default class SettingTap extends React.Component {
       hostedDomain: '',
       forceConsentPrompt: true,
     });
+    
   }
- 
-  childFunction = () => {
-    return(
-    this.props.functionCallFromParent(this.state.loggedIn, this.state.userInfo)
-    )
-}
 
   _signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
+
       this.setState({ userInfo: userInfo, loggedIn: true });
-      this.childFunction()
+      this.props.saveUserInfo(userInfo)
+      
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        console.log('SIGN_IN_CANCELLED')
         // user cancelled the login flow
       } else if (error.code === statusCodes.IN_PROGRESS) {
+        console.log('IN_PROGRESS')
         // operation (f.e. sign in) is in progress already
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        console.log('PLAY_SERVICES_NOT_AVAILABLE')
         // play services not available or outdated
       } else {
+        console.error(error);
         // some other error happened
       }
     }
@@ -65,51 +67,31 @@ export default class SettingTap extends React.Component {
     try {
       await GoogleSignin.revokeAccess();
       await GoogleSignin.signOut();
-
-      
-      this.setState({ user: null, loggedIn: false }); // Remember to remove the user from your app's state as well
+      // Remember to remove the user from your app's state as well
+      this.setState({ user: null, loggedIn: false }); 
     } catch (error) {
       console.error(error);
     }
   };
 
   render() {
+    console.log(this.props)
     return (
       <View style={styles.container}>
         <View style={styles.container}>
-          <Title style={styles.titleText}>rn-bike-app</Title>
-          <FormInput
-            labelName='Email'
-            value={this.state.email}
-            autoCapitalize='none'
-            onChangeText={userEmail => setEmail(userEmail)}
-          />
-          <FormInput
-            labelName='Password'
-            value={this.state.password}
-            secureTextEntry={true}
-            onChangeText={userPassword => setPassword(userPassword)}
-          />
-          <FormButton
-            title='로그인'
-            modeValue='contained'
-            labelStyle={styles.loginButtonLabel}
-          />
-          <TouchableOpacity style={{ marginTop: 10 }} activeOpacity={0.5}>
-            <Image
-              source={require('../../res/naverLoginButton.png')}
-              style={styles.ImageIconStyle}
-            />
-          </TouchableOpacity>
-
+          <Title style={styles.titleText}>email : {this.props.userInfo.user.email}  </Title>
+          <Title style={styles.titleText}>name : {this.props.userInfo.user.name} </Title>
+          <Title style={styles.titleText}>id : {this.props.userInfo.user.id}  </Title>
           <View style={styles.sectionContainer}>
             <GoogleSigninButton
               style={{ width: 250, height: 50 }}
               size={GoogleSigninButton.Size.Wide}
               color={GoogleSigninButton.Color.Dark}
               onPress={this._signIn}
-              disabled={this.state.isSigninInProgress} />
+              disabled={this.state.isSigninInProgress} 
+              />
           </View>
+
           <View style={styles.buttonContainer}>
             {!this.state.loggedIn && <Text>You are currently logged out</Text>}
             {!this.state.loggedIn && <Button onPress={this.signOut}
@@ -141,22 +123,22 @@ export default class SettingTap extends React.Component {
               <Text style={styles.message}>{this.state.userInfo && this.state.userInfo.user && this.state.userInfo.user.id}</Text>
             </View>
           </View>}
-
-          <FormButton
-            title='회원가입'
-            modeValue='text'
-            uppercase={false}
-            labelStyle={styles.navButtonText}
-            onPress={() => navigation.navigate('Signup')}
-          />
         </View>
-
-
-
       </View>
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  const { userInfo } = state
+  return { userInfo }
+};
+
+const mapDispatchToProps = dispatch => (
+  bindActionCreators({
+    saveUserInfo,
+  }, dispatch)
+);
 
 const styles = StyleSheet.create({
   listHeader: {
@@ -221,13 +203,4 @@ const styles = StyleSheet.create({
   },
 });
 
-
-
-// export default function SettingTap(props) {
-//     return (
-//       <Stack.Navigator initialRouteName='Login' headerMode='none'>
-//         <Stack.Screen name='Login' component={LoginScreen} />
-//         <Stack.Screen name='Signup' component={SignupScreen} />
-//       </Stack.Navigator>
-//     );
-//   }
+export default connect(mapStateToProps, mapDispatchToProps)(SettingTap);

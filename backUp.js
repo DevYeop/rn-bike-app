@@ -9,7 +9,7 @@ import {
 import BottomTapNavigator from './src/ui/bottomTabNavigator/TabContainer/';
 
 import RequestLocationPermission from './src/lib/RequestLocationPermission'
-import SettingTap from './src/ui/bottomTabNavigator/SettingTab';
+import SettingTap from './src/ui/SettingTab';
 class App extends React.Component {
 
   constructor(props) {
@@ -33,7 +33,7 @@ class App extends React.Component {
       userInfo: userInfo,
       loggedIn: loggedIn,
     })
-    alert('로그인?' + loggedIn + 'info?:'+ userInfo)
+    
   }
 
   render() {
@@ -41,7 +41,7 @@ class App extends React.Component {
     if (this.state.loggedIn) {
       return (
         <NavigationContainer>
-          <BottomTapNavigator userInfo={this.state.userInfo} />
+          <BottomTapNavigator loggedIn={this.state.loggedIn} userInfo={this.state.userInfo} />
         </NavigationContainer>
       )
     } else {
