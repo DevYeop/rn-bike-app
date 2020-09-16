@@ -33,6 +33,7 @@ class ContactTap extends Component {
     };
     this.contactList = this.contactList.bind(this);
 
+    
   }
 
   goToProfileScreen = () => {
