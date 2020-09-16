@@ -1,4 +1,4 @@
-import { ADD_FRIEND, SAVE_USER_INFO } from '../types'
+import { ADD_FRIEND, SAVE_USER_INFO } from './types'
 
 /**
  * Actions are JavaScript objects that represent payloads of information that send data from your application to the Redux store.

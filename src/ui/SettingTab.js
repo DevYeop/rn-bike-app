@@ -1,9 +1,6 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Text, StyleSheet, View, StatusBar, SafeAreaView, Button, Image, TouchableOpacity } from 'react-native';
-import { Title } from 'react-native-paper';
-import FormInput from './settingScreen/FormInput';
-import FormButton from './settingScreen/FormButton';
 import { connect } from 'react-redux';
 import { saveUserInfo } from '../actions/FriendsActions'
 import { bindActionCreators } from 'redux';
@@ -45,6 +42,7 @@ class SettingTap extends React.Component {
 
       this.setState({ userInfo: userInfo, loggedIn: true });
       this.props.saveUserInfo(userInfo)
+      this.props.navigation.navigate('BottomTapNavigator')
       
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -79,10 +77,8 @@ class SettingTap extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.container}>
-          <Title style={styles.titleText}>email : {this.props.userInfo.user.email}  </Title>
-          <Title style={styles.titleText}>name : {this.props.userInfo.user.name} </Title>
-          <Title style={styles.titleText}>id : {this.props.userInfo.user.id}  </Title>
           <View style={styles.sectionContainer}>
+
             <GoogleSigninButton
               style={{ width: 250, height: 50 }}
               size={GoogleSigninButton.Size.Wide}
@@ -100,27 +96,30 @@ class SettingTap extends React.Component {
             </Button>}
           </View>
 
-          {this.state.loggedIn && <View>
+
+
+          {this.state.loggedIn && 
+          <View>
             <View style={styles.listHeader}>
               <Text>User Info</Text>
             </View>
             <View style={styles.dp}>
               <Image
                 style={{ width: 100, height: 100 }}
-                source={{ uri: this.state.userInfo && this.state.userInfo.user && this.state.userInfo.user.photo }}
+                source={{ uri: this.props.userInfo.user.photo }}
               />
             </View>
             <View style={styles.detailContainer}>
               <Text style={styles.title}>Name</Text>
-              <Text style={styles.message}>{this.state.userInfo && this.state.userInfo.user && this.state.userInfo.user.name}</Text>
+              <Text style={styles.message}>{ this.props.userInfo.user.name}</Text>
             </View>
             <View style={styles.detailContainer}>
               <Text style={styles.title}>Email</Text>
-              <Text style={styles.message}>{this.state.userInfo && this.state.userInfo.user && this.state.userInfo.user.email}</Text>
+              <Text style={styles.message}>{ this.props.userInfo.user.email}</Text>
             </View>
             <View style={styles.detailContainer}>
               <Text style={styles.title}>ID</Text>
-              <Text style={styles.message}>{this.state.userInfo && this.state.userInfo.user && this.state.userInfo.user.id}</Text>
+              <Text style={styles.message}>{ this.props.userInfo.user.id}</Text>
             </View>
           </View>}
         </View>

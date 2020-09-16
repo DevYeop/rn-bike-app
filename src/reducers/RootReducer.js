@@ -3,43 +3,23 @@
  * The reducer is instrumental in keeping the current state of friends updated throughout the app as it changes.
  */
 import { combineReducers } from 'redux';
-import { ADD_FRIEND, SAVE_USER_INFO } from '../types'
-
+import { ADD_FRIEND, SAVE_USER_INFO } from '../actions/types'
 /**
  * INITIAL_STATE variable with possible friends to add to your social network
  */
 const INITIAL_SATTE = {
 
-    // userInfo: {
-    //     loggedIn: false,
-    //     user: {
-    //         email:'',
-    //         id:'',
-    //     },
-    // },
-
     user:{
+        photo:'none',
         email:'none-email',
         name:'none-name',
         id:'none-id',
     },
-
-    name:'none',
-    email:'',
-    id:'id',
-
-    current: [],
-    possible: [
-        'Alice',
-        'Bob',
-        'Yeope'
-    ]
-
-
+  
 }
 
 
-const friendsReducer = (state = INITIAL_SATTE, action) => {
+const RootReducer = (state = INITIAL_SATTE, action) => {
 
     console.log(state)
     // console.log(action)
@@ -83,5 +63,5 @@ const friendsReducer = (state = INITIAL_SATTE, action) => {
  * exporting friendsReducer as a property called friends.
  */
 export default combineReducers({
-    userInfo: friendsReducer
+    userInfo: RootReducer
 })
