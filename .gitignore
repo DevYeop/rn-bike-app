@@ -367,5 +367,8 @@ Temporary Items
 # Ignore all local history of files
 .history
 
+# Watchman
+.watchmanconfig
+
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,reactnative
 
