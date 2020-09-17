@@ -17,7 +17,9 @@ import java.util.List;
 
 import com.dooboolab.kakaologins.RNKakaoLoginsPackage;
 
-public class MainApplication extends Application implements ReactApplication {
+import androidx.multidex.MultiDexApplication;
+
+public class MainApplication extends MultiDexApplication implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost =
       new ReactNativeHost(this) {
