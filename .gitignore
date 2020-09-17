@@ -58,9 +58,6 @@ buck-out/
 # CocoaPods
 /ios/Pods/
 
-#####################################################
-
-
 # Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,reactnative
 # Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,reactnative
 
