@@ -372,30 +372,22 @@ Temporary Items
 # Watchman
 .watchmanconfig
 
-# Gradle
-/build/
-/packages/react-native-codegen/android/build/
-/packages/react-native-codegen/android/gradlePlugin-build/gradlePlugin/build
-/packages/rn-tester/android/app/build/
-/packages/rn-tester/android/app/gradle/
-/packages/rn-tester/android/app/gradlew
-/packages/rn-tester/android/app/gradlew.bat
-/ReactAndroid/build/
-/ReactAndroid/gradle/
-/ReactAndroid/gradlew
-/ReactAndroid/gradlew.bat
-
 # Android
+/build/
+/android/build/
+/android/gradlePlugin-build/gradlePlugin/build
+/android/app/build/
+/android/app/gradle/
+/android/app/gradlew
+/android/app/gradlew.bat
+/android/build/
+/android/gradle/
+/android/gradlew
+/android/gradlew.bat
 .idea
 .gradle
 local.properties
 *.iml
-/android/
-
-# Android Studio
-.project
-.settings
-.classpath
 
 # Node
 node_modules

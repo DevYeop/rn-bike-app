@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1038042430405",
+    "firebase_url": "https://rn-bike-app.firebaseio.com",
+    "project_id": "rn-bike-app",
+    "storage_bucket": "rn-bike-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1038042430405:android:4db732f93bce8f103be9ac",
+        "android_client_info": {
+          "package_name": "com.rnbikeapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1038042430405-hjj6f96tr9gijgujij7rivdjcl3jb0mv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rnbikeapp",
+            "certificate_hash": "3c165d53b9fb75a0bf5537d1c3bceda4f04c838c"
+          }
+        },
+        {
+          "client_id": "1038042430405-e2nl3grsb7aqt804d1tni51vkd7aaka1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLrymA3ej0qWIVPLzzQr5ocTH7q5CYCFU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1038042430405-e2nl3grsb7aqt804d1tni51vkd7aaka1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
