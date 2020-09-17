@@ -6,43 +6,43 @@ import {
   View,
   Text
 } from '@react-navigation/native';
+import 'react-native-gesture-handler';
+import { createStackNavigator } from '@react-navigation/stack';
 import BottomTapNavigator from './src/ui/bottomTabNavigator/TabContainer/';
 
+import rootReducer from './src/reducers/RootReducer';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+
 import RequestLocationPermission from './src/lib/RequestLocationPermission'
-import SettingTap from './src/ui/bottomTabNavigator/SettingTab';
+
+import SettingTap from './src/ui/SettingTab';
+
+
+
+const Stack = createStackNavigator();
+
+// **** 리덕스 개발자도구 적용
+const devTools =
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
+
+const store = createStore(rootReducer, devTools);
+
 class App extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      loggedIn: false,
-      userInfo: {},
-    }
-  }
- 
-
-  parentFunction = (loggedIn, userInfo) => {
-    console.log('로그인값 변경시작')
-    this.setState({
-      userInfo: userInfo,
-      loggedIn: loggedIn,
-    })
-    
-  }
-
   render() {
-
-    if (this.state.loggedIn) {
-      return (
+    return (
+      <Provider store={store}>
         <NavigationContainer>
-          <BottomTapNavigator loggedIn={this.state.loggedIn} userInfo={this.state.userInfo} />
+          <Stack.Navigator
+            initialRouteName="SettingTap"
+            screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="BottomTapNavigator" component={BottomTapNavigator} />
+            <Stack.Screen name="SettingTap" component={SettingTap} />
+          </Stack.Navigator>
         </NavigationContainer>
-      )
-    } else {
-      return (
-        <SettingTap functionCallFromParent={this.parentFunction.bind(this)} />
-      )
-    }
+      </Provider>
+    )
   }
 }
 
