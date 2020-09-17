@@ -58,9 +58,6 @@ buck-out/
 # CocoaPods
 /ios/Pods/
 
-#####################################################
-
-
 # Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,reactnative
 # Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,reactnative
 
@@ -372,3 +369,37 @@ Temporary Items
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,reactnative
 
+# Watchman
+.watchmanconfig
+
+# Gradle
+/build/
+/packages/react-native-codegen/android/build/
+/packages/react-native-codegen/android/gradlePlugin-build/gradlePlugin/build
+/packages/rn-tester/android/app/build/
+/packages/rn-tester/android/app/gradle/
+/packages/rn-tester/android/app/gradlew
+/packages/rn-tester/android/app/gradlew.bat
+/ReactAndroid/build/
+/ReactAndroid/gradle/
+/ReactAndroid/gradlew
+/ReactAndroid/gradlew.bat
+
+# Android
+.idea
+.gradle
+local.properties
+*.iml
+/android/
+
+# Android Studio
+.project
+.settings
+.classpath
+
+# Node
+node_modules
+*.log
+.nvm
+/bots/node_modules/
+package-lock.json
