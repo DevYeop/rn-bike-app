@@ -1,18 +1,18 @@
 import React from 'react';
-import { Platform, StyleSheet, View} from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 
 import KakaoLogins, { KAKAO_AUTH_TYPES } from '@react-native-seoul/kakao-login';
 import NativeButton from 'apsl-react-native-button';
 
 import { connect } from 'react-redux';
-import { saveUserInfoKakao } from './src/actions/FriendsActions'
+import { saveUserInfoKakao } from '../../actions/FriendsActions'
 import { bindActionCreators } from 'redux';
 
 if (!KakaoLogins) {
     console.error('Module is Not Linked');
 }
 
-class App extends React.Component {
+class KakaLoginButton extends React.Component {
 
     constructor(props) {
         super(props);
@@ -42,18 +42,14 @@ class App extends React.Component {
 
     render() {
         return (
-            <View style={styles.container}>
-                <View style={styles.content}>
-                    <NativeButton
-                        isLoading={false}
-                        onPress={() => this.kakaoLogin()}
-                        activeOpacity={0.5}
-                        style={styles.btnKakaoLogin}
-                        textStyle={styles.txtKakaoLogin}>
-                        LOGIN
+            <NativeButton
+                isLoading={false}
+                onPress={() => this.kakaoLogin()}
+                activeOpacity={0.5}
+                style={styles.btnKakaoLogin}
+                textStyle={styles.txtKakaoLogin}>
+                카카오 LOGIN
             </NativeButton>
-                </View>
-            </View>
         );
     }
 }
@@ -70,18 +66,6 @@ const mapDispatchToProps = dispatch => (
 );
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        flexDirection: 'column',
-        marginTop: Platform.OS === 'ios' ? 0 : 24,
-        paddingTop: Platform.OS === 'ios' ? 24 : 0,
-        backgroundColor: 'white',
-    },
-    content: {
-        flex: 6,
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-    },
     btnKakaoLogin: {
         height: 48,
         width: 240,
@@ -96,4 +80,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(KakaLoginButton);
