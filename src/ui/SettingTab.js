@@ -2,7 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Text, StyleSheet, View, StatusBar, SafeAreaView, Button, Image, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
-import { saveUserInfo } from '../actions/FriendsActions'
+import { saveUserInfoGoogle } from '../actions/FriendsActions'
 import { bindActionCreators } from 'redux';
 
 import {
@@ -10,6 +10,8 @@ import {
   GoogleSigninButton,
   statusCodes,
 } from '@react-native-community/google-signin';
+
+import KakaoLoginButton from '../../kakaLoginButton'
 
 const Stack = createStackNavigator();
 
@@ -41,7 +43,7 @@ class SettingTap extends React.Component {
       const userInfo = await GoogleSignin.signIn();
 
       this.setState({ userInfo: userInfo, loggedIn: true });
-      this.props.saveUserInfo(userInfo)
+      this.props.saveUserInfoGoogle(userInfo)
       this.props.navigation.navigate('BottomTapNavigator')
       
     } catch (error) {
@@ -88,6 +90,8 @@ class SettingTap extends React.Component {
               />
           </View>
 
+          <KakaoLoginButton navigation={this.props.navigation}></KakaoLoginButton>
+
           <View style={styles.buttonContainer}>
             {!this.state.loggedIn && <Text>You are currently logged out</Text>}
             {!this.state.loggedIn && <Button onPress={this.signOut}
@@ -95,8 +99,6 @@ class SettingTap extends React.Component {
               color="#841584">
             </Button>}
           </View>
-
-
 
           {this.state.loggedIn && 
           <View>
@@ -135,7 +137,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => (
   bindActionCreators({
-    saveUserInfo,
+    saveUserInfoGoogle,
   }, dispatch)
 );
 
