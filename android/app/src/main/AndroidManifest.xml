@@ -10,13 +10,12 @@
     
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
-<!-- android:allowBackup="false" -->
     <application
       android:name=".MainApplication"
       android:label="@string/app_name"
       android:icon="@mipmap/ic_launcher"
       android:roundIcon="@mipmap/ic_launcher_round"
-      
+      allowBackup="true"
       android:theme="@style/AppTheme"
       android:supportsRtl="true"
       >
