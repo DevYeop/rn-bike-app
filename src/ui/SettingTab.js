@@ -80,7 +80,6 @@ class SettingTap extends React.Component {
       <View style={styles.container}>
         <View style={styles.container}>
           <View style={styles.sectionContainer}>
-
             <GoogleSigninButton
               style={{ width: 250, height: 50 }}
               size={GoogleSigninButton.Size.Wide}
@@ -89,8 +88,7 @@ class SettingTap extends React.Component {
               disabled={this.state.isSigninInProgress} 
               />
           </View>
-
-          <KakaoLoginButton navigation={this.props.navigation}></KakaoLoginButton>
+          <KakaoLoginButton navigation={this.props.navigation}/>
 
           <View style={styles.buttonContainer}>
             {!this.state.loggedIn && <Text>You are currently logged out</Text>}
