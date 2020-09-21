@@ -13,6 +13,7 @@ import { connect } from 'react-redux';
 
 class ContactTap extends Component {
 
+  
   constructor(props) {
     super(props);
     this.state = {
@@ -32,8 +33,6 @@ class ContactTap extends Component {
       ],
     };
     this.contactList = this.contactList.bind(this);
-
-    
   }
 
   goToProfileScreen = () => {
@@ -71,16 +70,18 @@ class ContactTap extends Component {
        *  todo : 유저의 정보를 나타네는 컴포넌트를 모듈화 해야함.
        */
       <View style={{ flex: 1 }} >
+        {console.log('컨택트탭 this.props.userInfo')}
+        {console.log(this.props.userInfo)}
         <TouchableOpacity onPress={this.goToProfileScreen}>
           <View style={styles.row}>
-            <Image source={{ uri: this.props.userInfo.user.photo }} style={styles.pic} />
+            <Image source={{ uri: this.props.userInfo.profile_image_url }} style={styles.pic} />
             <View>
               <View style={styles.nameContainer}>
-                <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail">{this.props.userInfo.user.name}</Text>
-                <Text style={styles.mblTxt}>{this.props.userInfo.user.id}</Text>
+                <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail">{this.props.userInfo.nickname}</Text>
+                <Text style={styles.mblTxt}>{this.props.userInfo.id}</Text>
               </View>
               <View style={styles.msgContainer}>
-                <Text style={styles.msgTxt}>{this.props.userInfo.user.email}</Text>
+                <Text style={styles.msgTxt}>{this.props.userInfo.email}</Text>
               </View>
             </View>
           </View>

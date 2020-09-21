@@ -3,26 +3,34 @@
  * The reducer is instrumental in keeping the current state of friends updated throughout the app as it changes.
  */
 import { combineReducers } from 'redux';
-import { ADD_FRIEND, SAVE_USER_INFO } from '../actions/types'
+import { ADD_FRIEND, SAVE_USER_INFO, SAVE_USER_INFO_GOOGLE, SAVE_USER_INFO_KAKAO } from '../actions/types'
 /**
  * INITIAL_STATE variable with possible friends to add to your social network
  */
 const INITIAL_SATTE = {
-
-    user:{
-        photo:'none',
-        email:'none-email',
-        name:'none-name',
-        id:'none-id',
+    user: {
+        photo: 'none',
+        email: 'none-email',
+        name: 'none-name',
+        id: 'none-id',
     },
-  
-}
+    id:'',
+    email:'',
+    nickname:'',
+    profile_image_url:'',
 
+}
 
 const RootReducer = (state = INITIAL_SATTE, action) => {
 
+    console.log('리듀서 state.status')
     console.log(state)
+    console.log('리듀서 action.payload')
+    console.log(action.payload)
     // console.log(action)
+
+    
+    
 
     switch (action.type) {
         /**
@@ -30,6 +38,7 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
          * Array.splice() retrieves the friend from the array of possible friends. 
          * Array.push adds the friend to array of current friends. After ther changes are made, the state is updated.
          */
+
         case ADD_FRIEND:
             // Pulls current and possible out of previous state
             // We do not want to alter state directly in case
@@ -51,14 +60,30 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
 
             return newState;
 
-        case SAVE_USER_INFO:
-            return action.payload;
+        case SAVE_USER_INFO_GOOGLE:
 
+            const userInfo = action.payload
+
+            var {id, email, name:nickname, photo:profile_image_url} = userInfo.user
+
+            const googleUser = {id, email, nickname, profile_image_url}
+
+            return Object.assign({}, state, googleUser)
+
+
+        case SAVE_USER_INFO_KAKAO:
+
+            var {id, email, nickname, profile_image_url} = action.payload
+
+            const kakaoUserInfo = {id, email, nickname, profile_image_url}
+
+            return Object.assign({}, state, kakaoUserInfo)
+ 
         default:
             return state
     }
 }
- 
+
 /**
  * exporting friendsReducer as a property called friends.
  */

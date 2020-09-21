@@ -15,8 +15,13 @@
       android:label="@string/app_name"
       android:icon="@mipmap/ic_launcher"
       android:roundIcon="@mipmap/ic_launcher_round"
-      android:allowBackup="false"
-      android:theme="@style/AppTheme">
+      allowBackup="true"
+      android:theme="@style/AppTheme"
+      android:supportsRtl="true"
+      >
+      <meta-data
+      android:name="com.kakao.sdk.AppKey"
+      android:value="@string/kakao_app_key" />
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"

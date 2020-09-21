@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">rnBikeApp</string>
+    <string name="kakao_app_key">685ed9fb05d4218538056dae373cc4ed</string>
 </resources>

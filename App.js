@@ -16,7 +16,7 @@ import { Provider } from 'react-redux';
 
 import RequestLocationPermission from './src/lib/RequestLocationPermission'
 
-import SettingTap from './src/ui/SettingTab';
+import SettingTap from './src/ui/login/SettingTab';
 
 
 
