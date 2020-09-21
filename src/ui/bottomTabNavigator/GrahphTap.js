@@ -26,11 +26,7 @@ class GraphTap extends Component {
     };
 
   }
-
-  componentDidMount() {
-  }
  
-
   goToGraphDetail = () => {
     alert('GraphScreen 필요')
   }
@@ -42,7 +38,7 @@ class GraphTap extends Component {
     },
     pitch: 3,
     heading: 0,
-    zoom: 13,
+    zoom: 13, //todo : 루트의 크기나 방향에 맞춰서 줌 배율을 달리해야함.
   });
   
   getMapCamera = item => ({
@@ -52,7 +48,7 @@ class GraphTap extends Component {
     },
     pitch: 3,
     heading: 0,
-    zoom: 18,
+    zoom: 16,
 });
 
   renderItem = ({ item }) => {
@@ -60,22 +56,16 @@ class GraphTap extends Component {
       <TouchableOpacity >
         <View style={styles.row}>
           <View style={styles.container}>
-            {console.log('item.routeCoordinates')} 
-            {console.log(item.routeCoordinates[0].latitude)}
-            {console.log(item.routeCoordinates[0].longitude)}
             <MapView style={styles.map}
               loadingEnabled={true}
-              liteMode='true'
-               
-
+              liteMode={true}
               camera={this.getMapCamera(item)}
-
-              initialRegion={{
-                latitude: item.routeCoordinates[0].latitude,
-                longitude: item.routeCoordinates[0].longitude,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-              }}
+              // initialRegion={{
+              //   latitude: item.routeCoordinates[0].latitude,
+              //   longitude: item.routeCoordinates[0].longitude,
+              //   latitudeDelta: 0.0922,
+              //   longitudeDelta: 0.0421,
+              // }}
               >
               <Polyline coordinates={item.routeCoordinates} strokeWidth={6} strokeColor="#fc3d03" />
             </MapView>
@@ -96,9 +86,9 @@ class GraphTap extends Component {
     return (
       <View style={{ flex: 1 }} >
         {console.log('this.props.routeInfo.routeItem')}
-        {console.log(this.props.routeInfo)}
+        {console.log(this.props.userInfo)}
         <FlatList
-          data={this.props.routeInfo.routeItem}
+          data={this.props.userInfo.routeItem}
           keyExtractor={ item=> {
             return item.id;
           }}
@@ -109,8 +99,8 @@ class GraphTap extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { routeInfo } = state
-  return { routeInfo }
+  const { userInfo } = state
+  return { userInfo }
 };
 
 const mapDispatchToProps = dispatch => (

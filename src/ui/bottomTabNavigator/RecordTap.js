@@ -18,7 +18,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 
 import { connect } from 'react-redux';
-import { addRecordedRoute, addFriend } from '../../actions/FriendsActions'
+import { addRecordedRoute } from '../../actions/FriendsActions'
 import { bindActionCreators } from 'redux';
 
 const LATITUDE_DELTA = 0.009;
@@ -101,9 +101,9 @@ class RecordTap extends React.Component {
         );
     }
 
-    componentWillUnmount() {
-        // Geolocation.clearWatch(this.watchID);
-    }
+    // componentWillUnmount() {
+    //     // Geolocation.clearWatch(this.watchID);
+    // }
 
     getMapRegion = () => ({
         latitude: this.state.latitude,
@@ -126,6 +126,7 @@ class RecordTap extends React.Component {
         if (this.state.recordStatus) {
             // 녹화가 아직 시작된 상태가 아니라면, 녹화를 시작한다.
             this.stopRecording();
+            
         } else {
             // 녹화가 시작된 상태면, 녹화를 중단한다.
             this.startRecording();
@@ -149,6 +150,9 @@ class RecordTap extends React.Component {
         })
         Geolocation.clearWatch(this.watchID); 
         
+
+        console.log('총 이동거리')
+        console.log(this.state.distanceTravelled)
   
         this.props.addRecordedRoute(this.state.routeCoordinates)
         
@@ -236,14 +240,13 @@ class RecordTap extends React.Component {
 
 
 const mapStateToProps = (state) => {
-    const { routeInfo } = state
-    return { routeInfo }
+    const { userInfo } = state
+    return { userInfo }
 };
 
 const mapDispatchToProps = dispatch => (
     bindActionCreators({
         addRecordedRoute,
-        addFriend,
     }, dispatch)
 );
 

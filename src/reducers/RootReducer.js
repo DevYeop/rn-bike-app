@@ -17,23 +17,17 @@ const INITIAL_SATTE = {
     email:'',
     nickname:'',
     profile_image_url:'',
-    routeItem:[
-     
-    ]
-    
-
+    routeItem:[],
 }
-
+ 
 const RootReducer = (state = INITIAL_SATTE, action) => {
 
     console.log('리듀서 state.status')
     console.log(state)
     console.log('리듀서 action.type')
     console.log(action.type)
-
     console.log('리듀서 action.payload')
     console.log(action.payload)
-
     
     switch (action.type) {
         /**
@@ -82,27 +76,18 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
 
             return Object.assign({}, state, kakaoUserInfo)
  
+            /**
+             * 녹화가 완료된 드라이빙 코스를 아이템으로 하나 추가한다.
+             */
         case ADD_RECORDED_ROUTE:
-
-            const {routeItem} = state;
-
-
-            console.log('현재 보유한 아이템')
-            console.log(routeItem)
  
-            const newItem = {
-                id: 444, // ++로 바꿔야함
-                routeCoordinates : action.payload
-            }
+            let {routeItem} = state
+  
+            routeItem.push({ id: routeItem.length+1, routeCoordinates : action.payload})
+   
 
-            console.log('추가할 아이템 ')
-            console.log(newItem)
-
-            routeItem.push(newItem)
-
-            console.log('추가된 아이템 현황 ')
-            console.log(routeItem)
-
+            console.log('반환값 : ')
+            console.log(Object.assign({}, state, routeItem))
 
             return Object.assign({}, state, routeItem)
             /**&
@@ -112,13 +97,7 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
              * 위에서 구한 값으로 지도의 배율을 맞춘다.
              * 경로상 중간으 ㅣ위치를 맵의 중간으로 잡는다
              * 출발 도착에 핀을 꽂는다
-             * 
-             *
-             */
-
-             
- 
-             
+             */             
 
         default:
             return state
@@ -130,6 +109,5 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
  */
 export default combineReducers({
     userInfo: RootReducer,
-    routeInfo: RootReducer
     //todo : reducer도메인별로 분할하고 여기서 합쳐야함,
 })
