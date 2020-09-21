@@ -44,6 +44,16 @@ class GraphTap extends Component {
     heading: 0,
     zoom: 13,
   });
+  
+  getMapCamera = item => ({
+    center: {
+        latitude: item.routeCoordinates[0].latitude,
+        longitude: item.routeCoordinates[0].longitude
+    },
+    pitch: 3,
+    heading: 0,
+    zoom: 18,
+});
 
   renderItem = ({ item }) => {
     return (
@@ -57,6 +67,8 @@ class GraphTap extends Component {
               loadingEnabled={true}
               liteMode='true'
                
+
+              camera={this.getMapCamera(item)}
 
               initialRegion={{
                 latitude: item.routeCoordinates[0].latitude,
