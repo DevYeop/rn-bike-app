@@ -10,6 +10,10 @@ import MapView, {
   Polyline,
 } from "react-native-maps";
 
+import { connect } from 'react-redux';
+import { addRecordedRoute, addFriend } from '../../actions/FriendsActions'
+import { bindActionCreators } from 'redux';
+
 class GraphTap extends Component {
 
   constructor(props) {
@@ -25,10 +29,7 @@ class GraphTap extends Component {
 
   componentDidMount() {
   }
-
-  test = () => {
-    alert(this.state.recordedCourse)
-  }
+ 
 
   goToGraphDetail = () => {
     alert('GraphScreen 필요')
@@ -46,21 +47,25 @@ class GraphTap extends Component {
 
   renderItem = ({ item }) => {
     return (
-      <TouchableOpacity onPress={() => this.goToGraphDetail()}>
+      <TouchableOpacity >
         <View style={styles.row}>
           <View style={styles.container}>
+            {console.log('item.routeCoordinates')} 
+            {console.log(item.routeCoordinates[0].latitude)}
+            {console.log(item.routeCoordinates[0].longitude)}
             <MapView style={styles.map}
               loadingEnabled={true}
               liteMode='true'
-              camera={this.getMapCamera()}
-              // initialRegion={{
-              //   latitude: 37.590920,
-              //   longitude: 126.913571,
-              //   latitudeDelta: 0.0922,
-              //   longitudeDelta: 0.0421,
-              // }}
+               
+
+              initialRegion={{
+                latitude: item.routeCoordinates[0].latitude,
+                longitude: item.routeCoordinates[0].longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}
               >
-              <Polyline coordinates={this.props.valueFromParent} strokeWidth={6} strokeColor="#fc3d03" />
+              <Polyline coordinates={item.routeCoordinates} strokeWidth={6} strokeColor="#fc3d03" />
             </MapView>
           </View>
           <View>
@@ -78,10 +83,11 @@ class GraphTap extends Component {
   render() {
     return (
       <View style={{ flex: 1 }} >
+        {console.log('this.props.routeInfo.routeItem')}
+        {console.log(this.props.routeInfo)}
         <FlatList
-          extraData={this.state}
-          data={this.state.recordedCourse}
-          keyExtractor={(item) => {
+          data={this.props.routeInfo.routeItem}
+          keyExtractor={ item=> {
             return item.id;
           }}
           renderItem={this.renderItem} />
@@ -89,6 +95,17 @@ class GraphTap extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  const { routeInfo } = state
+  return { routeInfo }
+};
+
+const mapDispatchToProps = dispatch => (
+  bindActionCreators({
+    // 수정 및 삭제 액션 추가햐야 함.
+  }, dispatch)
+);
 
 const styles = StyleSheet.create({
   row: {
@@ -118,4 +135,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default GraphTap;
+export default connect(mapStateToProps, mapDispatchToProps)(GraphTap);

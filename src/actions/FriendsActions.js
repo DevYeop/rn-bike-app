@@ -31,9 +31,10 @@ export const saveUserInfoKakao = userInfo => (
     } 
 )
 
-export const addRecordedRoute = userInfo => (
+export const addRecordedRoute = recoredRouteData => (
     {
         type: ADD_RECORDED_ROUTE,
-        payload: userInfo, 
+        payload: recoredRouteData, 
     } 
 )
+ 

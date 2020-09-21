@@ -18,7 +18,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 
 import { connect } from 'react-redux';
-import { addRecordedRoute } from '../../actions/FriendsActions'
+import { addRecordedRoute, addFriend } from '../../actions/FriendsActions'
 import { bindActionCreators } from 'redux';
 
 const LATITUDE_DELTA = 0.009;
@@ -30,7 +30,7 @@ class RecordTap extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            userInfo:{},
+           
             recordStatus: false,
             countDone: true,
             latitude: LATITUDE,
@@ -102,7 +102,7 @@ class RecordTap extends React.Component {
     }
 
     componentWillUnmount() {
-        Geolocation.clearWatch(this.watchID);
+        // Geolocation.clearWatch(this.watchID);
     }
 
     getMapRegion = () => ({
@@ -147,8 +147,11 @@ class RecordTap extends React.Component {
         this.setState({
             recordStatus: false
         })
-        Geolocation.clearWatch(this.watchID);
-        this.childFunction()
+        Geolocation.clearWatch(this.watchID); 
+        
+  
+        this.props.addRecordedRoute(this.state.routeCoordinates)
+        
     }
 
     /**
@@ -167,15 +170,11 @@ class RecordTap extends React.Component {
             parseInt(this.state.speed)
         )
     }
-
-    childFunction = (e) => {
-        this.props.functionCallFromParent(this.state.routeCoordinates);
-
-    }
-
+ 
     render() {
         return (
             <View style={styles.container}>
+                
                 <MapView
                     style={styles.map}
                     provider={PROVIDER_GOOGLE}
@@ -190,6 +189,7 @@ class RecordTap extends React.Component {
                     camera={this.getMapCamera()}>
                     <Polyline coordinates={this.state.routeCoordinates} strokeWidth={6} strokeColor="#fc3d03" />
                 </MapView>
+        
                 <Text style={styles.speed}>{this.showSpeed()}km/h + {this.props.valueFromParent}</Text>
                 <ActionButton
                     buttonColor="rgba(231,76,60,1)"
@@ -236,13 +236,14 @@ class RecordTap extends React.Component {
 
 
 const mapStateToProps = (state) => {
-    const { userInfo } = state
-    return { userInfo }
+    const { routeInfo } = state
+    return { routeInfo }
 };
 
 const mapDispatchToProps = dispatch => (
     bindActionCreators({
         addRecordedRoute,
+        addFriend,
     }, dispatch)
 );
 
