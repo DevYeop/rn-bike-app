@@ -17,6 +17,10 @@ import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 
+import { connect } from 'react-redux';
+import { addRecordedRoute } from '../../actions/FriendsActions'
+import { bindActionCreators } from 'redux';
+
 const LATITUDE_DELTA = 0.009;
 const LONGITUDE_DELTA = 0.009;
 const LATITUDE = 37.569889;
@@ -231,6 +235,19 @@ class RecordTap extends React.Component {
 }
 
 
+const mapStateToProps = (state) => {
+    const { userInfo } = state
+    return { userInfo }
+};
+
+const mapDispatchToProps = dispatch => (
+    bindActionCreators({
+        addRecordedRoute,
+    }, dispatch)
+);
+
+
+
 const styles = StyleSheet.create({
 
     container: {
@@ -270,5 +287,5 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     }
 });
-
-export default RecordTap;
+ 
+export default connect(mapStateToProps, mapDispatchToProps)(RecordTap);
