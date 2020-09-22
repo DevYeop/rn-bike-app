@@ -153,8 +153,71 @@ class RecordTap extends React.Component {
 
         console.log('총 이동거리')
         console.log(this.state.distanceTravelled)
+
+        this.calculateRouteInfo(this.state.routeCoordinates)
+
+        
+    }
+
+    /**
+     * 
+     * @param {*} info 
+     */
+    calculateRouteInfo = (info) => {
+        let minLat = info[0].latitude 
+        let maxLat = info[0].latitude
+        let minLong= info[0].longitude
+        let maxLong = info[0].longitude
+
+        console.log('전달받은 인자')
+        console.log(info)
+
+        console.log('min lat')
+        console.log(minLat)
+
+        console.log('계산 중..................')
+        for (i = 0; i < info.length ; i++){
+            
+            if (minLat > info[i].latitude){
+                minLat = info[i].latitude
+            }else if (minLong > info[i].longitude){
+                minLong = info[i].longitude
+            }else if(maxLat < info[i].latitude){
+                maxLat = info[i].latitude
+            }else if(maxLong < info[i].longitude){
+                maxLong = info[i].longitude
+            }
+
+        }
+
+        const northEast = {
+            latitude: maxLat,
+            longitude: maxLong
+        }
+
+        const southWest = {
+            latitude: minLat,
+            longitude: minLong
+        }
+         
+        console.log('northEast ')
+        console.log(northEast)
+        console.log('southWest ')
+        console.log(southWest)
+        
+        /**
+         * 녹화가 종료되면 아래의 정보를 저장하게 됨.
+         * -녹화경로(경위도 집합 ) + (경위도별로 시간?)
+         * -총 이동거리
+         * -총 이동시간
+         * -
+         */
+
+        const boundInfo = {northEast: northEast, southWest: southWest}
+
+        const routeInfo = {routeCoordinates: this.state.routeCoordinates, boundInfo: boundInfo}
   
-        this.props.addRecordedRoute(this.state.routeCoordinates)
+        this.props.addRecordedRoute(routeInfo)
         
     }
 

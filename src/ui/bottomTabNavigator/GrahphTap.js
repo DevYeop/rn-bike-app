@@ -75,14 +75,26 @@ class GraphTap extends Component {
     zoom: 16,
 });
 
+  getBoundInfo = item => ({
+    northEast : item.boundInfo.northEast,
+    southWest : item.boundInfo.southWest,
+  }
+  )
+
   renderItem = ({ item }) => {
     return (
+
       <TouchableOpacity >
+        
+        {console.log('this.props.item'),
+        console.log(item)
+        }
         <View style={styles.row}>
           <View style={styles.container}>
             <MapView style={styles.map}
               loadingEnabled={true}
               liteMode={true}
+              setMapBoundaries={this.getBoundInfo(item)}
               camera={this.getMapCamera(item)}
               // initialRegion={{
               //   latitude: item.routeCoordinates[0].latitude,

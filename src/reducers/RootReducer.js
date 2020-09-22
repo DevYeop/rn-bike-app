@@ -75,12 +75,15 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
 
             return Object.assign({}, state, kakaoUserInfo)
  
-            
+
         case ADD_RECORDED_ROUTE:
  
             let {routeItem} = state
+
+            const {routeCoordinates} = action.payload;
+            const {boundInfo} = action.payload
   
-            routeItem.push({ id: routeItem.length+1, routeCoordinates : action.payload})
+            routeItem.push({ id: routeItem.length+1, boundInfo : boundInfo , routeCoordinates : routeCoordinates})
           
             return Object.assign({}, state, routeItem)
             /**&
