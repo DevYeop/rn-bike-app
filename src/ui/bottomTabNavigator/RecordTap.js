@@ -204,6 +204,10 @@ class RecordTap extends React.Component {
         console.log(northEast)
         console.log('southWest ')
         console.log(southWest)
+
+        const latitudeDelta = maxLat - minLat
+        const longitudeDelta = maxLong - minLong
+        const deltaInfo = {latitudeDelta: latitudeDelta, longitudeDelta:longitudeDelta}
         
         /**
          * 녹화가 종료되면 아래의 정보를 저장하게 됨.
@@ -215,7 +219,11 @@ class RecordTap extends React.Component {
 
         const boundInfo = {northEast: northEast, southWest: southWest}
 
-        const routeInfo = {routeCoordinates: this.state.routeCoordinates, boundInfo: boundInfo}
+        const routeInfo = {
+            routeCoordinates: this.state.routeCoordinates, 
+            boundInfo: boundInfo,
+            deltaInfo: deltaInfo,
+        }
   
         this.props.addRecordedRoute(routeInfo)
         

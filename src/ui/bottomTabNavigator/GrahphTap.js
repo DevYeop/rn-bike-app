@@ -92,6 +92,12 @@ class GraphTap extends Component {
         <View style={styles.row}>
           <View style={styles.container}>
             <MapView style={styles.map}
+              initialRegion={{
+                latitude: item.routeCoordinates[0].latitude,
+                longitude: item.routeCoordinates[0].longitude,
+                latitudeDelta: item.deltaInfo.latitudeDelta,
+                longitudeDelta: item.deltaInfo.longitudeDelta,
+              }}
               loadingEnabled={true}
               liteMode={true}
               setMapBoundaries={this.getBoundInfo(item)}

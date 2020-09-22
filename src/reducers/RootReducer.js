@@ -80,10 +80,15 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
  
             let {routeItem} = state
 
-            const {routeCoordinates} = action.payload;
+            const {routeCoordinates} = action.payload
             const {boundInfo} = action.payload
+            const {deltaInfo} = action.payload
   
-            routeItem.push({ id: routeItem.length+1, boundInfo : boundInfo , routeCoordinates : routeCoordinates})
+            routeItem.push({ 
+                id: routeItem.length+1, 
+                boundInfo : boundInfo ,
+                deltaInfo : deltaInfo ,
+                routeCoordinates : routeCoordinates})
           
             return Object.assign({}, state, routeItem)
             /**&
