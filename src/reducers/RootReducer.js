@@ -12,7 +12,6 @@ import {
  * INITIAL_STATE variable with possible friends to add to your social network
  */
 const INITIAL_SATTE = {
-    
     id:'',
     email:'',
     nickname:'',
@@ -76,19 +75,13 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
 
             return Object.assign({}, state, kakaoUserInfo)
  
-            /**
-             * 녹화가 완료된 드라이빙 코스를 아이템으로 하나 추가한다.
-             */
+            
         case ADD_RECORDED_ROUTE:
  
             let {routeItem} = state
   
             routeItem.push({ id: routeItem.length+1, routeCoordinates : action.payload})
-   
-
-            console.log('반환값 : ')
-            console.log(Object.assign({}, state, routeItem))
-
+          
             return Object.assign({}, state, routeItem)
             /**&
              * latlng 배열을 받는다 + 시간별 위치,거리,속도

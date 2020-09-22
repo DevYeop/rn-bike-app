@@ -10,6 +10,8 @@ import MapView, {
   Polyline,
 } from "react-native-maps";
 
+import MapViewDirections from 'react-native-maps-directions';
+
 import { connect } from 'react-redux';
 import { addRecordedRoute, addFriend } from '../../actions/FriendsActions'
 import { bindActionCreators } from 'redux';
@@ -39,6 +41,28 @@ class GraphTap extends Component {
     pitch: 3,
     heading: 0,
     zoom: 13, //todo : 루트의 크기나 방향에 맞춰서 줌 배율을 달리해야함.
+    /** 단위 km ?
+     * 20 : 1128.497220 
+19 : 2256.994440
+18 : 4513.988880
+17 : 9027.977761
+16 : 18055.955520
+15 : 36111.911040
+14 : 72223.822090
+13 : 144447.644200
+12 : 288895.288400
+11 : 577790.576700
+10 : 1155581.153000
+9  : 2311162.307000
+8  : 4622324.614000
+7  : 9244649.227000
+6  : 18489298.450000
+5  : 36978596.910000
+4  : 73957193.820000
+3  : 147914387.600000
+2  : 295828775.300000
+1  : 591657550.500000
+     */
   });
   
   getMapCamera = item => ({
@@ -67,8 +91,15 @@ class GraphTap extends Component {
               //   longitudeDelta: 0.0421,
               // }}
               >
+                {/* <MapViewDirections 
+                   origin={origin}
+                   destination={destination}
+                   apikey={GOOGLE_MAPS_APIKEY}
+                /> */}
+ 
               <Polyline coordinates={item.routeCoordinates} strokeWidth={6} strokeColor="#fc3d03" />
             </MapView>
+            
           </View>
           <View>
             <View style={styles.nameContainer}>
