@@ -4,94 +4,148 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Image,
   FlatList,
 } from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
+import MapView, {
+  Polyline,
+} from "react-native-maps";
 
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Marker } from 'react-native-svg';
+import { Dimensions } from 'react-native';
 
-class ContactTap extends Component {
+import {
+  LineChart,
+  BarChart,
+  PieChart,
+  ProgressChart,
+  ContributionGraph,
+  StackedBarChart
+} from "react-native-chart-kit";
 
-  
+
+const LATITUDE_DELTA = 0.009;
+const LONGITUDE_DELTA = 0.009;
+const LATITUDE = 37.569889;
+const LONGITUDE = 126.978175;
+
+const screenWidth = Dimensions.get("window").width;
+const screenHeight = Dimensions.get("window").height;
+
+class GraphDetail extends Component {
+
   constructor(props) {
     super(props);
     this.state = {
-      userInfo: {},
-      calls: [
-        // { id: 1, name: "마이크", status: "active", image: "https://ca.slack-edge.com/T6TPDPPSL-U012FDZ8ZFY-gd91ba12a15f-512" },
-        // { id: 2, name: "길버트", status: "active", image: "https://ca.slack-edge.com/T6TPDPPSL-U016D3J0V70-d60770cf7eb6-512" },
-        // { id: 3, name: "매튜", status: "active", image: "https://ca.slack-edge.com/T6TPDPPSL-UNTQY9CQ3-7166ae8bba92-512" },
-        // { id: 4, name: "할리", status: "active", image: "https://ca.slack-edge.com/T6TPDPPSL-U019G7HDU81-371bb17a9475-512" },
-        // { id: 5, name: "지쿠터1", status: "inactive", image: "https://gbike.io/index_files/5c456b32d027f.png" },
-        // { id: 6, name: "지쿠터2", status: "inactive", image: "https://gbike.io/index_files/5c456b32d027f.png" },
-        // { id: 8, name: "지쿠터3", status: "inactive", image: "https://gbike.io/index_files/5c456b32d027f.png" },
-        // { id: 9, name: "지쿠터4", status: "inactive", image: "https://gbike.io/index_files/5c456b32d027f.png" },
-        // { id: 10, name: "지쿠터5", status: "inactive", image: "https://gbike.io/index_files/5c456b32d027f.png" },
-        // { id: 11, name: "지쿠터6", status: "inactive", image: "https://gbike.io/index_files/5c456b32d027f.png" },
-        // { id: 12, name: "지쿠터7", status: "inactive", image: "https://gbike.io/index_files/5c456b32d027f.png" },
+      newRecord: {},
+      recordedCourse: [
+        { id: 0, latlng: [] },
       ],
     };
-    this.contactList = this.contactList.bind(this);
+
   }
 
-  goToProfileScreen = () => {
-    alert('profileScreen 필요')
+  goToGraphDetail = () => {
+
+    this.props.navigation.navigate('GraphDetail')
+
   }
 
-  renderItem = ({ item }) => {
-    const Stack = createStackNavigator();
-    return (
-      <TouchableOpacity onPress={this.goToProfileScreen}>
-        <View style={styles.row}>
-          <Image source={{ uri: item.image }} style={styles.pic} />
-          <View>
-            <View style={styles.nameContainer}>
-              <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
-              <Text style={styles.mblTxt}>G지빌리티</Text>
-            </View>
-            <View style={styles.msgContainer}>
-              <Text style={styles.msgTxt}>{item.status}</Text>
-            </View>
-          </View>
-        </View>
-      </TouchableOpacity>
-    );
-  }
+  getBoundInfo = item => ({
+    northEast: item.boundInfo.northEast,
+    southWest: item.boundInfo.southWest,
+  })
 
-  contactList(state) {
-  }
+  getStartPoint = item => ({
+
+  })
+
 
   render() {
-    const Stack = createStackNavigator();
     return (
 
-      /**
-       *  todo : 유저의 정보를 나타네는 컴포넌트를 모듈화 해야함.
-       */
-      <View style={{ flex: 1 }} > 
-        <TouchableOpacity onPress={this.goToProfileScreen}>
-          <View style={styles.row}>
-            <Image source={{ uri: this.props.userInfo.profile_image_url }} style={styles.pic} />
-            <View>
-              <View style={styles.nameContainer}>
-                <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail">{this.props.userInfo.nickname}</Text>
-                <Text style={styles.mblTxt}>{this.props.userInfo.id}</Text>
-              </View>
-              <View style={styles.msgContainer}>
-                <Text style={styles.msgTxt}>{this.props.userInfo.email}</Text>
-              </View>
-            </View>
+
+      <View style={styles.rootContainer}>
+        <View style={styles.mapContainer}>
+          <MapView style={styles.map}
+            initialRegion={{
+              latitude: LATITUDE,
+              longitude: LONGITUDE,
+              /**
+               * 델타값에 2를 곱해주는 이유:
+               * - 
+               */
+              latitudeDelta: LATITUDE_DELTA,
+              longitudeDelta: LONGITUDE_DELTA,
+            }}
+            loadingEnabled={true}
+            liteMode={false}
+          // setMapBoundaries={this.getBoundInfo(item)}
+          >
+            {/*  
+            <Polyline
+              coordinates={item.routeCoordinates}
+              strokeWidth={6}
+              strokeColor="#fc3d03"
+            // geodesic={true}
+            /> */}
+          </MapView>
+        </View>
+
+        <View style={styles.graphContainer}>
+          <View>
+            <LineChart
+              // 이거 하고 안하고 차이가 뭐지?
+              // bezier
+              data={{
+                labels: ["January", "February", "March", "April", "May", "June"],
+                datasets: [
+                  {
+                    data: [
+                      Math.random() * 100,
+                      Math.random() * 100,
+                      Math.random() * 100,
+                      Math.random() * 100,
+                      Math.random() * 100,
+                      Math.random() * 100
+                    ]
+                  }
+                ]
+              }}
+              width={screenWidth} // from react-native
+              height={screenHeight / 2}
+              yAxisLabel="$"
+              yAxisSuffix="km/h"
+              yAxisInterval={1} // optional, defaults to 1
+
+              chartConfig={{ //함수로 뺄까
+                backgroundColor: "#e26a00",
+                backgroundGradientFrom: "#fb8c00",
+                backgroundGradientTo: "#ffa726",
+                decimalPlaces: 2, // optional, defaults to 2dp
+                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                style: {
+                  borderRadius: 16
+                },
+                propsForDots: {
+                  r: "6",
+                  strokeWidth: "2",
+                  stroke: "#ffa726"
+                }
+              }}
+              bezier
+              style={{
+                marginVertical: 8,
+                borderRadius: 16
+              }}
+            />
           </View>
-        </TouchableOpacity>
  
-        <FlatList
-          extraData={this.state}
-          data={this.state.calls}
-          keyExtractor={(item) => {
-            return item.id;
-          }}
-          renderItem={this.renderItem} />
+
+
+        </View>
       </View>
     );
   }
@@ -102,47 +156,40 @@ const mapStateToProps = (state) => {
   return { userInfo }
 };
 
+const mapDispatchToProps = dispatch => (
+  bindActionCreators({
+    // 수정 및 삭제 액션 추가햐야 함.
+  }, dispatch)
+);
+
 const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderColor: '#DCDCDC',
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    padding: 10,
+
+  rootContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: '#4287f5'
   },
-  pic: {
-    borderRadius: 30,
-    width: 60,
-    height: 60,
+
+  mapContainer: {
+
+    flex: 1,
+    backgroundColor: 'red'
+
   },
-  nameContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: 280,
+
+  graphContainer: {
+    flex: 1,
+    backgroundColor: 'blue'
   },
-  nameTxt: {
-    marginLeft: 15,
-    fontWeight: '600',
-    color: '#222',
-    fontSize: 18,
-    width: 170,
+
+  map: {
+    ...StyleSheet.absoluteFillObject,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
-  mblTxt: {
-    fontWeight: '200',
-    color: '#777',
-    fontSize: 13,
-  },
-  msgContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  msgTxt: {
-    fontWeight: '400',
-    color: '#008B8B',
-    fontSize: 12,
-    marginLeft: 15,
-  },
+
 });
 
-export default connect(mapStateToProps)(ContactTap);
+export default connect(mapStateToProps, mapDispatchToProps)(GraphDetail);

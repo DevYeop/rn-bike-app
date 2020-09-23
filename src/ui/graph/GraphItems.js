@@ -31,30 +31,16 @@ class GraphDetail extends Component {
 
   goToGraphDetail = () => {
 
-    this.props.navigation.navigate('GraphDetail')
-   
+    this.props.navigation.navigate('GraphDetail',{
+      /**
+       * 디테일 화면에 넘겨줄 정보들 여다가 ㅇㅇ
+       */
+    // itemId: 86,
+    // otherParam: 'anything you want here',
+    })
+    
   }
 
-  getMapCamera = () => ({
-    center: {
-      latitude: 37.590920,
-      longitude: 126.913571,
-    },
-    pitch: 3,
-    heading: 0,
-    zoom: 13,
-    
-  });
-
-  getMapCamera = item => ({
-    center: {
-      latitude: item.routeCoordinates[0].latitude,
-      longitude: item.routeCoordinates[0].longitude
-    },
-    pitch: 3,
-    heading: 0,
-    zoom: 16,
-  });
 
   getBoundInfo = item => ({
     northEast: item.boundInfo.northEast,
@@ -86,9 +72,7 @@ class GraphDetail extends Component {
               }}
               loadingEnabled={true}
               liteMode={false}
-              setMapBoundaries={this.getBoundInfo(item)}
-            // camera={this.getMapCamera(item)}
-            >   
+              setMapBoundaries={this.getBoundInfo(item)}>   
  
               {/* <Marker
                 coordinate={}
