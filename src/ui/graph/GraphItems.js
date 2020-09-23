@@ -16,7 +16,7 @@ import { Marker } from 'react-native-svg';
 
 import {GOOGLE_MAPS_APIKEY} from '../../actions/types'
 
-class GraphTap extends Component {
+class GraphDetail extends Component {
 
   constructor(props) {
     super(props);
@@ -30,7 +30,9 @@ class GraphTap extends Component {
   }
 
   goToGraphDetail = () => {
-    alert('GraphScreen 필요')
+
+    this.props.navigation.navigate('GraphDetail')
+   
   }
 
   getMapCamera = () => ({
@@ -41,29 +43,7 @@ class GraphTap extends Component {
     pitch: 3,
     heading: 0,
     zoom: 13,
-    //todo : 루트의 크기나 방향에 맞춰서 줌 배율을 달리해야함.
-    /** 단위????
-     * 20 : 1128.497220 
-19 : 2256.994440
-18 : 4513.988880
-17 : 9027.977761
-16 : 18055.955520
-15 : 36111.911040
-14 : 72223.822090
-13 : 144447.644200
-12 : 288895.288400
-11 : 577790.576700
-10 : 1155581.153000
-9  : 2311162.307000
-8  : 4622324.614000
-7  : 9244649.227000
-6  : 18489298.450000
-5  : 36978596.910000
-4  : 73957193.820000
-3  : 147914387.600000
-2  : 295828775.300000
-1  : 591657550.500000
-     */
+    
   });
 
   getMapCamera = item => ({
@@ -192,4 +172,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(GraphTap);
+export default connect(mapStateToProps, mapDispatchToProps)(GraphDetail);

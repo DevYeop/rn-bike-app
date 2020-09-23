@@ -3,7 +3,7 @@ import * as React from 'react';
 import ContactTab from './ContactTab';
 import ChatTab from './ChatTab';
 import RecrodTab from './RecordTap';
-import GrahphTap from './GrahphTap';
+import GraphTab from './GraphTab';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -20,16 +20,7 @@ class TabContainer extends React.Component {
       value:'',
     }
   }
-    
-  value="Value From Parent111";
-
-  parentFunction=(data_from_child)=>{
-    this.setState({
-      value_key: data_from_child,
-    })
-    alert('StopRecord Called')
- }
-  
+     
   render() {
     return(
     <Tab.Navigator 
@@ -59,8 +50,8 @@ class TabContainer extends React.Component {
         }} />
         <Tab.Screen
           name="RecrodTab"
-          children={()=><RecrodTab 
-            functionCallFromParent={this.parentFunction.bind(this)}
+          children={()=><RecrodTab  
+
             />}
           options={{
             tabBarLabel: 'Record',
@@ -70,9 +61,9 @@ class TabContainer extends React.Component {
           }}
         />
       <Tab.Screen
-        name="GrahphTap"
-        children={()=><GrahphTap 
-          valueFromParent={this.state.value_key}
+        name="GraphTab"
+        children={()=><GraphTab 
+        
           />}
         options={{
           tabBarLabel: 'Graph',

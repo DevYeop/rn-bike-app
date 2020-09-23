@@ -83,6 +83,9 @@ class RecordTap extends React.Component {
                     longitude,
                     heading,
                     speed,
+                    /**
+                     * 경위도 하나당 x 값으로 쓸 데이터 하나 추가하면 좋을 듯.
+                     */
                     routeCoordinates: routeCoordinates.concat([newCoordinate]),
                     distanceTravelled:
                         distanceTravelled + this.calcDistance(newCoordinate),
@@ -151,15 +154,12 @@ class RecordTap extends React.Component {
         })
         Geolocation.clearWatch(this.watchID); 
         
-
         console.log('총 이동거리')
         console.log(this.state.distanceTravelled)
 
-        
+
         this.resetPolyline()
         this.calculateRouteInfo(this.state.routeCoordinates)
-
-        
     }
 
     resetPolyline() {
