@@ -176,7 +176,7 @@ class RecordTap extends React.Component {
         console.log(minLat)
 
         console.log('계산 중..................')
-        for (i = 0; i < info.length ; i++){
+        for (var i = 0; i < info.length ; i++){
             
             if (minLat > info[i].latitude){
                 minLat = info[i].latitude
@@ -209,6 +209,11 @@ class RecordTap extends React.Component {
         const longitudeDelta = maxLong - minLong
         const deltaInfo = {latitudeDelta: latitudeDelta, longitudeDelta:longitudeDelta}
         
+
+        const boundaryCenterLat = (latitudeDelta/2) + minLat
+        const boundaryCenterLong = (longitudeDelta/2) + minLong
+
+
         /**
          * 녹화가 종료되면 아래의 정보를 저장하게 됨.
          * -녹화경로(경위도 집합 ) + (경위도별로 시간?)
@@ -217,11 +222,14 @@ class RecordTap extends React.Component {
          * -
          */
 
+        const centerInfo = {latitude: boundaryCenterLat, longitude: boundaryCenterLong}
+
         const boundInfo = {northEast: northEast, southWest: southWest}
 
         const routeInfo = {
             routeCoordinates: this.state.routeCoordinates, 
             boundInfo: boundInfo,
+            centerInfo: centerInfo,
             deltaInfo: deltaInfo,
         }
   

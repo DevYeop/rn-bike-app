@@ -13,8 +13,8 @@ import MapView, {
 import MapViewDirections from 'react-native-maps-directions';
 
 import { connect } from 'react-redux';
-import { addRecordedRoute, addFriend } from '../../actions/FriendsActions'
 import { bindActionCreators } from 'redux';
+import { Marker } from 'react-native-svg';
 
 class GraphTap extends Component {
 
@@ -28,20 +28,21 @@ class GraphTap extends Component {
     };
 
   }
- 
+
   goToGraphDetail = () => {
     alert('GraphScreen 필요')
   }
 
   getMapCamera = () => ({
     center: {
-        latitude: 37.590920,
-        longitude: 126.913571,
+      latitude: 37.590920,
+      longitude: 126.913571,
     },
     pitch: 3,
     heading: 0,
-    zoom: 13, //todo : 루트의 크기나 방향에 맞춰서 줌 배율을 달리해야함.
-    /** 단위 km ?
+    zoom: 13,
+    //todo : 루트의 크기나 방향에 맞춰서 줌 배율을 달리해야함.
+    /** 단위????
      * 20 : 1128.497220 
 19 : 2256.994440
 18 : 4513.988880
@@ -64,60 +65,71 @@ class GraphTap extends Component {
 1  : 591657550.500000
      */
   });
-  
+
   getMapCamera = item => ({
     center: {
-        latitude: item.routeCoordinates[0].latitude,
-        longitude: item.routeCoordinates[0].longitude
+      latitude: item.routeCoordinates[0].latitude,
+      longitude: item.routeCoordinates[0].longitude
     },
     pitch: 3,
     heading: 0,
     zoom: 16,
-});
+  });
 
   getBoundInfo = item => ({
-    northEast : item.boundInfo.northEast,
-    southWest : item.boundInfo.southWest,
-  }
-  )
+    northEast: item.boundInfo.northEast,
+    southWest: item.boundInfo.southWest,
+  })
+
+  getStartPoint = item => ({
+
+  })
 
   renderItem = ({ item }) => {
     return (
 
       <TouchableOpacity >
-        
-        {console.log('this.props.item'),
-        console.log(item)
-        }
         <View style={styles.row}>
           <View style={styles.container}>
+            {
+              console.log('델타값 '),
+              console.log(item.deltaInfo.latitudeDelta),
+              console.log(item.deltaInfo.longitudeDelta)
+            }
             <MapView style={styles.map}
               initialRegion={{
-                latitude: item.routeCoordinates[0].latitude,
-                longitude: item.routeCoordinates[0].longitude,
-                latitudeDelta: item.deltaInfo.latitudeDelta,
-                longitudeDelta: item.deltaInfo.longitudeDelta,
+
+                
+                latitude: item.centerInfo.latitude,
+                longitude: item.centerInfo.longitude,
+                
+                /**
+                 * 델타값에 2를 곱해주는 이유:
+                 * -
+                 */
+                latitudeDelta: item.deltaInfo.latitudeDelta*2,
+                longitudeDelta: item.deltaInfo.longitudeDelta*2,
               }}
               loadingEnabled={true}
-              liteMode={true}
+              liteMode={false}
               setMapBoundaries={this.getBoundInfo(item)}
-              camera={this.getMapCamera(item)}
-              // initialRegion={{
-              //   latitude: item.routeCoordinates[0].latitude,
-              //   longitude: item.routeCoordinates[0].longitude,
-              //   latitudeDelta: 0.0922,
-              //   longitudeDelta: 0.0421,
-              // }}
-              >
-                {/* <MapViewDirections 
+              // camera={this.getMapCamera(item)}
+            >
+              {/* <MapViewDirections 
                    origin={origin}
                    destination={destination}
                    apikey={GOOGLE_MAPS_APIKEY}
                 /> */}
- 
+
+              {/* <Marker
+                coordinate={}
+                title='title'
+                description='des'
+              /> */}
+
               <Polyline coordinates={item.routeCoordinates} strokeWidth={6} strokeColor="#fc3d03" />
             </MapView>
-            
+
           </View>
           <View>
             <View style={styles.nameContainer}>
@@ -138,7 +150,7 @@ class GraphTap extends Component {
         {console.log(this.props.userInfo)}
         <FlatList
           data={this.props.userInfo.routeItem}
-          keyExtractor={ item=> {
+          keyExtractor={item => {
             return item.id;
           }}
           renderItem={this.renderItem} />
