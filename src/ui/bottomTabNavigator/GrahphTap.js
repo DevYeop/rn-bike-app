@@ -116,7 +116,12 @@ class GraphTap extends Component {
                 description='des'
               /> */}
 
-              <Polyline coordinates={item.routeCoordinates} strokeWidth={6} strokeColor="#fc3d03" />
+              <Polyline 
+              coordinates={item.routeCoordinates} 
+              strokeWidth={6} 
+              strokeColor="#fc3d03"
+              // geodesic={true}
+              />
             </MapView>
 
           </View>

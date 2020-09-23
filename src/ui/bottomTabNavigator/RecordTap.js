@@ -155,9 +155,17 @@ class RecordTap extends React.Component {
         console.log('총 이동거리')
         console.log(this.state.distanceTravelled)
 
+        
+        this.resetPolyline()
         this.calculateRouteInfo(this.state.routeCoordinates)
 
         
+    }
+
+    resetPolyline() {
+        this.setState({
+            routeCoordinates: []
+        })
     }
 
     /**
