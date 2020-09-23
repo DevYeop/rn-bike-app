@@ -20,6 +20,7 @@ import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import { connect } from 'react-redux';
 import { addRecordedRoute } from '../../actions/FriendsActions'
 import { bindActionCreators } from 'redux';
+import { sortAndDeduplicateDiagnostics } from "typescript";
 
 const LATITUDE_DELTA = 0.009;
 const LONGITUDE_DELTA = 0.009;
@@ -30,7 +31,8 @@ class RecordTap extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-           
+            startRecordMilli: 0,
+            stopRecordMilli: 0,
             recordStatus: false,
             countDone: true,
             latitude: LATITUDE,
@@ -137,7 +139,35 @@ class RecordTap extends React.Component {
         }
     }
 
+    formatDate(date) {
+        return date.getFullYear() + '년 ' +
+            (date.getMonth() + 1) + '월 ' +
+            date.getDate() + '일 ' +
+            date.getHours() + '시 ' +
+            date.getMinutes() + '분';
+    }
+
     startRecording() {
+ 
+        const time = new Date().getTime();
+        const date = new Date(time);
+
+        // 녹화를 시작한 시기정보. 각 아이템이 언제 탄생(?) 했는지 표시할 때 사용한다.
+        // 아이템 인덱스로 활용해도 좋을듯?
+        const startRecordTime = this.formatDate(date)
+
+        alert(startRecordTime);
+
+        this.setState({
+            startRecordMilli : time,
+        })
+        
+
+
+
+
+
+
         /**
          * todo : 여기서 시작 측정 시작
          */
@@ -152,6 +182,33 @@ class RecordTap extends React.Component {
     }
 
     stopRecording() {
+
+
+
+        const stopRecordMilli = new Date().getTime();
+
+        const timeGap = stopRecordMilli -  this.state.startRecordMilli
+        
+
+        console.log('걸린시간')
+        console.log(timeGap)
+
+        const hour = Math.floor((timeGap/1000/60/60) << 0)
+        const min = Math.floor((timeGap/1000/60) << 0)
+        const sec = Math.floor((timeGap/1000) % 60)
+
+        console.log('분')
+        console.log(min)
+
+        console.log('초')
+        console.log(sec)
+
+        const lapTime = {
+            hour : hour,
+            min : min,
+            sec : sec,
+        }
+ 
 
           /**
          * todo : 여기서 시작 측정 중단
@@ -168,7 +225,7 @@ class RecordTap extends React.Component {
 
 
         this.resetPolyline()
-        this.calculateRouteInfo(this.state.routeCoordinates)
+        this.calculateRouteInfo(this.state.routeCoordinates, lapTime)
     }
 
     resetPolyline() {
@@ -181,7 +238,7 @@ class RecordTap extends React.Component {
      * 
      * @param {*} info 
      */
-    calculateRouteInfo = (info) => {
+    calculateRouteInfo = (info, lapTime) => {
         let minLat = info[0].latitude 
         let maxLat = info[0].latitude
         let minLong= info[0].longitude
@@ -246,6 +303,7 @@ class RecordTap extends React.Component {
         const boundInfo = {northEast: northEast, southWest: southWest}
 
         const routeInfo = {
+            lapTime : lapTime,
             routeCoordinates: this.state.routeCoordinates,
             distance: distance, 
             boundInfo: boundInfo,
