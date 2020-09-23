@@ -155,19 +155,11 @@ class RecordTap extends React.Component {
         // 녹화를 시작한 시기정보. 각 아이템이 언제 탄생(?) 했는지 표시할 때 사용한다.
         // 아이템 인덱스로 활용해도 좋을듯?
         const startRecordTime = this.formatDate(date)
-
-        alert(startRecordTime);
-
+ 
         this.setState({
             startRecordMilli : time,
         })
-        
-
-
-
-
-
-
+  
         /**
          * todo : 여기서 시작 측정 시작
          */
@@ -208,7 +200,6 @@ class RecordTap extends React.Component {
             min : min,
             sec : sec,
         }
- 
 
           /**
          * todo : 여기서 시작 측정 중단
@@ -230,7 +221,8 @@ class RecordTap extends React.Component {
 
     resetPolyline() {
         this.setState({
-            routeCoordinates: []
+            routeCoordinates: [],
+            distanceTravelled: 0,
         })
     }
 

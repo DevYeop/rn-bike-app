@@ -54,30 +54,28 @@ class GraphDetail extends Component {
 
   getLapTime(item) {
     
-    let lapTimeString;
+    let lapTimeString = ''
 
     console.log("랩ㅌ임")
     console.log(item)
-
-    if(item.sec != 0){
-      
-    }
-
+ 
+    
     if(item.hour == 0){
       console.log("0시간")
     }else{
       lapTimeString = item.hour+'시 '
     }
+
     if(item.min == 0){
       console.log("0분")
     }else{
-      lapTimeString = item.min+'분 '
+      lapTimeString += item.min+'분 '
     }
 
     if(item.sec == 0){
       console.log("0초")
     }else{
-      lapTimeString = item.sec+'초'
+      lapTimeString += item.sec+'초'
     }
 
     return lapTimeString;
@@ -105,7 +103,7 @@ class GraphDetail extends Component {
                 longitudeDelta: item.deltaInfo.longitudeDelta*2,
               }}
               loadingEnabled={true}
-              liteMode={false}
+              liteMode={true}
               setMapBoundaries={this.getBoundInfo(item)}>   
  
               {/* <Marker
