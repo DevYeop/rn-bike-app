@@ -8,11 +8,11 @@ import {
 } from 'react-native';
 import MapView, {
   Polyline,
+  Marker,
 } from "react-native-maps";
 
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { Marker } from 'react-native-svg';
+import { bindActionCreators } from 'redux'; 
 import { Dimensions } from 'react-native';
 
 import {
@@ -32,7 +32,7 @@ const LONGITUDE = 126.978175;
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
-
+ 
 class GraphDetail extends Component {
 
   constructor(props) {
@@ -53,8 +53,8 @@ class GraphDetail extends Component {
   }
 
   getBoundInfo = item => ({
-    northEast: item.boundInfo.northEast,
-    southWest: item.boundInfo.southWest,
+    northEast: this.props.route.params.routeInfo.boundInfo.northEast,
+    southWest: this.props.route.params.routeInfo.boundInfo.southWest,
   })
 
   getStartPoint = item => ({
@@ -66,30 +66,45 @@ class GraphDetail extends Component {
     return (
 
 
+
+
       <View style={styles.rootContainer}>
+        {console.log('클릭된 아이템으로부터 받은 props'),
+          console.log(this.props.route.params.routeInfo)}
         <View style={styles.mapContainer}>
           <MapView style={styles.map}
             initialRegion={{
-              latitude: LATITUDE,
-              longitude: LONGITUDE,
+              latitude: this.props.route.params.routeInfo.centerInfo.latitude,
+              longitude: this.props.route.params.routeInfo.centerInfo.longitude,
               /**
                * 델타값에 2를 곱해주는 이유:
                * - 
                */
-              latitudeDelta: LATITUDE_DELTA,
-              longitudeDelta: LONGITUDE_DELTA,
+              latitudeDelta: this.props.route.params.routeInfo.deltaInfo.latitudeDelta*2,
+              longitudeDelta: this.props.route.params.routeInfo.deltaInfo.longitudeDelta*2,
             }}
             loadingEnabled={true}
             liteMode={false}
-          // setMapBoundaries={this.getBoundInfo(item)}
+          setMapBoundaries={this.getBoundInfo()}
           >
-            {/*  
+
+              <Marker
+                coordinate={
+                  {
+                    latitude:this.props.route.params.routeInfo.routeCoordinates[0].latitude,
+                    longitude: this.props.route.params.routeInfo.routeCoordinates[0].longitude,
+                  }
+                }
+                title='출발점'
+                description='출발시각 :'
+              />
+
             <Polyline
-              coordinates={item.routeCoordinates}
+              coordinates={this.props.route.params.routeInfo.routeCoordinates}
               strokeWidth={6}
               strokeColor="#fc3d03"
             // geodesic={true}
-            /> */}
+            />
           </MapView>
         </View>
 
@@ -142,7 +157,7 @@ class GraphDetail extends Component {
               }}
             />
           </View>
- 
+
 
 
         </View>

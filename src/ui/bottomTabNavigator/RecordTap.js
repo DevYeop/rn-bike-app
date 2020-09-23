@@ -138,6 +138,9 @@ class RecordTap extends React.Component {
     }
 
     startRecording() {
+        /**
+         * todo : 여기서 시작 측정 시작
+         */
         this.setState({
             recordStatus: true,
             countDone: false
@@ -149,6 +152,12 @@ class RecordTap extends React.Component {
     }
 
     stopRecording() {
+
+          /**
+         * todo : 여기서 시작 측정 중단
+         * - 시작-중단 시간의 간격구하기
+         */
+
         this.setState({
             recordStatus: false
         })

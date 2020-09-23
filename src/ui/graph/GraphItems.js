@@ -8,11 +8,11 @@ import {
 } from 'react-native';
 import MapView, {
   Polyline,
+  Marker,
 } from "react-native-maps";
  
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { Marker } from 'react-native-svg';
+import { bindActionCreators } from 'redux'; 
 
 import {GOOGLE_MAPS_APIKEY} from '../../actions/types'
 
@@ -29,9 +29,10 @@ class GraphDetail extends Component {
 
   }
 
-  goToGraphDetail = () => {
+  goToGraphDetail = (item) => {
 
     this.props.navigation.navigate('GraphDetail',{
+      routeInfo : item,
       /**
        * 디테일 화면에 넘겨줄 정보들 여다가 ㅇㅇ
        */
@@ -54,7 +55,7 @@ class GraphDetail extends Component {
   renderItem = ({ item }) => {
     return (
 
-      <TouchableOpacity onPress={()=>this.goToGraphDetail()}>
+      <TouchableOpacity onPress={()=>this.goToGraphDetail(item)}>
         <View style={styles.row}>
           <View style={styles.container}> 
             <MapView style={styles.map}
