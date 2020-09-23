@@ -9,12 +9,12 @@ import {
 import MapView, {
   Polyline,
 } from "react-native-maps";
-
-import MapViewDirections from 'react-native-maps-directions';
-
+ 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Marker } from 'react-native-svg';
+
+import {GOOGLE_MAPS_APIKEY} from '../../actions/types'
 
 class GraphTap extends Component {
 
@@ -88,24 +88,18 @@ class GraphTap extends Component {
   renderItem = ({ item }) => {
     return (
 
-      <TouchableOpacity >
+      <TouchableOpacity onPress={()=>this.goToGraphDetail()}>
         <View style={styles.row}>
-          <View style={styles.container}>
-            {
-              console.log('델타값 '),
-              console.log(item.deltaInfo.latitudeDelta),
-              console.log(item.deltaInfo.longitudeDelta)
-            }
+          <View style={styles.container}> 
             <MapView style={styles.map}
+ 
               initialRegion={{
-
-                
                 latitude: item.centerInfo.latitude,
                 longitude: item.centerInfo.longitude,
                 
                 /**
                  * 델타값에 2를 곱해주는 이유:
-                 * -
+                 * - 
                  */
                 latitudeDelta: item.deltaInfo.latitudeDelta*2,
                 longitudeDelta: item.deltaInfo.longitudeDelta*2,
@@ -113,14 +107,9 @@ class GraphTap extends Component {
               loadingEnabled={true}
               liteMode={false}
               setMapBoundaries={this.getBoundInfo(item)}
-              // camera={this.getMapCamera(item)}
-            >
-              {/* <MapViewDirections 
-                   origin={origin}
-                   destination={destination}
-                   apikey={GOOGLE_MAPS_APIKEY}
-                /> */}
-
+            // camera={this.getMapCamera(item)}
+            >   
+ 
               {/* <Marker
                 coordinate={}
                 title='title'

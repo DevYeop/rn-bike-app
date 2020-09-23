@@ -118,7 +118,8 @@ class RecordTap extends React.Component {
             longitude: this.state.longitude,
         },
         pitch: 3,
-        heading: this.state.heading,
+        // heading: this.state.heading,
+        heading:0,
         zoom: 18,
     });
 
