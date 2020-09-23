@@ -212,7 +212,8 @@ class RecordTap extends React.Component {
 
         const boundaryCenterLat = (latitudeDelta/2) + minLat
         const boundaryCenterLong = (longitudeDelta/2) + minLong
-
+ 
+        const distance = parseInt(this.state.distanceTravelled*1000)
 
         /**
          * 녹화가 종료되면 아래의 정보를 저장하게 됨.
@@ -227,7 +228,8 @@ class RecordTap extends React.Component {
         const boundInfo = {northEast: northEast, southWest: southWest}
 
         const routeInfo = {
-            routeCoordinates: this.state.routeCoordinates, 
+            routeCoordinates: this.state.routeCoordinates,
+            distance: distance, 
             boundInfo: boundInfo,
             centerInfo: centerInfo,
             deltaInfo: deltaInfo,

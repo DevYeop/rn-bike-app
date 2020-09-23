@@ -133,7 +133,7 @@ class GraphTap extends Component {
           </View>
           <View>
             <View style={styles.nameContainer}>
-              <Text>거리 : {}km</Text>
+              <Text>거리 : {item.distance}m</Text>
               <Text>시간 : {} 분</Text>
               <Text>평균속도 : {} km/h</Text>
             </View>
