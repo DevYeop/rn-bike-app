@@ -12,6 +12,7 @@ import {
  * INITIAL_STATE variable with possible friends to add to your social network
  */
 const INITIAL_SATTE = {
+    collectionID:'',
     id:'',
     email:'',
     nickname:'',
@@ -59,10 +60,12 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
         case SAVE_USER_INFO_GOOGLE:
 
             const userInfo = action.payload
+            let {collectionID} = state
 
-            var {id, email, name:nickname, photo:profile_image_url} = userInfo.user
-
-            const googleUser = {id, email, nickname, profile_image_url}
+            var {id, email, name:nickname, photo:profile_image_url} = userInfo.userInfo.user
+            collectionID = userInfo.collectionID
+            
+            const googleUser = {id, email, nickname, profile_image_url, collectionID}
 
             return Object.assign({}, state, googleUser)
 

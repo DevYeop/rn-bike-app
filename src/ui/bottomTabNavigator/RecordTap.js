@@ -4,6 +4,7 @@ import {
     View,
     Platform, 
     Text,
+    Button
 } from "react-native";
 import MapView, {
     AnimatedRegion,
@@ -20,6 +21,9 @@ import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import { connect } from 'react-redux';
 import { addRecordedRoute } from '../../actions/FriendsActions'
 import { bindActionCreators } from 'redux'; 
+import { TouchableOpacity } from "react-native-gesture-handler";
+
+import firestore from '@react-native-firebase/firestore';
   
 class RecordTap extends React.Component {
     constructor(props) {
@@ -61,7 +65,7 @@ class RecordTap extends React.Component {
             position => {
                 const { routeCoordinates, distanceTravelled, speedArray } = this.state;
                 const { latitude, longitude, heading, speed } = position.coords;
-
+                
                 const newCoordinate = {
                     latitude,
                     longitude
@@ -256,18 +260,57 @@ class RecordTap extends React.Component {
             centerInfo: centerInfo,
             deltaInfo: deltaInfo,
         }
+
+        this.setFireStoreInfo(routeInfo)
+        this.getFireStoreInfo()
+
         this.props.addRecordedRoute(routeInfo)
     }
+
+
+    setFireStoreInfo = routeInfo => {
+
+        console.log('setFireStoreInfo this.props.userInfo.routeItem')
+        console.log(this.props.userInfo.routeItem)
+
+        const preRouteInfo = this.props.userInfo.routeItem
+
+        const citiesRef = firestore().collection(this.props.userInfo.id);
+
+        citiesRef.doc("routeInfo").set(
+            { preRouteInfo }
+        );
+    }
+
+    getFireStoreInfo = () => {
+
+        const citiesRef = firestore().collection(this.props.userInfo.id).doc("routeInfo");
+
+        citiesRef.get().then(function (doc) {
+            if (doc.exists) {
+                console.log("Document data:", doc.data());
+            } else {
+                // doc.data() will be undefined in this case
+                console.log("No such document!");
+            }
+        }).catch(function (error) {
+            console.log("Error getting document:", error);
+        });
+
+  }
+
+
+
 
     getAvgSpeed = () => {
         const speedArray = this.state.speedArray
         let avgSpeed = 0;
-        
-        for(var i = 0 ; i < speedArray.length ; i++){
+
+        for (var i = 0; i < speedArray.length; i++) {
             avgSpeed += speedArray[i]
         }
 
-        avgSpeed = avgSpeed/speedArray.length
+        avgSpeed = avgSpeed / speedArray.length
         return avgSpeed
     }
 
@@ -286,6 +329,24 @@ class RecordTap extends React.Component {
         return (
             parseInt(this.state.speed)
         )
+    }
+
+    getRoadAPI  = () => { 
+        /**
+         * todo : 녹화 중에 계속 road api를 호출하지 않았으면 좋겟는데.. 잠시보류
+         */
+        fetch('https://roads.googleapis.com/v1/snapToRoads?path=-35.27801,149.12958|-35.28032,149.12907|-35.28099,149.12929|-35.28144,149.12984|-35.28194,149.13003|-35.28282,149.12956|-35.28302,149.12881|-35.28473,149.12836&interpolate=true&key=AIzaSyCiBqROXrj7009fX49-BxlGpd1NyhIldYA')
+        .then((response) => response.json())
+        .then((json) => {
+            console.log('json');
+            console.log(json);  
+          return json.movies;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+
+        alert('getRoadAPI')
     }
 
     render() {
@@ -319,6 +380,9 @@ class RecordTap extends React.Component {
                         <Icon name="md-stop" style={styles.actionButtonIcon} />
                     </ActionButton.Item>
                 </ActionButton>
+                <TouchableOpacity onPress={()=>this.getRoadAPI()}>
+                <Button title='road api'/>
+                </TouchableOpacity>
                 {/* {!this.state.countDone ? ( todo : roadAPI 적용 후 개발완료 할 것
                     <CountdownCircleTimer
                         style={styles.countDownTimer}

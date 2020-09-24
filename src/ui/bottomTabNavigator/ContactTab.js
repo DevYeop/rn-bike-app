@@ -70,6 +70,11 @@ class ContactTap extends Component {
        *  todo : 유저의 정보를 나타네는 컴포넌트를 모듈화 해야함.
        */
       <View style={{ flex: 1 }} > 
+
+      {
+        console.log('contact this.props'),
+        console.log(this.props)
+      }
         <TouchableOpacity onPress={this.goToProfileScreen}>
           <View style={styles.row}>
             <Image source={{ uri: this.props.userInfo.profile_image_url }} style={styles.pic} />

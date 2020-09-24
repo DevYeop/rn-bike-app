@@ -192,6 +192,9 @@ dependencies {
 
     implementation 'com.android.support:multidex:1.0.3'
 
+    implementation project(path: ":@react-native-firebase_auth")
+    implementation project(':@react-native-firebase_firestore')
+ 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
     }
