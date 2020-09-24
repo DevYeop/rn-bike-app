@@ -180,10 +180,12 @@ class RecordTap extends React.Component {
 
         Geolocation.clearWatch(this.watchID); 
 
-        this.resetPolyline()
 
         this.getRouteInfo()
+
         
+
+        this.resetPolyline()
     }
 
     getLapTime() {
@@ -224,9 +226,12 @@ class RecordTap extends React.Component {
         })
     }
  
+    /**
+     * getRouteInfo를 따로 두고, 스토어에 저장하는 함수를 따로 만들어서 귀속시키는 게 깔끔할 듯
+     */
     getRouteInfo = () => {
 
-        const lapTime = this.getLapTime()
+        
         const info = this.state.routeCoordinates
   
         let minLat = info[0].latitude 
@@ -234,13 +239,6 @@ class RecordTap extends React.Component {
         let minLong= info[0].longitude
         let maxLong = info[0].longitude
 
-        console.log('전달받은 인자')
-        console.log(info)
-
-        console.log('min lat')
-        console.log(minLat)
-
-        console.log('계산 중..................')
         for (var i = 0; i < info.length ; i++){
             
             if (minLat > info[i].latitude){
@@ -264,12 +262,7 @@ class RecordTap extends React.Component {
             latitude: minLat,
             longitude: minLong
         }
-         
-        console.log('northEast ')
-        console.log(northEast)
-        console.log('southWest ')
-        console.log(southWest)
-
+       
         const latitudeDelta = maxLat - minLat
         const longitudeDelta = maxLong - minLong
         const deltaInfo = {latitudeDelta: latitudeDelta, longitudeDelta:longitudeDelta}
@@ -280,20 +273,17 @@ class RecordTap extends React.Component {
  
         const distance = parseInt(this.state.distanceTravelled*1000)
 
-        /**
-         * 녹화가 종료되면 아래의 정보를 저장하게 됨.
-         * -녹화경로(경위도 집합 ) + (경위도별로 시간?)
-         * -총 이동거리
-         * -총 이동시간
-         * -
-         */
-
         const centerInfo = {latitude: boundaryCenterLat, longitude: boundaryCenterLong}
-
+        
         const boundInfo = {northEast: northEast, southWest: southWest}
+
+        const lapTime = this.getLapTime()
+
+        const avgSpeed = this.getAvgSpeed()
 
         const routeInfo = {
             speedArray : this.state.speedArray,
+            avgSpeed : avgSpeed,
             lapTime : lapTime,
             routeCoordinates: this.state.routeCoordinates,
             distance: distance, 
@@ -301,9 +291,24 @@ class RecordTap extends React.Component {
             centerInfo: centerInfo,
             deltaInfo: deltaInfo,
         }
+
   
         this.props.addRecordedRoute(routeInfo)
         
+    }
+
+    getAvgSpeed = () => {
+
+        const speedArray = this.state.speedArray
+        let avgSpeed = 0;
+        
+        for(var i = 0 ; i < speedArray.length ; i++){
+            avgSpeed += speedArray[i]
+        }
+
+        avgSpeed = avgSpeed/speedArray.length
+
+        return avgSpeed
     }
 
     /**

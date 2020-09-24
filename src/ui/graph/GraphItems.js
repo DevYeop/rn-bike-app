@@ -15,6 +15,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'; 
 
 import {GOOGLE_MAPS_APIKEY} from '../../actions/types'
+import { Time } from 'react-native-gifted-chat';
 
 class GraphDetail extends Component {
 
@@ -111,7 +112,7 @@ class GraphDetail extends Component {
             <View style={styles.nameContainer}>
               <Text>거리 : {item.distance}m</Text>
               <Text>시간 : {item.lapTime}</Text>
-              <Text>평균속도 : {} km/h</Text>
+              <Text>평균속도 : {parseInt(item.avgSpeed)} km/h</Text>
             </View>
           </View>
         </View>

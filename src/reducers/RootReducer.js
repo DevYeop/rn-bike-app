@@ -87,12 +87,14 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
             const {distance} = action.payload
             const {lapTime} = action.payload
             const {speedArray} = action.payload
+            const {avgSpeed} = action.payload
   
             routeItem.push({ 
                 id: routeItem.length+1, 
                 boundInfo : boundInfo ,
                 deltaInfo : deltaInfo ,
                 centerInfo : centerInfo,
+                avgSpeed : avgSpeed,
                 distance : distance,
                 lapTime : lapTime,
                 speedArray : speedArray,
