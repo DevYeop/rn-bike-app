@@ -378,7 +378,6 @@ Temporary Items
 /android/app/build/
 /android/app/gradlew
 /android/build/
-/android/gradlew
 .idea
 .gradle
 local.properties

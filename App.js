@@ -19,12 +19,9 @@ import RequestLocationPermission from './src/lib/RequestLocationPermission'
 import SettingTap from './src/ui/login/SettingTab';
 
 
-
 const Stack = createStackNavigator();
 
-// **** 리덕스 개발자도구 적용
-const devTools =
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
+const devTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
 
 const store = createStore(rootReducer, devTools);
 

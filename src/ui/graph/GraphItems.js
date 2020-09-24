@@ -93,7 +93,7 @@ class GraphDetail extends Component {
               liteMode={true}
               setMapBoundaries={this.getBoundInfo(item)}>   
  
-              {/* <Marker
+              {/* <Marker // todo : 출발 도착점 표시해야함. 커스텀 마커 필요
                 coordinate={}
                 title='title'
                 description='des'
@@ -103,15 +103,14 @@ class GraphDetail extends Component {
               coordinates={item.routeCoordinates} 
               strokeWidth={6} 
               strokeColor="#fc3d03"
-              // geodesic={true}
               />
             </MapView>
 
           </View>
           <View>
             <View style={styles.nameContainer}>
-              <Text>거리 : {item.distance}m</Text>
-              <Text>시간 : {item.lapTime}</Text>
+              <Text>거   리 : {item.distance}m</Text>
+              <Text>시   간 : {item.lapTime}</Text>
               <Text>평균속도 : {parseInt(item.avgSpeed)} km/h</Text>
             </View>
           </View>

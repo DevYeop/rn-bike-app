@@ -3,7 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Text, StyleSheet, View, StatusBar, SafeAreaView, Button, Image, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import { saveUserInfoGoogle } from '../../actions/FriendsActions'
-import { bindActionCreators } from 'redux';
+import { bindActionCreators } from 'redux'; 
 
 import {
   GoogleSignin,

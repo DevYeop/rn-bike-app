@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  FlatList,
+  StyleSheet, 
+  View, 
 } from 'react-native';
 import MapView, {
   Polyline,
@@ -15,21 +12,12 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'; 
 import { Dimensions } from 'react-native';
 
-import {
-  LineChart
-} from "react-native-chart-kit";
-
-
-const LATITUDE_DELTA = 0.009;
-const LONGITUDE_DELTA = 0.009;
-const LATITUDE = 37.569889;
-const LONGITUDE = 126.978175;
-
+import { LineChart } from "react-native-chart-kit";
+ 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
  
 class GraphDetail extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -38,25 +26,17 @@ class GraphDetail extends Component {
         { id: 0, latlng: [] },
       ],
     };
-
   }
 
   goToGraphDetail = () => {
-
     this.props.navigation.navigate('GraphDetail')
-
   }
 
-  getBoundInfo = item => ({
+  getBoundInfo = () => ({
     northEast: this.props.route.params.routeInfo.boundInfo.northEast,
     southWest: this.props.route.params.routeInfo.boundInfo.southWest,
   })
-
-  getStartPoint = item => ({
-
-  })
-
-
+ 
   render() {
     return (
       <View style={styles.rootContainer}>
@@ -102,9 +82,6 @@ class GraphDetail extends Component {
         <View style={styles.graphContainer}>
           <View>
             <LineChart
-
-              segments = {5}
-
               data={{
                 labels: ["0", "", "", "", "","","","","", this.props.route.params.routeInfo.lapTime],
                 datasets: [
@@ -114,18 +91,19 @@ class GraphDetail extends Component {
                 ]
               }}
               
+              segments = {5}
               fromZero={true}
               yLabelsOffset={1}
               withDots={false}
               withInnerLines={false}
- 
+
               width={screenWidth}  
               height={screenHeight/2}
  
               yAxisSuffix="km/h"
               yAxisInterval={1} // optional, defaults to 1
 
-              chartConfig={{ //함수로 뺄까
+              chartConfig={{ //함수로 뺄까?
                 backgroundColor: "#e26a00",
                 backgroundGradientFrom: "#fb8c00",
                 backgroundGradientTo: "#ffa726",
@@ -141,17 +119,11 @@ class GraphDetail extends Component {
                   stroke: "#ffa726"
                 }
               }}
-
-              bezier // ???
-
               style={{
-               // 이쁜거 찾자.
+               // 이쁜게 나중에
               }}
             />
           </View>
-
-
-
         </View>
       </View>
     );

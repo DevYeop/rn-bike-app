@@ -1,18 +1,10 @@
 import * as React from 'react';
 import {
-} from 'react-native';
-import {
-  NavigationContainer,
-  View,
-  Text
-} from '@react-navigation/native';
+} from 'react-native'; 
 import 'react-native-gesture-handler';
 import { createStackNavigator } from '@react-navigation/stack'; 
-  
 import GraphItems from '../graph/GraphItems';
 import GraphDetail from '../graph/GraphDetail';
-
-
 
 const GraphStack = createStackNavigator();
   
