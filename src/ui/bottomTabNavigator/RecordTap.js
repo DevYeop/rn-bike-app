@@ -161,7 +161,7 @@ class RecordTap extends React.Component {
 
         Geolocation.clearWatch(this.watchID); 
 
-        this.getRouteInfo()
+        this.getRouteInfo() // .then?
         this.resetRecordStatus()
     }
 
@@ -261,9 +261,28 @@ class RecordTap extends React.Component {
             deltaInfo: deltaInfo,
         }
 
+
+
+        /**
+         * 여기서 fire-store로 저장해야함. add
+         * 
+         * 
+         * collection(유저 아이디)
+         * - doc
+         * - doc
+         * - doc (유저 정보)
+         * .
+         * .
+         * .
+         * - doc (아템 목록)
+         *  -- collection (아템 목록)
+         *   --- doc (아템 아이디)
+         * 
+         */
         this.setFireStoreInfo(routeInfo)
         this.getFireStoreInfo()
 
+ 
         this.props.addRecordedRoute(routeInfo)
     }
 

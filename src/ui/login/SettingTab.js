@@ -2,7 +2,10 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Text, StyleSheet, View, StatusBar, SafeAreaView, Button, Image, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
-import { saveUserInfoGoogle } from '../../actions/FriendsActions'
+import { 
+  saveUserInfoGoogle,
+  setPreRouteItems,
+ } from '../../actions/FriendsActions'
 import { bindActionCreators } from 'redux'; 
 
 import {
@@ -16,7 +19,6 @@ import KakaoLoginButton from './KakaLoginButton'
 import firestore from '@react-native-firebase/firestore'; 
 
 const Stack = createStackNavigator();
-
 
 class SettingTap extends React.Component {
 
@@ -37,8 +39,16 @@ class SettingTap extends React.Component {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      
+
       this.props.saveUserInfoGoogle(userInfo)
+
+
+      /**
+       * 여기서 로그인 완료되면 redux-store에,
+       * 기존의 유저가 가지고 있던 아이템의 정보를 저장해야함.
+       * 
+       * 액션과 리듀서 수정 필요
+       */
       
       this.props.navigation.navigate('BottomTapNavigator')
     } catch (error) {
@@ -53,6 +63,13 @@ class SettingTap extends React.Component {
       }
     }
   };
+
+  loadPreRouteItems = () => {
+
+ 
+
+    this.props.setPreRouteItems()
+  }
 
   signOut = async () => {
     try {
@@ -73,6 +90,8 @@ class SettingTap extends React.Component {
 
     return collectionID;
   }
+
+  ㅁㄴㅇㄹㅁㄴㅇㄹㅁㄴㅇㄹ
   
   
 

@@ -7,7 +7,10 @@ import {
     ADD_FRIEND, 
     SAVE_USER_INFO_GOOGLE, 
     SAVE_USER_INFO_KAKAO,
-    ADD_RECORDED_ROUTE } from '../actions/types'
+    ADD_RECORDED_ROUTE,
+    LOAD_ROUTE_ITEMS
+} from '../actions/types'
+
 /**
  * INITIAL_STATE variable with possible friends to add to your social network
  */
@@ -101,14 +104,21 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
                 routeCoordinates : routeCoordinates})
           
             return Object.assign({}, state, routeItem)
-            /**&
-             * latlng 배열을 받는다 + 시간별 위치,거리,속도
-             * 가장 첫번째와 마지막의 latlng을 출발 도착지로 설정한다
-             * 경로상 가장 동서남북인 쪽으 각각 구하고 전체맵상 북서쪽 남동쪽을 구한다
-             * 위에서 구한 값으로 지도의 배율을 맞춘다.
-             * 경로상 중간으 ㅣ위치를 맵의 중간으로 잡는다
-             * 출발 도착에 핀을 꽂는다
-             */             
+
+    
+        case LOAD_ROUTE_ITEMS :
+
+        /**
+         * fireStore로부터 받은 아이템의 정보로,
+         * state값을 덮어준다.
+         */
+            const routeItems = action.payload
+        
+            return Object.assign({}, routeItems)
+
+
+
+
 
         default:
             return state
