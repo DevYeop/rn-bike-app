@@ -26,6 +26,7 @@
     "expo-location": "~8.2.1",
     "expo-task-manager": "~8.3.0",
     "haversine": "^1.1.1",
+    "mariadb": "^2.4.2",
     "react": "16.13.1",
     "react-native": "^0.63.2",
     "react-native-action-button": "^2.8.5",

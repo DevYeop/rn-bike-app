@@ -25,7 +25,6 @@ class KakaLoginButton extends React.Component {
                     .then(result => {
                         this.props.saveUserInfoKakao(result)
                         this.props.navigation.navigate('BottomTapNavigator')
-
                     })
                     .catch(err => {
                         console.log(err)
@@ -42,6 +41,10 @@ class KakaLoginButton extends React.Component {
 
     render() {
         return (
+
+            /**
+             * 카카오 버튼으로 바꿔야 함.
+             */
             <NativeButton
                 isLoading={false}
                 onPress={() => this.kakaoLogin()}

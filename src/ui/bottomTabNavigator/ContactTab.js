@@ -19,17 +19,17 @@ class ContactTap extends Component {
     this.state = {
       userInfo: {},
       calls: [
-        { id: 1, name: "마이크", status: "active", image: "https://ca.slack-edge.com/T6TPDPPSL-U012FDZ8ZFY-gd91ba12a15f-512" },
-        { id: 2, name: "길버트", status: "active", image: "https://ca.slack-edge.com/T6TPDPPSL-U016D3J0V70-d60770cf7eb6-512" },
-        { id: 3, name: "매튜", status: "active", image: "https://ca.slack-edge.com/T6TPDPPSL-UNTQY9CQ3-7166ae8bba92-512" },
-        { id: 4, name: "할리", status: "active", image: "https://ca.slack-edge.com/T6TPDPPSL-U019G7HDU81-371bb17a9475-512" },
-        { id: 5, name: "지쿠터1", status: "inactive", image: "https://gbike.io/index_files/5c456b32d027f.png" },
-        { id: 6, name: "지쿠터2", status: "inactive", image: "https://gbike.io/index_files/5c456b32d027f.png" },
-        { id: 8, name: "지쿠터3", status: "inactive", image: "https://gbike.io/index_files/5c456b32d027f.png" },
-        { id: 9, name: "지쿠터4", status: "inactive", image: "https://gbike.io/index_files/5c456b32d027f.png" },
-        { id: 10, name: "지쿠터5", status: "inactive", image: "https://gbike.io/index_files/5c456b32d027f.png" },
-        { id: 11, name: "지쿠터6", status: "inactive", image: "https://gbike.io/index_files/5c456b32d027f.png" },
-        { id: 12, name: "지쿠터7", status: "inactive", image: "https://gbike.io/index_files/5c456b32d027f.png" },
+        // { id: 1, name: "마이크", status: "active", image: "https://ca.slack-edge.com/T6TPDPPSL-U012FDZ8ZFY-gd91ba12a15f-512" },
+        // { id: 2, name: "길버트", status: "active", image: "https://ca.slack-edge.com/T6TPDPPSL-U016D3J0V70-d60770cf7eb6-512" },
+        // { id: 3, name: "매튜", status: "active", image: "https://ca.slack-edge.com/T6TPDPPSL-UNTQY9CQ3-7166ae8bba92-512" },
+        // { id: 4, name: "할리", status: "active", image: "https://ca.slack-edge.com/T6TPDPPSL-U019G7HDU81-371bb17a9475-512" },
+        // { id: 5, name: "지쿠터1", status: "inactive", image: "https://gbike.io/index_files/5c456b32d027f.png" },
+        // { id: 6, name: "지쿠터2", status: "inactive", image: "https://gbike.io/index_files/5c456b32d027f.png" },
+        // { id: 8, name: "지쿠터3", status: "inactive", image: "https://gbike.io/index_files/5c456b32d027f.png" },
+        // { id: 9, name: "지쿠터4", status: "inactive", image: "https://gbike.io/index_files/5c456b32d027f.png" },
+        // { id: 10, name: "지쿠터5", status: "inactive", image: "https://gbike.io/index_files/5c456b32d027f.png" },
+        // { id: 11, name: "지쿠터6", status: "inactive", image: "https://gbike.io/index_files/5c456b32d027f.png" },
+        // { id: 12, name: "지쿠터7", status: "inactive", image: "https://gbike.io/index_files/5c456b32d027f.png" },
       ],
     };
     this.contactList = this.contactList.bind(this);
@@ -69,9 +69,7 @@ class ContactTap extends Component {
       /**
        *  todo : 유저의 정보를 나타네는 컴포넌트를 모듈화 해야함.
        */
-      <View style={{ flex: 1 }} >
-        {console.log('컨택트탭 this.props.userInfo')}
-        {console.log(this.props.userInfo)}
+      <View style={{ flex: 1 }} > 
         <TouchableOpacity onPress={this.goToProfileScreen}>
           <View style={styles.row}>
             <Image source={{ uri: this.props.userInfo.profile_image_url }} style={styles.pic} />

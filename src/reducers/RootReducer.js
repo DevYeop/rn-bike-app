@@ -3,35 +3,31 @@
  * The reducer is instrumental in keeping the current state of friends updated throughout the app as it changes.
  */
 import { combineReducers } from 'redux';
-import { ADD_FRIEND, SAVE_USER_INFO, SAVE_USER_INFO_GOOGLE, SAVE_USER_INFO_KAKAO } from '../actions/types'
+import { 
+    ADD_FRIEND, 
+    SAVE_USER_INFO_GOOGLE, 
+    SAVE_USER_INFO_KAKAO,
+    ADD_RECORDED_ROUTE } from '../actions/types'
 /**
  * INITIAL_STATE variable with possible friends to add to your social network
  */
 const INITIAL_SATTE = {
-    user: {
-        photo: 'none',
-        email: 'none-email',
-        name: 'none-name',
-        id: 'none-id',
-    },
     id:'',
     email:'',
     nickname:'',
     profile_image_url:'',
-
+    routeItem:[],
 }
-
+ 
 const RootReducer = (state = INITIAL_SATTE, action) => {
 
     console.log('리듀서 state.status')
     console.log(state)
+    console.log('리듀서 action.type')
+    console.log(action.type)
     console.log('리듀서 action.payload')
     console.log(action.payload)
-    // console.log(action)
-
     
-    
-
     switch (action.type) {
         /**
          * pulls the current and possible friends out of the previous state. 
@@ -79,6 +75,41 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
 
             return Object.assign({}, state, kakaoUserInfo)
  
+
+        case ADD_RECORDED_ROUTE:
+ 
+            let {routeItem} = state
+
+            const {routeCoordinates} = action.payload
+            const {boundInfo} = action.payload
+            const {deltaInfo} = action.payload
+            const {centerInfo} = action.payload
+            const {distance} = action.payload
+            const {lapTime} = action.payload
+            const {speedArray} = action.payload
+            const {avgSpeed} = action.payload
+  
+            routeItem.push({ 
+                id: routeItem.length+1, 
+                boundInfo : boundInfo ,
+                deltaInfo : deltaInfo ,
+                centerInfo : centerInfo,
+                avgSpeed : avgSpeed,
+                distance : distance,
+                lapTime : lapTime,
+                speedArray : speedArray,
+                routeCoordinates : routeCoordinates})
+          
+            return Object.assign({}, state, routeItem)
+            /**&
+             * latlng 배열을 받는다 + 시간별 위치,거리,속도
+             * 가장 첫번째와 마지막의 latlng을 출발 도착지로 설정한다
+             * 경로상 가장 동서남북인 쪽으 각각 구하고 전체맵상 북서쪽 남동쪽을 구한다
+             * 위에서 구한 값으로 지도의 배율을 맞춘다.
+             * 경로상 중간으 ㅣ위치를 맵의 중간으로 잡는다
+             * 출발 도착에 핀을 꽂는다
+             */             
+
         default:
             return state
     }
@@ -88,5 +119,6 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
  * exporting friendsReducer as a property called friends.
  */
 export default combineReducers({
-    userInfo: RootReducer
+    userInfo: RootReducer,
+    //todo : reducer도메인별로 분할하고 여기서 합쳐야함,
 })
