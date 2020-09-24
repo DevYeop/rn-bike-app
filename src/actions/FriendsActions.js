@@ -17,17 +17,17 @@ export const addFriend = friendsIndex => (
     } 
 )
 
-export const saveUserInfoGoogle = (userInfo, collectionID) => (
+export const saveUserInfoGoogle = (userInfo) => (
     {
         type: SAVE_USER_INFO_GOOGLE,
-        payload: {userInfo, collectionID}, 
+        payload: userInfo, 
     } 
 )
 
-export const saveUserInfoKakao = (userInfo, collectionID) => (
+export const saveUserInfoKakao = (userInfo) => (
     {
         type: SAVE_USER_INFO_KAKAO,
-        payload: {userInfo, collectionID}, 
+        payload: userInfo, 
     } 
 )
 

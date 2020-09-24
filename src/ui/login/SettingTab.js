@@ -37,10 +37,8 @@ class SettingTap extends React.Component {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-
-      const collectionID = this.setFireStoreCollection(userInfo)
       
-      this.props.saveUserInfoGoogle(userInfo, collectionID)
+      this.props.saveUserInfoGoogle(userInfo)
       
       this.props.navigation.navigate('BottomTapNavigator')
     } catch (error) {
