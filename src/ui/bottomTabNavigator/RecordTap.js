@@ -263,6 +263,7 @@ class RecordTap extends React.Component {
 
 
 
+        this.props.addRecordedRoute(routeInfo)
         /**
          * 여기서 fire-store로 저장해야함. add
          * 
@@ -279,33 +280,36 @@ class RecordTap extends React.Component {
          *   --- doc (아템 아이디)
          * 
          */
-        this.setFireStoreInfo(routeInfo)
-        this.getFireStoreInfo()
+        this.addFireStoreInfo(routeInfo)
+        
 
  
-        this.props.addRecordedRoute(routeInfo)
     }
 
 
-    setFireStoreInfo = routeInfo => {
+    /**
+     * 
+     * @param {*} routeInfo 기존에 가지고 있어던 아이템들의 정보
+     */
+    addFireStoreInfo = routeInfo => {
 
         console.log('setFireStoreInfo this.props.userInfo.routeItem')
         console.log(this.props.userInfo.routeItem)
 
         const preRouteInfo = this.props.userInfo.routeItem
 
-        const citiesRef = firestore().collection(this.props.userInfo.id);
+        const itemsRef = firestore().collection(this.props.userInfo.id);
 
-        citiesRef.doc("routeInfo").set(
+        itemsRef.doc("routeInfo").set(
             { preRouteInfo }
         );
     }
 
     getFireStoreInfo = () => {
 
-        const citiesRef = firestore().collection(this.props.userInfo.id).doc("routeInfo");
+        const itemsRef = firestore().collection(this.props.userInfo.id).doc("routeInfo");
 
-        citiesRef.get().then(function (doc) {
+        itemsRef.get().then(function (doc) {
             if (doc.exists) {
                 console.log("Document data:", doc.data());
             } else {
