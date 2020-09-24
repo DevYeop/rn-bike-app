@@ -86,6 +86,7 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
             const {centerInfo} = action.payload
             const {distance} = action.payload
             const {lapTime} = action.payload
+            const {speedArray} = action.payload
   
             routeItem.push({ 
                 id: routeItem.length+1, 
@@ -94,6 +95,7 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
                 centerInfo : centerInfo,
                 distance : distance,
                 lapTime : lapTime,
+                speedArray : speedArray,
                 routeCoordinates : routeCoordinates})
           
             return Object.assign({}, state, routeItem)

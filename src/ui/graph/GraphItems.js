@@ -52,36 +52,22 @@ class GraphDetail extends Component {
 
   })
 
-  getLapTime(item) {
+  // getLapTime(item) {
+
+  //   let lapTimeString = ''
+
+  //   if(item.hour != 0){
+  //     lapTimeString = item.hour+'시 '
+  //   }
+  //   if(item.min != 0){
+  //     lapTimeString += item.min+'분 '
+  //   }
+  //   if(item.sec != 0){
+  //     lapTimeString += item.sec+'초'
+  //   }
     
-    let lapTimeString = ''
-
-    console.log("랩ㅌ임")
-    console.log(item)
- 
-    
-    if(item.hour == 0){
-      console.log("0시간")
-    }else{
-      lapTimeString = item.hour+'시 '
-    }
-
-    if(item.min == 0){
-      console.log("0분")
-    }else{
-      lapTimeString += item.min+'분 '
-    }
-
-    if(item.sec == 0){
-      console.log("0초")
-    }else{
-      lapTimeString += item.sec+'초'
-    }
-
-    return lapTimeString;
-
-
-  }
+  //   return lapTimeString;
+  // }
 
   renderItem = ({ item }) => {
     return (
@@ -124,7 +110,7 @@ class GraphDetail extends Component {
           <View>
             <View style={styles.nameContainer}>
               <Text>거리 : {item.distance}m</Text>
-              <Text>시간 : {this.getLapTime(item.lapTime)}</Text>
+              <Text>시간 : {item.lapTime}</Text>
               <Text>평균속도 : {} km/h</Text>
             </View>
           </View>

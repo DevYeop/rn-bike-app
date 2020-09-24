@@ -37,6 +37,7 @@ class RecordTap extends React.Component {
             countDone: true,
             latitude: LATITUDE,
             longitude: LONGITUDE,
+            speedArray: [],
             routeCoordinates: [],           // 녹화된 드라이빙 코스의 경위도 좌표 집합.
             distanceTravelled: 0,           // 드라이브 코스의 총 직선거리. 
             prevLatLng: {},
@@ -64,7 +65,7 @@ class RecordTap extends React.Component {
 
         this.watchID = Geolocation.watchPosition(
             position => {
-                const { routeCoordinates, distanceTravelled } = this.state;
+                const { routeCoordinates, distanceTravelled, speedArray } = this.state;
                 const { latitude, longitude, heading, speed } = position.coords;
 
                 const newCoordinate = {
@@ -85,9 +86,7 @@ class RecordTap extends React.Component {
                     longitude,
                     heading,
                     speed,
-                    /**
-                     * 경위도 하나당 x 값으로 쓸 데이터 하나 추가하면 좋을 듯.
-                     */
+                    speedArray: speedArray.concat(parseInt(speed)),
                     routeCoordinates: routeCoordinates.concat([newCoordinate]),
                     distanceTravelled:
                         distanceTravelled + this.calcDistance(newCoordinate),
@@ -174,26 +173,27 @@ class RecordTap extends React.Component {
     }
 
     stopRecording() {
+ 
+        this.setState({
+            recordStatus: false
+        })
 
+        Geolocation.clearWatch(this.watchID); 
 
+        this.resetPolyline()
+
+        this.getRouteInfo()
+        
+    }
+
+    getLapTime() {
 
         const stopRecordMilli = new Date().getTime();
-
         const timeGap = stopRecordMilli -  this.state.startRecordMilli
-        
-
-        console.log('걸린시간')
-        console.log(timeGap)
-
+ 
         const hour = Math.floor((timeGap/1000/60/60) << 0)
         const min = Math.floor((timeGap/1000/60) << 0)
         const sec = Math.floor((timeGap/1000) % 60)
-
-        console.log('분')
-        console.log(min)
-
-        console.log('초')
-        console.log(sec)
 
         const lapTime = {
             hour : hour,
@@ -201,36 +201,34 @@ class RecordTap extends React.Component {
             sec : sec,
         }
 
-          /**
-         * todo : 여기서 시작 측정 중단
-         * - 시작-중단 시간의 간격구하기
-         */
-
-        this.setState({
-            recordStatus: false
-        })
-        Geolocation.clearWatch(this.watchID); 
+        let lapTimeString = ''
+    
+        if(hour != 0){
+          lapTimeString = hour+'시 '
+        }
+        if(min != 0){
+          lapTimeString += min+'분 '
+        }
+        if(sec != 0){
+          lapTimeString += sec+'초'
+        }
         
-        console.log('총 이동거리')
-        console.log(this.state.distanceTravelled)
-
-
-        this.resetPolyline()
-        this.calculateRouteInfo(this.state.routeCoordinates, lapTime)
-    }
+        return lapTimeString;
+      }
 
     resetPolyline() {
         this.setState({
             routeCoordinates: [],
             distanceTravelled: 0,
+            speedArray: [],
         })
     }
+ 
+    getRouteInfo = () => {
 
-    /**
-     * 
-     * @param {*} info 
-     */
-    calculateRouteInfo = (info, lapTime) => {
+        const lapTime = this.getLapTime()
+        const info = this.state.routeCoordinates
+  
         let minLat = info[0].latitude 
         let maxLat = info[0].latitude
         let minLong= info[0].longitude
@@ -295,6 +293,7 @@ class RecordTap extends React.Component {
         const boundInfo = {northEast: northEast, southWest: southWest}
 
         const routeInfo = {
+            speedArray : this.state.speedArray,
             lapTime : lapTime,
             routeCoordinates: this.state.routeCoordinates,
             distance: distance, 

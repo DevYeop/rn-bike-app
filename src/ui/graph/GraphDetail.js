@@ -16,12 +16,7 @@ import { bindActionCreators } from 'redux';
 import { Dimensions } from 'react-native';
 
 import {
-  LineChart,
-  BarChart,
-  PieChart,
-  ProgressChart,
-  ContributionGraph,
-  StackedBarChart
+  LineChart
 } from "react-native-chart-kit";
 
 
@@ -64,12 +59,8 @@ class GraphDetail extends Component {
 
   render() {
     return (
-
-
-
-
       <View style={styles.rootContainer}>
-        {console.log('클릭된 아이템으로부터 받은 props'),
+        {console.log('클릭된 아이템의 this.props.route.params.routeInfo'),
           console.log(this.props.route.params.routeInfo)}
         <View style={styles.mapContainer}>
           <MapView style={styles.map}
@@ -111,26 +102,26 @@ class GraphDetail extends Component {
         <View style={styles.graphContainer}>
           <View>
             <LineChart
-              // 이거 하고 안하고 차이가 뭐지?
-              // bezier
+
+              segments = {5}
+
               data={{
-                labels: ["January", "February", "March", "April", "May", "June"],
+                labels: ["0", "", "", "", "","","","","", this.props.route.params.routeInfo.lapTime],
                 datasets: [
                   {
-                    data: [
-                      Math.random() * 100,
-                      Math.random() * 100,
-                      Math.random() * 100,
-                      Math.random() * 100,
-                      Math.random() * 100,
-                      Math.random() * 100
-                    ]
+                    data : this.props.route.params.routeInfo.speedArray
                   }
                 ]
               }}
-              width={screenWidth} // from react-native
-              height={screenHeight / 2}
-              yAxisLabel="$"
+              
+              fromZero={true}
+              yLabelsOffset={1}
+              withDots={false}
+              withInnerLines={false}
+ 
+              width={screenWidth}  
+              height={screenHeight/2}
+ 
               yAxisSuffix="km/h"
               yAxisInterval={1} // optional, defaults to 1
 
@@ -145,15 +136,16 @@ class GraphDetail extends Component {
                   borderRadius: 16
                 },
                 propsForDots: {
-                  r: "6",
-                  strokeWidth: "2",
+                  r: "10",
+                  strokeWidth: "1",
                   stroke: "#ffa726"
                 }
               }}
-              bezier
+
+              bezier // ???
+
               style={{
-                marginVertical: 8,
-                borderRadius: 16
+               // 이쁜거 찾자.
               }}
             />
           </View>
