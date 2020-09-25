@@ -389,7 +389,7 @@ class RecordTap extends React.Component {
     getRoadAPI  = routeCoordinates => { 
 
 
-        let newRouteCoordinates = 'path='
+        let newRouteCoordinates = 'points='
 
         console.log('routeCoordinates lenth',routeCoordinates.length)
         
@@ -419,22 +419,27 @@ class RecordTap extends React.Component {
         // const roadAPIpullPath = url+params+option+key
 
 
-        const url = 'https://roads.googleapis.com/v1/snapToRoads?'
+        // const url = 'https://roads.googleapis.com/v1/snapToRoads?'
+        const url = 'https://roads.googleapis.com/v1/nearestRoads?'
         const params1 = newRouteCoordinates
  
         const params2 = 'path=-35.27801,149.12958|-35.28032,149.12907|-35.28099,149.12929|-35.28144,149.12984|-35.28194,149.13003|-35.28282,149.12956|-35.28302,149.12881|-35.28473,149.12836'
-         
+        const params21 = 'points=35.461337,-97.533734|35.462222,-97.531993'// 호주 좌표
+        const params22 = 'points=37.480483,126.930500|37.481247,126.930420'// 울나라 좌표
+        const params23 = 'points=35.343465,137.095879|35.344012,137.098465'// 닛본 좌표
+       
+
         
-        const params3 = 'path=37.575695,126.983571|37.576004,126.984328|37.576445,126.985374|37.576400,126.986200|37.576400,126.986200|37.574609,126.986849'
+        const params3 = 'points=37.575695,126.983571|37.576004,126.984328|37.576445,126.985374|37.576400,126.986200|37.576400,126.986200|37.574609,126.986849'
         const params4 = 'path=29.759326,-95.368095|29.758332,-95.368954|29.757584,-95.369530|29.756243,-95.370550'
  
- 
-        
+        // 
 
-        const option = '&interpolate=false&'
-        const key = 'key=AIzaSyCiBqROXrj7009fX49-BxlGpd1NyhIldYA'
-        const roadAPIpullPath = url+params4+option+key
-  
+        // const option = '&interpolate=true&'
+        const key = '&key=AIzaSyCiBqROXrj7009fX49-BxlGpd1NyhIldYA'
+        const roadAPIpullPath = url+params21+key
+   
+
         /**
          * todo : 녹화 중에 계속 road api를 호출하지 않았으면 좋겟는데.. 잠시보류
          */
@@ -444,8 +449,8 @@ class RecordTap extends React.Component {
             console.log('json');
             console.log(json);   
 
-            // 아니 이 놈이 왜 우리나라 좌표만 차별하나..
-            this.setSnappedPoint(json)
+            // 아니 이 놈이 왜 우리나라 좌표만 안돼 지원 끊겻나본데 이거
+            // this.setSnappedPoint(json)
         //   return json.movies;
         })
         .catch((error) => {
