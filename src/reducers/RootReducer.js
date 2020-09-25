@@ -8,7 +8,7 @@ import {
     SAVE_USER_INFO_GOOGLE, 
     SAVE_USER_INFO_KAKAO,
     ADD_RECORDED_ROUTE,
-    LOAD_ROUTE_ITEMS
+    SET_PRE_ROUTE_ITEMS
 } from '../actions/types'
 
 /**
@@ -81,8 +81,11 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
 
         case ADD_RECORDED_ROUTE:
  
-            let {routeItem} = state
+            var {routeItem} = state
 
+            /**
+             * todo : 하나로 묶자
+             */
             const {routeCoordinates} = action.payload
             const {boundInfo} = action.payload
             const {deltaInfo} = action.payload
@@ -92,33 +95,46 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
             const {speedArray} = action.payload
             const {avgSpeed} = action.payload
             const {itemIndex} = action.payload 
-            routeItem.push({ 
+
+            routeItem.push({
                 itemIndex: itemIndex,
-                boundInfo : boundInfo ,
-                deltaInfo : deltaInfo ,
-                centerInfo : centerInfo,
-                avgSpeed : avgSpeed,
-                distance : distance,
-                lapTime : lapTime,
-                speedArray : speedArray,
-                routeCoordinates : routeCoordinates})
-          
+                boundInfo: boundInfo,
+                deltaInfo: deltaInfo,
+                centerInfo: centerInfo,
+                avgSpeed: avgSpeed,
+                distance: distance,
+                lapTime: lapTime,
+                speedArray: speedArray,
+                routeCoordinates: routeCoordinates
+            })
+
             return Object.assign({}, state, routeItem)
 
-    
-        case LOAD_ROUTE_ITEMS :
 
-        /**
-         * fireStore로부터 받은 아이템의 정보로,
-         * state값을 덮어준다.
-         */
-            const routeItems = action.payload
-        
-            return Object.assign({}, routeItems)
+        case SET_PRE_ROUTE_ITEMS:
 
+            var {routeItem} = state
 
+            const preRouteItems = action.payload
+ 
+            for (var i = 0 ; i < preRouteItems.length ; i ++){
+ 
+                routeItem.push({
+                    itemIndex: preRouteItems[i].routeItem.itemIndex,
+                    boundInfo: preRouteItems[i].routeItem.boundInfo,
+                    deltaInfo: preRouteItems[i].routeItem.deltaInfo,
+                    centerInfo: preRouteItems[i].routeItem.centerInfo,
+                    avgSpeed: preRouteItems[i].routeItem.avgSpeed,
+                    distance: preRouteItems[i].routeItem.distance,
+                    lapTime: preRouteItems[i].routeItem.lapTime,
+                    speedArray: preRouteItems[i].routeItem.speedArray,
+                    routeCoordinates: preRouteItems[i].routeItem.routeCoordinates
+                })
 
+            }
 
+            
+            return Object.assign({}, state, routeItem)
 
         default:
             return state

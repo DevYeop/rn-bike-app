@@ -3,7 +3,7 @@ import {
     SAVE_USER_INFO_GOOGLE, 
     SAVE_USER_INFO_KAKAO, 
     ADD_RECORDED_ROUTE,
-    LOAD_ROUTE_ITEMS
+    SET_PRE_ROUTE_ITEMS
  } from './types'
 
 /**
@@ -44,10 +44,10 @@ export const addRecordedRoute = recoredRouteData => (
     } 
 )
 
-export const setPreRouteItems = routeItems => (
+export const setPreRouteItems = preRouteItems => (
     {
-        type: LOAD_ROUTE_ITEMS,
-        payload: recoredRouteData, 
+        type: SET_PRE_ROUTE_ITEMS,
+        payload: preRouteItems, 
     } 
 )
  

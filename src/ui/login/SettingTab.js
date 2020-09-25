@@ -17,9 +17,7 @@ import {
 import KakaoLoginButton from './KakaLoginButton'
 
 import firestore from '@react-native-firebase/firestore'; 
-
-const Stack = createStackNavigator();
-
+ 
 class SettingTap extends React.Component {
 
   constructor(props) {
@@ -34,7 +32,46 @@ class SettingTap extends React.Component {
       forceConsentPrompt: true,
     });
   }
+ 
 
+  // async deleteAll() {
+  //   alert('User deleted!')
+  //   console.log('deleteAll called')
+
+  //   const userIndex = this.props.userInfo.id
+  //   const collectionName = 'routeItemCollection'
+
+  //   firestore()
+  //     .collection(userIndex)
+  //     .delete()
+  //     .then(() => {
+  //       alert('User deleted!')
+  //     });
+  // }
+
+
+  async getPreRouteItems() {
+
+    console.log('getMarker called')
+
+    const userIndex = this.props.userInfo.id
+    const collectionName = 'routeItemCollection_new'
+
+    const snapshot = await firestore().collection(userIndex+collectionName).get()
+    snapshot.docs.map(doc => console.log("docs",doc.data()));
+
+    let preRouteItems = []
+    
+    snapshot.docs.map(doc => preRouteItems.push(doc.data()));
+
+    console.log('preRouteItems', preRouteItems)
+
+    /**
+     * 이전 아이템들의 객체들의 집합을 줘야함.
+     */
+    this.props.setPreRouteItems(preRouteItems)
+}
+  
   _signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
@@ -42,14 +79,14 @@ class SettingTap extends React.Component {
 
       this.props.saveUserInfoGoogle(userInfo)
 
-
-      /**
+       /**
        * 여기서 로그인 완료되면 redux-store에,
        * 기존의 유저가 가지고 있던 아이템의 정보를 저장해야함.
        * 
        * 액션과 리듀서 수정 필요
        */
-      
+      this.getPreRouteItems()
+ 
       this.props.navigation.navigate('BottomTapNavigator')
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -63,14 +100,7 @@ class SettingTap extends React.Component {
       }
     }
   };
-
-  loadPreRouteItems = () => {
-
  
-
-    this.props.setPreRouteItems()
-  }
-
   signOut = async () => {
     try {
       await GoogleSignin.revokeAccess();
@@ -79,84 +109,15 @@ class SettingTap extends React.Component {
       console.error(error);
     }
   };
-
-  setFireStoreCollection = (userInfo) => {
-    
-    console.log('userInfo')
-    console.log(userInfo.user.id)
-
-    const collectionID = userInfo.user.id
-    firestore().collection(collectionID);
-
-    return collectionID;
-  }
-
-  ㅁㄴㅇㄹㅁㄴㅇㄹㅁㄴㅇㄹ
   
-  
-
-  setFireStoreInfo() {
-
-    const citiesRef = firestore().collection('cities1');
-
-    citiesRef.doc("SF").set({
-      name: "San Francisco", state: "CA", country: "USA",
-      capital: false, population: 860000,
-      regions: ["west_coast", "norcal"]
-    });
-    citiesRef.doc("LA").set({
-      name: "Los Angeles", state: "CA", country: "USA",
-      capital: false, population: 3900000,
-      regions: ["west_coast", "socal"]
-    });
-    citiesRef.doc("DC").set({
-      name: "Washington, D.C.", state: null, country: "USA",
-      capital: true, population: 680000,
-      regions: ["east_coast"]
-    });
-    citiesRef.doc("TOK").set({
-      name: "Tokyo", state: null, country: "Japan",
-      capital: true, population: 9000000,
-      regions: ["kanto", "honshu"]
-    });
-    citiesRef.doc("BJ").set({
-      name: "Beijing", state: null, country: "China",
-      capital: true, population: 21500000,
-      regions: ["jingjinji", "hebei"]
-    });
-
-
-  }
-
-
-  
-  getFireStoreInfo = () => {
-
-    const citiesRef = firestore().collection('cities1').doc("SF");
-
-    citiesRef.get().then(function (doc) {
-      if (doc.exists) {
-        console.log("Document data:", doc.data());
-      } else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!");
-      }
-    }).catch(function (error) {
-      console.log("Error getting document:", error);
-    });
-
-  }
-
-
-
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.container}>
- 
-          <Button title='save'onPress={()=>this.setFireStoreInfo()}/>
-          <Button title='load'onPress={()=>this.getFireStoreInfo()}/>
-        
+{/*            
+          <Button title='delete All ' onPress={this.deleteAll}/>
+          */}
+
           <GoogleSigninButton
             style={{ width: 250, height: 50 }}
             size={GoogleSigninButton.Size.Wide}
@@ -177,6 +138,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => (
   bindActionCreators({
     saveUserInfoGoogle,
+    setPreRouteItems
   }, dispatch)
 );
 

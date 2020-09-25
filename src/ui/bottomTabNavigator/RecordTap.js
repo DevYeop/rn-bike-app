@@ -262,8 +262,7 @@ class RecordTap extends React.Component {
             deltaInfo: deltaInfo,
         }
 
-
-
+ 
         this.props.addRecordedRoute(routeInfo)
         /**
          * 여기서 fire-store로 저장해야함. add
@@ -281,7 +280,7 @@ class RecordTap extends React.Component {
          *   --- doc (아템 아이디)
          * 
          */
-        this.addFireStoreInfo(routeInfo)
+        this.addFireStoreInfo(routeInfo) 
  
     }
 
@@ -289,38 +288,59 @@ class RecordTap extends React.Component {
     /**
      * 
      * 
-     * @param {*} routeInfo 기존에 가지고 있어던 아이템들의 정보
+     * @param {*} routeItem 새로 생성된 아이템의 정보
      */
-    addFireStoreInfo = routeInfo => {
+    addFireStoreInfo = routeItem => {
+        console.log('setFireStoreInfo called')
 
-        console.log('setFireStoreInfo this.props.userInfo.routeItem')
-        console.log(this.props.userInfo.routeItem)
+        const userIndex = this.props.userInfo.id
+        const collectionName = 'routeItemCollection_new'
 
-        const preRouteInfo = this.props.userInfo.routeItem
+        const itemIndex = routeItem.itemIndex+''
+        console.log('itemIndex :')
+        console.log(itemIndex)
 
-        const itemsRef = firestore().collection(this.props.userInfo.id);
+        console.log(routeItem)
+ 
+        const itemsRef = firestore().collection(userIndex+collectionName);
 
-        itemsRef.doc("routeInfo").set(
-            { preRouteInfo }
+        itemsRef.doc(itemIndex).set(
+            { routeItem }
         );
     }
 
-    getFireStoreInfo = () => {
+//     async getPreRouteItems() {
 
-        const itemsRef = firestore().collection(this.props.userInfo.id).doc("routeInfo");
+//         console.log('getMarker called')
 
-        itemsRef.get().then(function (doc) {
-            if (doc.exists) {
-                console.log("Document data:", doc.data());
-            } else {
-                // doc.data() will be undefined in this case
-                console.log("No such document!");
-            }
-        }).catch(function (error) {
-            console.log("Error getting document:", error);
-        });
+//         const userIndex = this.props.userInfo.id
+//         const collectionName = 'routeItemCollection'
 
-  }
+//         const snapshot = await firestore().collection(userIndex+collectionName).get()
+//         snapshot.docs.map(doc => console.log("docs",doc.data()));
+//     }
+
+//     getFireStoreInfo = () => {
+
+//         const userIndex = this.props.userInfo.id
+
+//         const itemsRef = firestore().collection(userIndex)
+        
+//         console.log("콜렉션 :");
+//         console.log(itemsRef);
+
+//         itemsRef.get().then(function (doc) {
+//             if (doc.exists) {
+//                 console.log("Document data:", doc.data());
+//             } else {
+//                 // doc.data() will be undefined in this case
+//                 console.log("No such document!");
+//             }
+//         }).catch(function (error) {
+//             console.log("Error getting document:", error);
+//         });
+
+//   }
 
 
 
