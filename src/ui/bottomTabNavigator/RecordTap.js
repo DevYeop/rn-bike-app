@@ -36,6 +36,7 @@ class RecordTap extends React.Component {
             latitude: 0, // todo : 유저 현 위치의 latlong으로 설정해야 함
             longitude: 0,
             speedArray: [],
+            snappedRouteCoordinates : [],
             routeCoordinates: [],           // 녹화된 드라이빙 코스의 경위도 좌표 집합.
             distanceTravelled: 0,           // 드라이브 코스의 총 직선거리. 
             prevLatLng: {},
@@ -250,6 +251,16 @@ class RecordTap extends React.Component {
         const lapTime = this.getLapTime()
         const avgSpeed = this.getAvgSpeed()
 
+
+        /**
+         * 여기서 routecorodinate를 roead로 스냅후 전달할 것
+         * 
+         */
+
+        this.getRoadAPI(this.state.routeCoordinates)
+
+
+         
         const routeInfo = {
             itemIndex : this.state.startRecordMilli,
             speedArray : this.state.speedArray,
@@ -374,22 +385,122 @@ class RecordTap extends React.Component {
         )
     }
 
-    getRoadAPI  = () => { 
+    getRoadAPI  = routeCoordinates => { 
+
+
+        let newRouteCoordinates = 'path='
+
+        console.log('routeCoordinates lenth',routeCoordinates.length)
+        
+        let routeLatitue = ''
+        let routeLongitude = ''
+
+    for (var i = 0 ; i < routeCoordinates.length ; i++){
+        
+        routeLatitue   = routeCoordinates[i].latitude+','
+
+        if( i == routeCoordinates.length-1){
+            routeLongitude = routeCoordinates[i].longitude  
+        }else{
+            routeLongitude = routeCoordinates[i].longitude+'|'  
+        }
+        
+        newRouteCoordinates += routeLatitue+routeLongitude
+        // newRouteCoordinates = 
+    }
+
+        console.log('newRouteCoordinates',newRouteCoordinates)
+
+        // const url = 'https://roads.googleapis.com/v1/snapToRoads?'
+        // const params = newRouteCoordinates
+        // const option = '&interpolate=true&'
+        // const key = 'key=AIzaSyCiBqROXrj7009fX49-BxlGpd1NyhIldYA'
+        // const roadAPIpullPath = url+params+option+key
+
+
+        const url = 'https://roads.googleapis.com/v1/snapToRoads?'
+        const params1 = 'path=-35.27801,149.12958|-35.28032,149.12907|-35.28099,149.12929|-35.28144,149.12984|-35.28194,149.13003|-35.28282,149.12956|-35.28302,149.12881|-35.28473,149.12836'
+ 
+        const params2 =    'path=37.564685116405464,126.98243124521284|37.564685116405464,126.98243124521284|37.56486754020817,126.9824748607508|37.56486754020817,126.9824748607508'
+        const option = '&interpolate=true&'
+        const key = 'key=AIzaSyCiBqROXrj7009fX49-BxlGpd1NyhIldYA'
+        const roadAPIpullPath = url+params2+option+key
+ 
+        let jsonObj;
+
         /**
          * todo : 녹화 중에 계속 road api를 호출하지 않았으면 좋겟는데.. 잠시보류
          */
-        fetch('https://roads.googleapis.com/v1/snapToRoads?path=-35.27801,149.12958|-35.28032,149.12907|-35.28099,149.12929|-35.28144,149.12984|-35.28194,149.13003|-35.28282,149.12956|-35.28302,149.12881|-35.28473,149.12836&interpolate=true&key=AIzaSyCiBqROXrj7009fX49-BxlGpd1NyhIldYA')
+        fetch(roadAPIpullPath)
         .then((response) => response.json())
         .then((json) => {
             console.log('json');
             console.log(json);  
-          return json.movies;
+            jsonObj = json; 
+            this.setSnappedPoint(jsonObj)
+        //   return json.movies;
         })
         .catch((error) => {
           console.error(error);
         });
 
-        alert('getRoadAPI')
+        
+
+        // alert('getRoadAPI')
+    }
+
+    setSnappedPoint = (jsonObj) => {
+
+        console.log('jsonObj',jsonObj)
+
+        console.log('jsonObj.snappedPoints',jsonObj.snappedPoints)
+        
+        const snappedPoints = jsonObj.snappedPoints
+        const snappedPointArray = []
+
+        let snappedPoint = {
+            latitude:0,
+            longitude:0,
+        };
+
+        let snappedLat
+        let snappedLong
+
+        for (var i = 0; i < snappedPoints.length; i++) {
+             
+            snappedLat = snappedPoints[i].location.latitude
+            snappedLong = snappedPoints[i].location.longitude
+ 
+            snappedPoint.latitude = snappedLat
+            snappedPoint.longitude = snappedLong
+
+            snappedPointArray.push(snappedPoint)
+
+        }
+
+        console.log('snappedPointArray', snappedPointArray)
+ 
+
+        this.setState({
+            snappedRouteCoordinates : snappedPointArray
+        })
+
+        // this.setState({
+        //     latitude,
+        //     longitude,
+        //     heading,
+        //     speed, // todo : 유저가 정지해 있을 때 0으로 set 해줘야함.
+        //     speedArray: speedArray.concat(parseInt(speed)),
+        //     routeCoordinates: routeCoordinates.concat([newCoordinate]),
+        //     distanceTravelled:
+        //         distanceTravelled + this.calcDistance(newCoordinate),
+        //     prevLatLng: newCoordinate
+        // });
+
+        
+
+        
+        
     }
 
     render() {
@@ -407,7 +518,11 @@ class RecordTap extends React.Component {
                     zoomControlEnabled={true}
                     rotateEnabled={true}
                     camera={this.getMapCamera()}>
+                      
+                    <Polyline coordinates={this.state.snappedRouteCoordinates} strokeWidth={12} strokeColor="#4334eb" />
+
                     <Polyline coordinates={this.state.routeCoordinates} strokeWidth={6} strokeColor="#fc3d03" />
+
                 </MapView>
                 <Text style={styles.speed}>{this.showSpeed()}km/h</Text>
                 <ActionButton

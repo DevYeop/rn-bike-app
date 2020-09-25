@@ -121,9 +121,7 @@ class GraphDetail extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1 }} >
-        {console.log('this.props.routeInfo.routeItem')}
-        {console.log(this.props.userInfo)}
+      <View style={{ flex: 1 }} > 
         <FlatList
           data={this.props.userInfo.routeItem}
           keyExtractor={item => {
