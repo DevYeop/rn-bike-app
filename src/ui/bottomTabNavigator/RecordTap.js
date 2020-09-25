@@ -251,6 +251,7 @@ class RecordTap extends React.Component {
         const avgSpeed = this.getAvgSpeed()
 
         const routeInfo = {
+            itemIndex : this.state.startRecordMilli,
             speedArray : this.state.speedArray,
             avgSpeed : avgSpeed,
             lapTime : lapTime,
@@ -281,13 +282,12 @@ class RecordTap extends React.Component {
          * 
          */
         this.addFireStoreInfo(routeInfo)
-        
-
  
     }
 
 
     /**
+     * 
      * 
      * @param {*} routeInfo 기존에 가지고 있어던 아이템들의 정보
      */

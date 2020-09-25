@@ -127,7 +127,7 @@ class GraphDetail extends Component {
         <FlatList
           data={this.props.userInfo.routeItem}
           keyExtractor={item => {
-            return item.id;
+            return item.itemIndex;
           }}
           renderItem={this.renderItem} />
       </View>
