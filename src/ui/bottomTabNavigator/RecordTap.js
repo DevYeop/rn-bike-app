@@ -24,7 +24,8 @@ import { bindActionCreators } from 'redux';
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 import firestore from '@react-native-firebase/firestore';
-  
+
+ 
 class RecordTap extends React.Component {
     constructor(props) {
         super(props);
@@ -419,15 +420,21 @@ class RecordTap extends React.Component {
 
 
         const url = 'https://roads.googleapis.com/v1/snapToRoads?'
-        const params1 = 'path=-35.27801,149.12958|-35.28032,149.12907|-35.28099,149.12929|-35.28144,149.12984|-35.28194,149.13003|-35.28282,149.12956|-35.28302,149.12881|-35.28473,149.12836'
+        const params1 = newRouteCoordinates
  
-        const params2 =    'path=37.564685116405464,126.98243124521284|37.564685116405464,126.98243124521284|37.56486754020817,126.9824748607508|37.56486754020817,126.9824748607508'
-        const option = '&interpolate=true&'
-        const key = 'key=AIzaSyCiBqROXrj7009fX49-BxlGpd1NyhIldYA'
-        const roadAPIpullPath = url+params2+option+key
+        const params2 = 'path=-35.27801,149.12958|-35.28032,149.12907|-35.28099,149.12929|-35.28144,149.12984|-35.28194,149.13003|-35.28282,149.12956|-35.28302,149.12881|-35.28473,149.12836'
+         
+        
+        const params3 = 'path=37.575695,126.983571|37.576004,126.984328|37.576445,126.985374|37.576400,126.986200|37.576400,126.986200|37.574609,126.986849'
+        const params4 = 'path=29.759326,-95.368095|29.758332,-95.368954|29.757584,-95.369530|29.756243,-95.370550'
  
-        let jsonObj;
+ 
+        
 
+        const option = '&interpolate=false&'
+        const key = 'key=AIzaSyCiBqROXrj7009fX49-BxlGpd1NyhIldYA'
+        const roadAPIpullPath = url+params4+option+key
+  
         /**
          * todo : 녹화 중에 계속 road api를 호출하지 않았으면 좋겟는데.. 잠시보류
          */
@@ -435,9 +442,10 @@ class RecordTap extends React.Component {
         .then((response) => response.json())
         .then((json) => {
             console.log('json');
-            console.log(json);  
-            jsonObj = json; 
-            this.setSnappedPoint(jsonObj)
+            console.log(json);   
+
+            // 아니 이 놈이 왜 우리나라 좌표만 차별하나..
+            this.setSnappedPoint(json)
         //   return json.movies;
         })
         .catch((error) => {
@@ -449,13 +457,11 @@ class RecordTap extends React.Component {
         // alert('getRoadAPI')
     }
 
-    setSnappedPoint = (jsonObj) => {
-
-        console.log('jsonObj',jsonObj)
-
-        console.log('jsonObj.snappedPoints',jsonObj.snappedPoints)
+    setSnappedPoint = (json) => {
+ 
+        console.log('json.snappedPoints',json.snappedPoints)
         
-        const snappedPoints = jsonObj.snappedPoints
+        const snappedPoints = json.snappedPoints
         const snappedPointArray = []
 
         let snappedPoint = {
@@ -478,12 +484,18 @@ class RecordTap extends React.Component {
 
         }
 
+ 
+
         console.log('snappedPointArray', snappedPointArray)
  
 
         this.setState({
-            snappedRouteCoordinates : snappedPointArray
+            snappedRouteCoordinates: snappedPointArray,
+            latitude: snappedPointArray[0].latitude,
+            longitude: snappedPointArray[0].longitude,
         })
+
+        console.log('스냅 후 state ', this.state)
 
         // this.setState({
         //     latitude,
@@ -519,8 +531,11 @@ class RecordTap extends React.Component {
                     rotateEnabled={true}
                     camera={this.getMapCamera()}>
                       
+                      {
+                          console.log('스냅 데이터', this.state.snappedRouteCoordinates)
+                      }
                     <Polyline coordinates={this.state.snappedRouteCoordinates} strokeWidth={12} strokeColor="#4334eb" />
-
+ 
                     <Polyline coordinates={this.state.routeCoordinates} strokeWidth={6} strokeColor="#fc3d03" />
 
                 </MapView>
