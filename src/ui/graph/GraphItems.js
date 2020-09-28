@@ -34,11 +34,7 @@ class GraphDetail extends Component {
 
     this.props.navigation.navigate('GraphDetail',{
       routeInfo : item,
-      /**
-       * 디테일 화면에 넘겨줄 정보들 여다가 ㅇㅇ
-       */
-    // itemId: 86,
-    // otherParam: 'anything you want here',
+    
     })
     
   }

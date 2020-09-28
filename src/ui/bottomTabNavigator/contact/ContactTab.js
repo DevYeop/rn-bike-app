@@ -13,7 +13,6 @@ import { connect } from 'react-redux';
 
 class ContactTap extends Component {
 
-  
   constructor(props) {
     super(props);
     this.state = {
@@ -36,19 +35,22 @@ class ContactTap extends Component {
   }
 
   goToProfileScreen = () => {
-    alert('profileScreen 필요')
+    this.props.navigation.navigate('UserProfile')
   }
 
   renderItem = ({ item }) => {
     const Stack = createStackNavigator();
     return (
       <TouchableOpacity onPress={this.goToProfileScreen}>
+        {
+          console.log('contact props', item)
+        }
         <View style={styles.row}>
           <Image source={{ uri: item.image }} style={styles.pic} />
           <View>
             <View style={styles.nameContainer}>
-              <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
-              <Text style={styles.mblTxt}>G지빌리티</Text>
+              <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail">{item.nickname}</Text>
+              <Text style={styles.mblTxt}>{item.id}</Text>
             </View>
             <View style={styles.msgContainer}>
               <Text style={styles.msgTxt}>{item.status}</Text>
@@ -70,7 +72,6 @@ class ContactTap extends Component {
        *  todo : 유저의 정보를 나타네는 컴포넌트를 모듈화 해야함.
        */
       <View style={{ flex: 1 }} > 
-
       {
         console.log('contact this.props'),
         console.log(this.props)
@@ -91,12 +92,14 @@ class ContactTap extends Component {
         </TouchableOpacity>
  
         <FlatList
-          extraData={this.state}
-          data={this.state.calls}
+          
+          data={this.props.userInfo.contactList}
           keyExtractor={(item) => {
             return item.id;
           }}
           renderItem={this.renderItem} />
+ 
+
       </View>
     );
   }

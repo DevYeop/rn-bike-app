@@ -5,7 +5,7 @@ import KakaoLogins, { KAKAO_AUTH_TYPES } from '@react-native-seoul/kakao-login';
 import NativeButton from 'apsl-react-native-button';
 
 import { connect } from 'react-redux';
-import { saveUserInfoKakao } from '../../actions/FriendsActions'
+import { saveUserInfoKakao } from '../../actions/Actions'
 import { bindActionCreators } from 'redux';
 
 if (!KakaoLogins) {

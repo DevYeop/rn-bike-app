@@ -19,7 +19,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 
 import { connect } from 'react-redux';
-import { addRecordedRoute } from '../../actions/FriendsActions'
+import { addRecordedRoute } from '../../actions/Actions'
 import { bindActionCreators } from 'redux'; 
 import { TouchableOpacity } from "react-native-gesture-handler";
 
@@ -275,27 +275,11 @@ class RecordTap extends React.Component {
         }
 
  
-        this.props.addRecordedRoute(routeInfo)
-        /**
-         * 여기서 fire-store로 저장해야함. add
-         * 
-         * 
-         * collection(유저 아이디)
-         * - doc
-         * - doc
-         * - doc (유저 정보)
-         * .
-         * .
-         * .
-         * - doc (아템 목록)
-         *  -- collection (아템 목록)
-         *   --- doc (아템 아이디)
-         * 
-         */
+        this.props.addRecordedRoute(routeInfo) 
+
         this.addFireStoreInfo(routeInfo) 
  
     }
-
 
     /**
      * 
@@ -320,6 +304,8 @@ class RecordTap extends React.Component {
             { routeItem }
         );
     }
+
+    
 
 //     async getPreRouteItems() {
 
@@ -420,7 +406,7 @@ class RecordTap extends React.Component {
 
 
         // const url = 'https://roads.googleapis.com/v1/snapToRoads?'
-        const url = 'https://roads.googleapis.com/v1/nearestRoads?'
+        const url = 'https://apis.openapi.sk.com/tmap/road/matchToRoads?version=2&appKey=l7xxd873259fd9804fe693601cecb92bd4b7'
         const params1 = newRouteCoordinates
  
         const params2 = 'path=-35.27801,149.12958|-35.28032,149.12907|-35.28099,149.12929|-35.28144,149.12984|-35.28194,149.13003|-35.28282,149.12956|-35.28302,149.12881|-35.28473,149.12836'
@@ -443,12 +429,14 @@ class RecordTap extends React.Component {
         /**
          * todo : 녹화 중에 계속 road api를 호출하지 않았으면 좋겟는데.. 잠시보류
          */
-        fetch(roadAPIpullPath)
-        .then((response) => response.json())
+        fetch('https://apis.openapi.sk.com/tmap/road/matchToRoads?&appKey=l7xxd873259fd9804fe693601cecb92bd4b7&responseType=1&coords=126.87793387437,35.237431207701|126.87819495169,35.237856164051|126.87844491764,35.238331114558|126.87871432615,35.23881162032|126.87900595473,35.239300458849|126.87930591512,35.239819849619|126.8796392052,35.240367015588|126.87994472025'
+        
+        ) 
+        // .then((response) => response.json())
+        .then((response) => response)
         .then((json) => {
             console.log('json');
             console.log(json);   
-
             // 아니 이 놈이 왜 우리나라 좌표만 안돼 지원 끊겻나본데 이거
             // this.setSnappedPoint(json)
         //   return json.movies;
@@ -457,9 +445,33 @@ class RecordTap extends React.Component {
           console.error(error);
         });
 
-        
+        // fetch('https://apis.openapi.sk.com/tmap/road/matchToRoads?version=2&appKey=l7xxd873259fd9804fe693601cecb92bd4b7', {
+            // method: 'POST',
+            // contentType: "application/x-www-form-urlencoded",
+            // headers: {
+            //     Accept: 'application/json',
+            //     'Content-Type': 'application/json'
+            // },
+        //     body: {
+            
+        //         responseType : 1,
+        //         coords : '127.925710,37.557086|127.954464,37.556542'
+                
+        //     }  
+        // }).then((response) => response.json())
+        // .then((json) => {
+        //     console.log('json');
+        //     console.log(json);   
 
-        // alert('getRoadAPI')
+        //     // 아니 이 놈이 왜 우리나라 좌표만 안돼 지원 끊겻나본데 이거
+        //     // this.setSnappedPoint(json)
+        // //   return json.movies;
+        // })
+        // .catch((error) => {
+        //   console.error(error);
+        // });
+
+  
     }
 
     setSnappedPoint = (json) => {

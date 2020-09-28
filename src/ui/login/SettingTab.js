@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 import { 
   saveUserInfoGoogle,
   setPreRouteItems,
- } from '../../actions/FriendsActions'
+  setContactItems,
+ } from '../../actions/Actions'
 import { bindActionCreators } from 'redux'; 
 
 import {
@@ -49,6 +50,46 @@ class SettingTap extends React.Component {
   //     });
   // }
 
+  async getContactList() {
+
+    console.log('getContactList called')
+
+    const userIndex = this.props.userInfo.id
+    const collectionName = 'contactList_test'
+
+    const snapshot = await firestore().collection(userIndex+collectionName).get()
+    snapshot.docs.map(doc => console.log("frineds_docs",doc.data()));
+
+    let contactList = []
+    
+    snapshot.docs.map(doc => contactList.push(doc.data()));
+
+    console.log('contactList', contactList)
+ 
+    this.props.setContactItems(contactList)
+}
+
+async addContactList() {
+
+  console.log('addContactList called')
+ 
+  const userIndex = this.props.userInfo.id
+  const collectionName = 'contactList_test'
+  
+  const friendIndex = 'test-1' 
+
+  const friendInfo = {
+    id: 'test-1',
+    nickname : 'user',
+    imgae : 'https://ca.slack-edge.com/T6TPDPPSL-U019G7HDU81-371bb17a9475-512',
+  } 
+  
+  const friendRef = firestore().collection(userIndex+collectionName);
+  
+  friendRef.doc(friendIndex).set(
+      { friendInfo }
+  );
+}
 
   async getPreRouteItems() {
 
@@ -58,7 +99,7 @@ class SettingTap extends React.Component {
     const collectionName = 'routeItemCollection_new'
 
     const snapshot = await firestore().collection(userIndex+collectionName).get()
-    snapshot.docs.map(doc => console.log("docs",doc.data()));
+    snapshot.docs.map(doc => doc.data());
 
     let preRouteItems = []
     
@@ -86,6 +127,9 @@ class SettingTap extends React.Component {
        * 액션과 리듀서 수정 필요
        */
       this.getPreRouteItems()
+
+      // this.addContactList()
+      this.getContactList()
  
       this.props.navigation.navigate('BottomTapNavigator')
     } catch (error) {
@@ -114,9 +158,10 @@ class SettingTap extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.container}>
-{/*            
-          <Button title='delete All ' onPress={this.deleteAll}/>
-          */}
+
+          <Button title='add contact' onPress={() => this.addContactList()}/> 
+          <Button title='get contact' onPress={() => this.getContactList()}/>
+          
 
           <GoogleSigninButton
             style={{ width: 250, height: 50 }}
@@ -138,7 +183,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => (
   bindActionCreators({
     saveUserInfoGoogle,
-    setPreRouteItems
+    setPreRouteItems,
+    setContactItems,
   }, dispatch)
 );
 

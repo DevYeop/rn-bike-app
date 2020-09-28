@@ -1,7 +1,12 @@
+
 import React, { useState, useCallback, useEffect } from 'react'
 import { GiftedChat } from 'react-native-gifted-chat'
 
-export default function ChattingScreen() {
+import { connect } from 'react-redux';
+import { addRecordedRoute } from '../../../actions/Actions'
+import { bindActionCreators } from 'redux'; 
+
+function ChatScreen() {
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
@@ -33,3 +38,16 @@ export default function ChattingScreen() {
     />
   )
 }
+
+const mapStateToProps = (state) => {
+  const { userInfo } = state
+  return { userInfo }
+};
+
+const mapDispatchToProps = dispatch => (
+  bindActionCreators({
+      addRecordedRoute,
+  }, dispatch)
+);
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);
