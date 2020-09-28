@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View, Image } from 'react-native';
 
 import KakaoLogins, { KAKAO_AUTH_TYPES } from '@react-native-seoul/kakao-login';
 import NativeButton from 'apsl-react-native-button';
@@ -7,6 +7,7 @@ import NativeButton from 'apsl-react-native-button';
 import { connect } from 'react-redux';
 import { saveUserInfoKakao } from '../../actions/Actions'
 import { bindActionCreators } from 'redux';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 if (!KakaoLogins) {
     console.error('Module is Not Linked');
@@ -42,17 +43,22 @@ class KakaLoginButton extends React.Component {
     render() {
         return (
 
-            /**
-             * 카카오 버튼으로 바꿔야 함.
-             */
-            <NativeButton
-                isLoading={false}
-                onPress={() => this.kakaoLogin()}
-                activeOpacity={0.5}
-                style={styles.btnKakaoLogin}
-                textStyle={styles.txtKakaoLogin}>
-                카카오 LOGIN
-            </NativeButton>
+            <View>
+             
+
+                <TouchableOpacity
+                 onPress={() => this.kakaoLogin()}
+               >
+                
+                <Image
+                style={styles.btnKakaoLogin} 
+                    source={require('../../res/kakao_login.png')}
+                />
+                </TouchableOpacity>
+            </View>
+
+           
+            
         );
     }
 }
@@ -76,11 +82,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#F8E71C',
         borderRadius: 0,
         borderWidth: 0,
-    },
-    txtKakaoLogin: {
-        fontSize: 16,
-        color: '#3d3d3d',
-    },
+    }, 
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(KakaLoginButton);

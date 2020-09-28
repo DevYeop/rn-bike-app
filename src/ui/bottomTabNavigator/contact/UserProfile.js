@@ -31,20 +31,17 @@ export default class GraphDetail extends Component {
        
       const itemsRef = firestore().collection(userIndex+collectionName);
 
-      itemsRef.doc(friendIdx).set(
-            {
-              id : friendIdx,
-            },
-      );
+      // itemsRef.doc(friendIdx).collection()set(
+      //       {
+      //         id : friendIdx,
+      //       },
+      // );
   }
 
   getChatList = friendInfo => {
 
   }
-  
-
-  
-  
+   
 
   async getChatList() { 
     const userIndex = this.props.userInfo.id
