@@ -42,23 +42,13 @@ class KakaLoginButton extends React.Component {
 
     render() {
         return (
-
             <View>
-             
-
-                <TouchableOpacity
-                 onPress={() => this.kakaoLogin()}
-               >
-                
-                <Image
-                style={styles.btnKakaoLogin} 
-                    source={require('../../res/kakao_login.png')}
-                />
+                <TouchableOpacity onPress={() => this.kakaoLogin()}>
+                    <Image
+                        style={styles.btnKakaoLogin}
+                        source={require('../../res/kakao_login.png')} />
                 </TouchableOpacity>
             </View>
-
-           
-            
         );
     }
 }
