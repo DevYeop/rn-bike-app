@@ -6,43 +6,37 @@ import {
   SystemMessage
 } from 'react-native-gifted-chat';
 import { ActivityIndicator, View, StyleSheet } from 'react-native';
-import { IconButton, Button } from 'react-native-paper';
-import { AuthContext } from '../../../navigation/AuthProvider'
+import { IconButton } from 'react-native-paper';
+import { AuthContext } from '../navigation/AuthProvider';
 import firestore from '@react-native-firebase/firestore';
-import useStatsBar from '../../../utils/useStatusBar'
+import useStatsBar from '../utils/useStatusBar';
 
-import { connect } from 'react-redux';
-import ActionButton from 'react-native-action-button';
-
-function ChatScreen({ route, userInfo } ) {
- 
+export default function RoomScreen({ route }) {
   useStatsBar('light-content');
 
   const [messages, setMessages] = useState([]);
   const { thread } = route.params;
+  const { sameID } = 'test-1'
   const { user } = useContext(AuthContext);
   // const currentUser = user.toJSON();
-  const userIdx = userInfo.id
-  const userNick = userInfo.nickname
+  const userIdx = 'test-1'
+  const userEmail = 'lee_sangyeop0715@naver.com'
 
   async function handleSend(messages) {
     const text = messages[0].text;
-
-    console.log('userIdx :', userIdx)
-    console.log('thread._id',thread._id)
 
     firestore()
       .collection('THREADS2')
       .doc(thread._id)
       .collection('MESSAGES')
       .add({
+        text,
         createdAt: new Date().getTime(),
         user: {
           _id: userIdx,
-          nickname: userNick
+          email: userEmail
         }
       });
-      text,
 
     await firestore()
       .collection('THREADS2')
@@ -78,7 +72,7 @@ function ChatScreen({ route, userInfo } ) {
           if (!firebaseData.system) {
             data.user = {
               ...firebaseData.user,
-              name: firebaseData.user.nickname
+              name: firebaseData.user.email
             };
           }
 
@@ -99,9 +93,6 @@ function ChatScreen({ route, userInfo } ) {
         wrapperStyle={{
           right: {
             backgroundColor: '#6646ee'
-          },
-          left : {
-            backgroundColor: '#ffd608'
           }
         }}
         textStyle={{
@@ -148,15 +139,14 @@ function ChatScreen({ route, userInfo } ) {
       />
     );
   }
- 
+
   return (
- 
     <GiftedChat
       messages={messages}
       onSend={handleSend}
       user={{ _id: userIdx }}
-      placeholder=''
-      alwaysShowSend 
+      placeholder='Type your message here...'
+      alwaysShowSend
       showUserAvatar
       scrollToBottom
       renderBubble={renderBubble}
@@ -164,16 +154,9 @@ function ChatScreen({ route, userInfo } ) {
       renderSend={renderSend}
       scrollToBottomComponent={scrollToBottomComponent}
       renderSystemMessage={renderSystemMessage}
-    /> 
-
+    />
   );
 }
-
-
-const mapStateToProps = (state) => {
-  const { userInfo } = state
-  return { userInfo : userInfo }
-};
 
 const styles = StyleSheet.create({
   loadingContainer: {
@@ -200,6 +183,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   }
 });
-
-
-export default connect(mapStateToProps)(ChatScreen);

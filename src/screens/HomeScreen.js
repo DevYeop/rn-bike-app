@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
-import { List, Divider, Button,Text, Image } from 'react-native-paper';
+import { List, Divider } from 'react-native-paper';
 import firestore from '@react-native-firebase/firestore';
-import Loading from '../../../components/Loading'
-import useStatsBar from '../../../utils/useStatusBar'
- 
-export default function ChatRoomList({ navigation }) {
+import Loading from '../components/Loading';
+import useStatsBar from '../utils/useStatusBar';
+
+export default function HomeScreen({ navigation }) {
   useStatsBar('light-content');
 
   const [threads, setThreads] = useState([]);
   const [loading, setLoading] = useState(true);
- 
+
   /**
    * Fetch threads from Firestore
    */
   useEffect(() => {
     const unsubscribe = firestore()
-      .collection('THREADS2') 
+      .collection('THREADS2')
       .orderBy('latestMessage.createdAt', 'desc')
       .onSnapshot(querySnapshot => {
         const threads = querySnapshot.docs.map(documentSnapshot => {
@@ -33,8 +33,6 @@ export default function ChatRoomList({ navigation }) {
         });
 
         setThreads(threads);
-
-        console.log('threads id:' , threads)
 
         if (loading) {
           setLoading(false);
@@ -61,28 +59,25 @@ export default function ChatRoomList({ navigation }) {
           <TouchableOpacity
             onPress={() => navigation.navigate('Room', { thread: item })}
           >
-
-            <View style={{flexDirection:'column'}}>
-              <List.Item
-                title={item.name}
-                description={item.latestMessage.text}
-                titleNumberOfLines={1}
-                titleStyle={styles.listTitle}
-                descriptionStyle={styles.listDescription}
-                descriptionNumberOfLines={1}
-              />
-            </View>
+            <List.Item
+              title={item.name}
+              description={item.latestMessage.text}
+              titleNumberOfLines={1}
+              titleStyle={styles.listTitle}
+              descriptionStyle={styles.listDescription}
+              descriptionNumberOfLines={1}
+            />
           </TouchableOpacity>
         )}
       />
     </View>
   );
 }
- 
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#f5f5f5',
-    
+    flex: 1
   },
   listTitle: {
     fontSize: 22
@@ -91,4 +86,3 @@ const styles = StyleSheet.create({
     fontSize: 16
   }
 });
- 

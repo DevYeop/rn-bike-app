@@ -141,18 +141,14 @@ class RecordTap extends React.Component {
     startRecording() {
  
         const time = new Date().getTime();
-        const date = new Date(time);
-        const startRecordTime = this.formatDate(date)
+        const date = new Date(time); 
  
         this.setState({
             startRecordMilli : time,
             recordStatus: true,
             countDone: false
         })
-   
-        /**
-         * todo : 이미 시작된 watchPosigion이 있는지 검사 후 실행하도록 수정해야함.
-         */
+    
         this.startWatchPosigion();
     }
 
@@ -226,7 +222,6 @@ class RecordTap extends React.Component {
             }else if(maxLong < info[i].longitude){
                 maxLong = info[i].longitude
             }
-
         }
 
         const northEast = {
@@ -290,7 +285,7 @@ class RecordTap extends React.Component {
         console.log('setFireStoreInfo called')
 
         const userIndex = this.props.userInfo.id
-        const collectionName = 'routeItemCollection_new'
+        const collectionName = 'routeItemCollection'
 
         const itemIndex = routeItem.itemIndex+''
         console.log('itemIndex :')
@@ -304,44 +299,7 @@ class RecordTap extends React.Component {
             { routeItem }
         );
     }
-
-    
-
-//     async getPreRouteItems() {
-
-//         console.log('getMarker called')
-
-//         const userIndex = this.props.userInfo.id
-//         const collectionName = 'routeItemCollection'
-
-//         const snapshot = await firestore().collection(userIndex+collectionName).get()
-//         snapshot.docs.map(doc => console.log("docs",doc.data()));
-//     }
-
-//     getFireStoreInfo = () => {
-
-//         const userIndex = this.props.userInfo.id
-
-//         const itemsRef = firestore().collection(userIndex)
-        
-//         console.log("콜렉션 :");
-//         console.log(itemsRef);
-
-//         itemsRef.get().then(function (doc) {
-//             if (doc.exists) {
-//                 console.log("Document data:", doc.data());
-//             } else {
-//                 // doc.data() will be undefined in this case
-//                 console.log("No such document!");
-//             }
-//         }).catch(function (error) {
-//             console.log("Error getting document:", error);
-//         });
-
-//   }
-
-
-
+  
 
     getAvgSpeed = () => {
         const speedArray = this.state.speedArray
@@ -372,8 +330,11 @@ class RecordTap extends React.Component {
         )
     }
 
+    /**
+     * 
+     * @param {} routeCoordinates 
+     */
     getRoadAPI  = routeCoordinates => { 
-
 
         let newRouteCoordinates = 'points='
 
@@ -393,7 +354,7 @@ class RecordTap extends React.Component {
         }
         
         newRouteCoordinates += routeLatitue+routeLongitude
-        // newRouteCoordinates = 
+
     }
 
         console.log('newRouteCoordinates',newRouteCoordinates)
@@ -403,9 +364,8 @@ class RecordTap extends React.Component {
         // const option = '&interpolate=true&'
         // const key = 'key=AIzaSyCiBqROXrj7009fX49-BxlGpd1NyhIldYA'
         // const roadAPIpullPath = url+params+option+key
-
-
         // const url = 'https://roads.googleapis.com/v1/snapToRoads?'
+
         const url = 'https://apis.openapi.sk.com/tmap/road/matchToRoads?version=2&appKey=l7xxd873259fd9804fe693601cecb92bd4b7'
         const params1 = newRouteCoordinates
  
@@ -413,65 +373,33 @@ class RecordTap extends React.Component {
         const params21 = 'points=35.461337,-97.533734|35.462222,-97.531993'// 호주 좌표
         const params22 = 'points=37.480483,126.930500|37.481247,126.930420'// 울나라 좌표
         const params23 = 'points=35.343465,137.095879|35.344012,137.098465'// 닛본 좌표
-       
-
         
         const params3 = 'points=37.575695,126.983571|37.576004,126.984328|37.576445,126.985374|37.576400,126.986200|37.576400,126.986200|37.574609,126.986849'
         const params4 = 'path=29.759326,-95.368095|29.758332,-95.368954|29.757584,-95.369530|29.756243,-95.370550'
- 
-        // 
-
-        // const option = '&interpolate=true&'
+  
         const key = '&key=AIzaSyCiBqROXrj7009fX49-BxlGpd1NyhIldYA'
         const roadAPIpullPath = url+params21+key
-   
 
-        /**
-         * todo : 녹화 중에 계속 road api를 호출하지 않았으면 좋겟는데.. 잠시보류
-         */
-        fetch('https://apis.openapi.sk.com/tmap/road/matchToRoads?&appKey=l7xxd873259fd9804fe693601cecb92bd4b7&responseType=1&coords=126.87793387437,35.237431207701|126.87819495169,35.237856164051|126.87844491764,35.238331114558|126.87871432615,35.23881162032|126.87900595473,35.239300458849|126.87930591512,35.239819849619|126.8796392052,35.240367015588|126.87994472025'
+        let roadUrl = 'https://apis.openapi.sk.com/tmap/road/matchToRoads?version=2&appKey=l7xxd873259fd9804fe693601cecb92bd4b7'
+          
+        fetch(roadUrl
         
-        ) 
-        // .then((response) => response.json())
-        .then((response) => response)
-        .then((json) => {
-            console.log('json');
-            console.log(json);   
-            // 아니 이 놈이 왜 우리나라 좌표만 안돼 지원 끊겻나본데 이거
-            // this.setSnappedPoint(json)
-        //   return json.movies;
-        })
+            )
+            .then((response) => {
+           
+                    console.log('content-type',response.headers )
+               
+                return response; 
+               })
+            // .then((response) => response.json())
+            // .then((response) => response)
+            .then((json) => {
+                console.log('json');
+                console.log(json);
+            })
         .catch((error) => {
           console.error(error);
         });
-
-        // fetch('https://apis.openapi.sk.com/tmap/road/matchToRoads?version=2&appKey=l7xxd873259fd9804fe693601cecb92bd4b7', {
-            // method: 'POST',
-            // contentType: "application/x-www-form-urlencoded",
-            // headers: {
-            //     Accept: 'application/json',
-            //     'Content-Type': 'application/json'
-            // },
-        //     body: {
-            
-        //         responseType : 1,
-        //         coords : '127.925710,37.557086|127.954464,37.556542'
-                
-        //     }  
-        // }).then((response) => response.json())
-        // .then((json) => {
-        //     console.log('json');
-        //     console.log(json);   
-
-        //     // 아니 이 놈이 왜 우리나라 좌표만 안돼 지원 끊겻나본데 이거
-        //     // this.setSnappedPoint(json)
-        // //   return json.movies;
-        // })
-        // .catch((error) => {
-        //   console.error(error);
-        // });
-
-  
     }
 
     setSnappedPoint = (json) => {
@@ -551,7 +479,7 @@ class RecordTap extends React.Component {
                       {
                           console.log('스냅 데이터', this.state.snappedRouteCoordinates)
                       }
-                    <Polyline coordinates={this.state.snappedRouteCoordinates} strokeWidth={12} strokeColor="#4334eb" />
+                    <Polyline coordinates={this.state.routeCoordinates} strokeWidth={12} strokeColor="#4334eb" />
  
                     <Polyline coordinates={this.state.routeCoordinates} strokeWidth={6} strokeColor="#fc3d03" />
 
@@ -571,7 +499,7 @@ class RecordTap extends React.Component {
                     </ActionButton.Item>
                 </ActionButton>
                 <TouchableOpacity onPress={()=>this.getRoadAPI()}>
-                <Button title='road api'/>
+                {/* <Button title='road api'/> */}
                 </TouchableOpacity>
                 {/* {!this.state.countDone ? ( todo : roadAPI 적용 후 개발완료 할 것
                     <CountdownCircleTimer

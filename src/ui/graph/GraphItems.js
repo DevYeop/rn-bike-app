@@ -31,12 +31,9 @@ class GraphDetail extends Component {
   }
 
   goToGraphDetail = (item) => {
-
     this.props.navigation.navigate('GraphDetail',{
       routeInfo : item,
-    
     })
-    
   }
 
 
@@ -88,17 +85,11 @@ class GraphDetail extends Component {
               loadingEnabled={true}
               liteMode={true}
               setMapBoundaries={this.getBoundInfo(item)}>   
- 
-              {/* <Marker // todo : 출발 도착점 표시해야함. 커스텀 마커 필요
-                coordinate={}
-                title='title'
-                description='des'
-              /> */}
-
+  
               <Polyline 
               coordinates={item.routeCoordinates} 
-              strokeWidth={6} 
-              strokeColor="#fc3d03"
+              strokeWidth={5} 
+              strokeColor="#233ff7"
               />
             </MapView>
 

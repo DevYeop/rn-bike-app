@@ -34,7 +34,6 @@ class SettingTap extends React.Component {
     });
   }
  
-
   // async deleteAll() {
   //   alert('User deleted!')
   //   console.log('deleteAll called')
@@ -84,8 +83,12 @@ async addContactList() {
     imgae : 'https://ca.slack-edge.com/T6TPDPPSL-U019G7HDU81-371bb17a9475-512',
   } 
   
-  const friendRef = firestore().collection(userIndex+collectionName);
+  const friendRef = firestore().collection(userIndex+collectionName)
   
+  
+ 
+
+
   friendRef.doc(friendIndex).set(
       { friendInfo }
   );
@@ -96,9 +99,11 @@ async addContactList() {
     console.log('getMarker called')
 
     const userIndex = this.props.userInfo.id
-    const collectionName = 'routeItemCollection_new'
+    const collectionName = 'routeItemCollection'
 
     const snapshot = await firestore().collection(userIndex+collectionName).get()
+    // .orderBy('latestMessage.createdAt', 'desc')
+    
     snapshot.docs.map(doc => doc.data());
 
     let preRouteItems = []
@@ -107,9 +112,6 @@ async addContactList() {
 
     console.log('preRouteItems', preRouteItems)
 
-    /**
-     * 이전 아이템들의 객체들의 집합을 줘야함.
-     */
     this.props.setPreRouteItems(preRouteItems)
 }
   
@@ -119,16 +121,9 @@ async addContactList() {
       const userInfo = await GoogleSignin.signIn();
 
       this.props.saveUserInfoGoogle(userInfo)
-
-       /**
-       * 여기서 로그인 완료되면 redux-store에,
-       * 기존의 유저가 가지고 있던 아이템의 정보를 저장해야함.
-       * 
-       * 액션과 리듀서 수정 필요
-       */
+ 
       this.getPreRouteItems()
-
-      // this.addContactList()
+ 
       this.getContactList()
  
       this.props.navigation.navigate('BottomTapNavigator')
@@ -153,18 +148,45 @@ async addContactList() {
       console.error(error);
     }
   };
-  
+
+  async setChatRoom() {
+
+    const roomName = 'test-1'
+
+    firestore()
+      .collection('THREADS2')
+      .add({
+        name: roomName,
+        latestMessage: {
+          text: `You have joined the room ${roomName}.`,
+          createdAt: new Date().getTime()
+        }
+      })
+      .then(docRef => {
+        docRef.collection('MESSAGES').add({
+          text: `You have joined the room ${roomName}.`,
+          createdAt: new Date().getTime(),
+          system: true
+        });
+        navigation.navigate('Home');
+      });
+
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.container}>
+ 
+          <Image
+            style={{alignItems:'flex-start', height:500}}
+            source={require('../../res/brung.gif')} // first way (local)
+            resizeMethod='resize' />
 
-          <Button title='add contact' onPress={() => this.addContactList()}/> 
-          <Button title='get contact' onPress={() => this.getContactList()}/>
-          
+          <Text style={{fontSize:32}}> rn - bike - app  </Text>
 
           <GoogleSigninButton
-            style={{ width: 250, height: 50 }}
+            style={{ width: 250, height: 50, marginBottom : 25, }}
             size={GoogleSigninButton.Size.Wide}
             color={GoogleSigninButton.Color.Dark}
             onPress={this._signIn}/>
@@ -192,7 +214,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#f5f5f5',
     flex: 1,
-    justifyContent: 'center',
+    // justifyContent: 'center',
     alignItems: 'center'
   },
 });

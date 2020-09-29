@@ -4,7 +4,8 @@ import {
     SAVE_USER_INFO_KAKAO, 
     ADD_RECORDED_ROUTE,
     SET_PRE_ROUTE_ITEMS,
-    SET_CONTACT_ITEMS
+    SET_CONTACT_ITEMS,
+    RESET_STATE
  } from './types'
  
 export const addFriend = friendsIndex => (
@@ -46,6 +47,13 @@ export const setContactItems = contactList => (
     {
         type: SET_CONTACT_ITEMS,
         payload: contactList, 
+    } 
+)
+  
+export const resetState = reset => (
+    {
+        type: RESET_STATE,
+        payload: reset, 
     } 
 )
   

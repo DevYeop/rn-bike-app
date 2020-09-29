@@ -15,27 +15,26 @@ export default class GraphDetail extends Component {
   chatWithThisUser =() => {
     this.props.navigation.navigate('ChatScreen')
 
-    /**
-     * 여기서 채팅룸 생성(가져오기)
-     */
+    this,this.setChatRoom('test-1')
+  
   }
 
-  getChatRoom = friendInfo => {
+  /**
+   * 채팅룸을 생성함.
+   * @param {} friendInfo 채팅룸의 인덱스로 활용
+   */
+  setChatRoom = friendInfo => {
   
       console.log('setFireStoreInfo called')
 
       const userIndex = this.props.userInfo.id
       const collectionName = 'chatroomList'
 
-      const friendIdx = 'test-1'
+      const friendIdx = friendInfo
        
-      const itemsRef = firestore().collection(userIndex+collectionName);
-
-      // itemsRef.doc(friendIdx).collection()set(
-      //       {
-      //         id : friendIdx,
-      //       },
-      // );
+      const itemsRef = firestore().collection(userIndex+collectionName)
+      .doc(friendIdx).collection('messages').doc('message')
+       
   }
 
   getChatList = friendInfo => {
@@ -94,5 +93,4 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
 });
-
-// export default connect(mapStateToProps, mapDispatchToProps)(GraphDetail);
+ 

@@ -5,6 +5,8 @@ import ChatStack from './chat/ChatStack'
 import RecrodTab from './RecordTap';
 import GraphTab from './GraphTab';
 
+import AddRoom from '../../screens/AddRoomScreen'
+
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 
@@ -35,6 +37,8 @@ class TabContainer extends React.Component {
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="contacts" color={color} size={26} />
           ),
+
+          
         }} />
         {this.props.loggedIn && alert('전달받은 loggedIn:'+this.props.loggedIn)}
       <Tab.Screen
@@ -70,6 +74,19 @@ class TabContainer extends React.Component {
           ),
         }
       }/> 
+
+{/* <Tab.Screen
+        name="AddRoom"
+        children={()=><AddRoom 
+        
+          />}
+        options={{
+          tabBarLabel: 'AddRoom',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="chart-areaspline" color={color} size={26} />
+          ),
+        }
+      }/>  */}
       
     </Tab.Navigator>
   )} ;
