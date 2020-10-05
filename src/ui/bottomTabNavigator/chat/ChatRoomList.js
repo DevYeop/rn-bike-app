@@ -16,7 +16,7 @@ export default function ChatRoomList({ navigation }) {
    */
   useEffect(() => {
     const unsubscribe = firestore()
-      .collection('THREADS2') 
+      .collection('THREADS3') 
       .orderBy('latestMessage.createdAt', 'desc')
       .onSnapshot(querySnapshot => {
         const threads = querySnapshot.docs.map(documentSnapshot => {

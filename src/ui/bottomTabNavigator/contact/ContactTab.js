@@ -9,12 +9,12 @@ import {
 } from 'react-native';
 
 
-import { bindActionCreators } from 'redux'; 
+import { bindActionCreators } from 'redux';
 import { resetState } from '../../../actions/Actions'
 
 
 import {
-  GoogleSignin, 
+  GoogleSignin,
 } from '@react-native-community/google-signin';
 
 import { createStackNavigator } from '@react-navigation/stack';
@@ -74,22 +74,22 @@ class ContactTap extends Component {
 
   contactList(state) {
 
-    
+
   }
 
-  async logout () {
+  async logout() {
     try {
       await GoogleSignin.revokeAccess();
       await GoogleSignin.signOut();
 
 
       this.props.resetState()
- 
+
       this.props.navigation.navigate('SettingTap')
     } catch (error) {
       console.error(error);
     }
-    
+
 
 
     /**
@@ -97,12 +97,12 @@ class ContactTap extends Component {
      */
   }
 
-  
+
 
   render() {
     const Stack = createStackNavigator();
-    return ( 
-      <View style={{ flex: 1 }} >  
+    return (
+      <View style={{ flex: 1 }} >
 
         <TouchableOpacity onPress={this.goToProfileScreen}>
           <View style={styles.row}>
@@ -110,27 +110,28 @@ class ContactTap extends Component {
             <View>
               <View style={styles.nameContainer}>
                 <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail">{this.props.userInfo.nickname}</Text>
-                <Text style={styles.mblTxt}></Text>
+                <Text style={styles.mblTxt}> {this.props.userInfo.id}</Text>
               </View>
               <View style={styles.msgContainer}>
                 <Text style={styles.msgTxt}>{this.props.userInfo.email}</Text>
+
               </View>
             </View>
           </View>
         </TouchableOpacity>
 
 
-        <Button onPress={()=>this.logout()}>로그아웃</Button>
+        <Button onPress={() => this.logout()}>로그아웃</Button>
 
- 
+
         <FlatList
-          
+
           data={this.props.userInfo.contactList}
           keyExtractor={(item) => {
             return item.id;
           }}
           renderItem={this.renderItem} />
- 
+
 
       </View>
     );

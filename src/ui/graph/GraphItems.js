@@ -133,8 +133,8 @@ const mapDispatchToProps = dispatch => (
 
 const styles = StyleSheet.create({
   row: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
     borderBottomWidth: 1,
     backgroundColor: '#dbdbca',
     borderColor: 'white',

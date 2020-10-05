@@ -17,7 +17,7 @@ import {
 
 import KakaoLoginButton from './KakaLoginButton'
 
-import firestore from '@react-native-firebase/firestore'; 
+import firestore, { firebase } from '@react-native-firebase/firestore'; 
  
 class SettingTap extends React.Component {
 
@@ -33,22 +33,7 @@ class SettingTap extends React.Component {
       forceConsentPrompt: true,
     });
   }
- 
-  // async deleteAll() {
-  //   alert('User deleted!')
-  //   console.log('deleteAll called')
-
-  //   const userIndex = this.props.userInfo.id
-  //   const collectionName = 'routeItemCollection'
-
-  //   firestore()
-  //     .collection(userIndex)
-  //     .delete()
-  //     .then(() => {
-  //       alert('User deleted!')
-  //     });
-  // }
-
+  
   async getContactList() {
 
     console.log('getContactList called')
@@ -64,7 +49,7 @@ class SettingTap extends React.Component {
     snapshot.docs.map(doc => contactList.push(doc.data()));
 
     console.log('contactList', contactList)
- 
+  
     this.props.setContactItems(contactList)
 }
 
@@ -85,10 +70,6 @@ async addContactList() {
   
   const friendRef = firestore().collection(userIndex+collectionName)
   
-  
- 
-
-
   friendRef.doc(friendIndex).set(
       { friendInfo }
   );
@@ -102,7 +83,6 @@ async addContactList() {
     const collectionName = 'routeItemCollection'
 
     const snapshot = await firestore().collection(userIndex+collectionName).get()
-    // .orderBy('latestMessage.createdAt', 'desc')
     
     snapshot.docs.map(doc => doc.data());
 
@@ -115,6 +95,7 @@ async addContactList() {
     this.props.setPreRouteItems(preRouteItems)
 }
   
+ 
   _signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
@@ -125,6 +106,7 @@ async addContactList() {
       this.getPreRouteItems()
  
       this.getContactList()
+  
  
       this.props.navigation.navigate('BottomTapNavigator')
     } catch (error) {
@@ -154,7 +136,7 @@ async addContactList() {
     const roomName = 'test-1'
 
     firestore()
-      .collection('THREADS2')
+      .collection('THREADS3')
       .add({
         name: roomName,
         latestMessage: {

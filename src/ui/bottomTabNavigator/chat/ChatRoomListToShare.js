@@ -20,7 +20,7 @@ export default function ChatRoomList({ navigation, route }) {
    */
   useEffect(() => {
     const unsubscribe = firestore()
-      .collection('THREADS2') 
+      .collection('THREADS3') 
       .orderBy('latestMessage.createdAt', 'desc')
       .onSnapshot(querySnapshot => {
         const threads = querySnapshot.docs.map(documentSnapshot => {
@@ -71,13 +71,13 @@ export default function ChatRoomList({ navigation, route }) {
     const text = 'SharedItem';
 
     const userIdx = '110329963856987142979'
-    const threadID = 'MbvtKVFZ5XPwNAXVXA5K'
+    const threadID = 'ImxrNjznbQre4RWifS62'
 
     console.log('userIdx :', userIdx)
     console.log('thread._id',threadID)
 
     firestore()
-      .collection('THREADS2')
+      .collection('THREADS3')
       .doc(threadID)
       .collection('MESSAGES')
       .add({
@@ -91,7 +91,7 @@ export default function ChatRoomList({ navigation, route }) {
       });
 
     await firestore()
-      .collection('THREADS2')
+      .collection('THREADS3')
       .doc(threadID)
       .set(
         {

@@ -5,7 +5,7 @@ import {
   Send,
   SystemMessage
 } from 'react-native-gifted-chat';
-import { ActivityIndicator, View, StyleSheet } from 'react-native';
+import { ActivityIndicator, View, StyleSheet, Text } from 'react-native';
 import { IconButton, Button } from 'react-native-paper';
 import { AuthContext } from '../../../navigation/AuthProvider'
 import firestore from '@react-native-firebase/firestore';
@@ -14,8 +14,10 @@ import useStatsBar from '../../../utils/useStatusBar'
 import { connect } from 'react-redux';
 import ActionButton from 'react-native-action-button';
 
-function ChatScreen({ route, userInfo } ) {
- 
+import RouteItemView from './RouteItemView'
+
+function ChatScreen({ route, userInfo }) {
+
   useStatsBar('light-content');
 
   const [messages, setMessages] = useState([]);
@@ -28,11 +30,8 @@ function ChatScreen({ route, userInfo } ) {
   async function handleSend(messages) {
     const text = messages[0].text;
 
-    console.log('userIdx :', userIdx)
-    console.log('thread._id',thread._id)
-
     firestore()
-      .collection('THREADS2')
+      .collection('THREADS3')
       .doc(thread._id)
       .collection('MESSAGES')
       .add({
@@ -40,12 +39,12 @@ function ChatScreen({ route, userInfo } ) {
         user: {
           _id: userIdx,
           nickname: userNick
-        }
+        },
+        text: text,
       });
-      text,
 
     await firestore()
-      .collection('THREADS2')
+      .collection('THREADS3')
       .doc(thread._id)
       .set(
         {
@@ -60,7 +59,7 @@ function ChatScreen({ route, userInfo } ) {
 
   useEffect(() => {
     const messagesListener = firestore()
-      .collection('THREADS2')
+      .collection('THREADS3')
       .doc(thread._id)
       .collection('MESSAGES')
       .orderBy('createdAt', 'desc')
@@ -93,24 +92,37 @@ function ChatScreen({ route, userInfo } ) {
   }, []);
 
   function renderBubble(props) {
-    return (
-      <Bubble
-        {...props}
-        wrapperStyle={{
-          right: {
-            backgroundColor: '#6646ee'
-          },
-          left : {
-            backgroundColor: '#ffd608'
-          }
-        }}
-        textStyle={{
-          right: {
-            color: '#fff'
-          }
-        }}
-      />
-    );
+
+    console.log('buble props : ', props)
+    if (props.currentMessage.itemInfo) {
+
+      console.log('지도 버블 :', props.currentMessage.itemInfo)
+
+      return (
+        <RouteItemView itemInfo={props.currentMessage.itemInfo}/>
+      )
+    } else {
+      return (
+        <Bubble
+          {...props}
+          wrapperStyle={{
+            right: {
+              backgroundColor: '#6646ee'
+            },
+            left: {
+              backgroundColor: '#ffd608'
+            }
+          }}
+          textStyle={{
+            right: {
+              color: '#fff'
+            }
+          }}
+        />
+      )
+    }
+
+    ;
   }
 
   function renderLoading() {
@@ -148,15 +160,16 @@ function ChatScreen({ route, userInfo } ) {
       />
     );
   }
- 
+
+
   return (
- 
+
     <GiftedChat
       messages={messages}
       onSend={handleSend}
       user={{ _id: userIdx }}
       placeholder=''
-      alwaysShowSend 
+      alwaysShowSend
       showUserAvatar
       scrollToBottom
       renderBubble={renderBubble}
@@ -164,7 +177,8 @@ function ChatScreen({ route, userInfo } ) {
       renderSend={renderSend}
       scrollToBottomComponent={scrollToBottomComponent}
       renderSystemMessage={renderSystemMessage}
-    /> 
+
+    />
 
   );
 }
@@ -172,7 +186,7 @@ function ChatScreen({ route, userInfo } ) {
 
 const mapStateToProps = (state) => {
   const { userInfo } = state
-  return { userInfo : userInfo }
+  return { userInfo: userInfo }
 };
 
 const styles = StyleSheet.create({
