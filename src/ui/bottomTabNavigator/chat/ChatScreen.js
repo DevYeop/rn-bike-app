@@ -5,7 +5,7 @@ import {
   Send,
   SystemMessage
 } from 'react-native-gifted-chat';
-import { ActivityIndicator, View, StyleSheet } from 'react-native';
+import { ActivityIndicator, View, StyleSheet, Text } from 'react-native';
 import { IconButton, Button } from 'react-native-paper';
 import { AuthContext } from '../../../navigation/AuthProvider'
 import firestore from '@react-native-firebase/firestore';
@@ -14,12 +14,16 @@ import useStatsBar from '../../../utils/useStatusBar'
 import { connect } from 'react-redux';
 import ActionButton from 'react-native-action-button';
 
-function ChatScreen({ route, userInfo } ) {
- 
-  useStatsBar('light-content');
+import RouteItemView from './RouteItemView'
 
+function ChatScreen({ route, userInfo }) {
+
+  useStatsBar('light-content');
+ 
+  console.log('chatscreen route props' ,route)
+   
   const [messages, setMessages] = useState([]);
-  const { thread } = route.params;
+  const {roomId, userIndex, friendIdx} = route.params;
   const { user } = useContext(AuthContext);
   // const currentUser = user.toJSON();
   const userIdx = userInfo.id
@@ -28,27 +32,35 @@ function ChatScreen({ route, userInfo } ) {
   async function handleSend(messages) {
     const text = messages[0].text;
 
-    console.log('userIdx :', userIdx)
-    console.log('thread._id',thread._id)
-
+    /**
+     * 채팅메세지들을 차곡차곡 더한다
+     */
     firestore()
-      .collection('THREADS2')
-      .doc(thread._id)
-      .collection('MESSAGES')
+      .collection('chattingList')
+      .doc(roomId)
+      .collection('message')
       .add({
         createdAt: new Date().getTime(),
         user: {
           _id: userIdx,
           nickname: userNick
-        }
+        },
+        text: text,
       });
-      text,
 
+
+      /**
+       * 채팅룸리스트에서 챗팅룸이 표시해야할 마지막 채팅정보를 셋팅한다.
+       */
     await firestore()
-      .collection('THREADS2')
-      .doc(thread._id)
+      .collection('chattingList')
+      .doc(roomId)
       .set(
         {
+          invitedUser:[
+            userIdx,
+            friendIdx
+        ],
           latestMessage: {
             text,
             createdAt: new Date().getTime()
@@ -57,12 +69,12 @@ function ChatScreen({ route, userInfo } ) {
         { merge: true }
       );
   }
-
+ 
   useEffect(() => {
     const messagesListener = firestore()
-      .collection('THREADS2')
-      .doc(thread._id)
-      .collection('MESSAGES')
+      .collection('chattingList')
+      .doc(roomId)
+      .collection('message')
       .orderBy('createdAt', 'desc')
       .onSnapshot(querySnapshot => {
         const messages = querySnapshot.docs.map(doc => {
@@ -93,24 +105,37 @@ function ChatScreen({ route, userInfo } ) {
   }, []);
 
   function renderBubble(props) {
-    return (
-      <Bubble
-        {...props}
-        wrapperStyle={{
-          right: {
-            backgroundColor: '#6646ee'
-          },
-          left : {
-            backgroundColor: '#ffd608'
-          }
-        }}
-        textStyle={{
-          right: {
-            color: '#fff'
-          }
-        }}
-      />
-    );
+
+    console.log('buble props : ', props)
+    if (props.currentMessage.itemInfo) {
+
+      console.log('지도 버블 :', props.currentMessage.itemInfo)
+
+      return (
+        <RouteItemView itemInfo={props.currentMessage.itemInfo}/>
+      )
+    } else {
+      return (
+        <Bubble
+          {...props}
+          wrapperStyle={{
+            right: {
+              backgroundColor: '#6646ee'
+            },
+            left: {
+              backgroundColor: '#ffd608'
+            }
+          }}
+          textStyle={{
+            right: {
+              color: '#fff'
+            }
+          }}
+        />
+      )
+    }
+
+    ;
   }
 
   function renderLoading() {
@@ -148,15 +173,15 @@ function ChatScreen({ route, userInfo } ) {
       />
     );
   }
- 
+
   return (
- 
+
     <GiftedChat
       messages={messages}
       onSend={handleSend}
       user={{ _id: userIdx }}
       placeholder=''
-      alwaysShowSend 
+      alwaysShowSend
       showUserAvatar
       scrollToBottom
       renderBubble={renderBubble}
@@ -164,7 +189,8 @@ function ChatScreen({ route, userInfo } ) {
       renderSend={renderSend}
       scrollToBottomComponent={scrollToBottomComponent}
       renderSystemMessage={renderSystemMessage}
-    /> 
+
+    />
 
   );
 }
@@ -172,7 +198,7 @@ function ChatScreen({ route, userInfo } ) {
 
 const mapStateToProps = (state) => {
   const { userInfo } = state
-  return { userInfo : userInfo }
+  return { userInfo: userInfo }
 };
 
 const styles = StyleSheet.create({

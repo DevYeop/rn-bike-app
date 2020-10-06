@@ -16,7 +16,7 @@ export default function AddRoomScreen({ navigation }) {
   function handleButtonPress() {
     if (roomName.length > 0) {
       firestore()
-        .collection('THREADS2') 
+        .collection('THREADS3') 
         .add({
           name: roomName,
           latestMessage: {

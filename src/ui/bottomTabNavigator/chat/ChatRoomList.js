@@ -4,51 +4,78 @@ import { List, Divider, Button,Text, Image } from 'react-native-paper';
 import firestore from '@react-native-firebase/firestore';
 import Loading from '../../../components/Loading'
 import useStatsBar from '../../../utils/useStatusBar'
+
+import { connect } from 'react-redux';
  
-export default function ChatRoomList({ navigation }) {
+function ChatRoomList({ navigation, userInfo }) {
   useStatsBar('light-content');
 
   const [threads, setThreads] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const userIndex = userInfo.id
+  
+  useEffect( () => { 
  
-  /**
-   * Fetch threads from Firestore
-   */
-  useEffect(() => {
-    const unsubscribe = firestore()
-      .collection('THREADS2') 
-      .orderBy('latestMessage.createdAt', 'desc')
-      .onSnapshot(querySnapshot => {
-        const threads = querySnapshot.docs.map(documentSnapshot => {
-          return {
-            _id: documentSnapshot.id,
-            // give defaults
-            name: '',
+    getUnsubscribe()
 
-            latestMessage: {
-              text: ''
-            },
-            ...documentSnapshot.data()
-          };
-        });
+  }, []); 
 
-        setThreads(threads);
+  const getUnsubscribe = async () => {
 
-        console.log('threads id:' , threads)
+    console.log('in chatroom userInfo.id', userInfo.id)
+ 
+    const unsubscribe =   
+    await firestore()
+    .collection('chattingList')    
+    .where('invitedUser', 'array-contains', userInfo.id)
+    .orderBy('latestMessage.createdAt', 'desc')
+    .onSnapshot(querySnapshot => {
 
-        if (loading) {
-          setLoading(false);
-        }
+      const threads = querySnapshot.docs.map(documentSnapshot => {
+
+        return {
+          _id: documentSnapshot.id,
+          // give defaults
+          name: '',
+
+          latestMessage: {
+            text: ''
+          },
+          ...documentSnapshot.data()
+        };
+
       });
 
-    /**
-     * unsubscribe listener
-     */
-    return () => unsubscribe();
-  }, []);
+      setThreads(threads);
+
+      console.log('threads id:' , threads)
+
+      if (loading) {
+        setLoading(false);
+      }
+    })
+
+  /**
+   * unsubscribe listener
+   */
+  return () => unsubscribe();
+
+  }
 
   if (loading) {
     return <Loading />;
+  }
+
+  const getOpponentInfo = async () => {
+ 
+    await firestore()
+    .collection('userInfo')
+    
+    .where('invitedUser', 'array-contains', userInfo.id)
+    .orderBy('latestMessage.createdAt', 'desc')
+
+    return
   }
 
   return (
@@ -63,6 +90,9 @@ export default function ChatRoomList({ navigation }) {
           >
 
             <View style={{flexDirection:'column'}}>
+
+            {/* <Image source={{ uri: getOpponentInfo(item.invitedUser) }} style={styles.pic} /> */}
+             
               <List.Item
                 title={item.name}
                 description={item.latestMessage.text}
@@ -78,6 +108,11 @@ export default function ChatRoomList({ navigation }) {
     </View>
   );
 }
+
+const mapStateToProps = (state) => {
+  const { userInfo } = state
+  return { userInfo }
+};
  
 const styles = StyleSheet.create({
   container: {
@@ -92,3 +127,5 @@ const styles = StyleSheet.create({
   }
 });
  
+
+export default connect(mapStateToProps)(ChatRoomList);

@@ -7,20 +7,22 @@ import {
   Image,
   FlatList,
 } from 'react-native';
+import { Icon, Container, Content, Header, Left, Body, Right } from 'native-base';
 
 
-import { bindActionCreators } from 'redux'; 
+import { bindActionCreators } from 'redux';
 import { resetState } from '../../../actions/Actions'
-
+import { connect } from 'react-redux';
 
 import {
-  GoogleSignin, 
+  GoogleSignin,
 } from '@react-native-community/google-signin';
 
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { connect } from 'react-redux';
 import { Button } from 'react-native-paper';
+import firestore from '@react-native-firebase/firestore';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 
 class ContactTap extends Component {
 
@@ -29,35 +31,27 @@ class ContactTap extends Component {
     this.state = {
       userInfo: {},
       calls: [
-        // { id: 1, name: "마이크", status: "active", image: "https://ca.slack-edge.com/T6TPDPPSL-U012FDZ8ZFY-gd91ba12a15f-512" },
-        // { id: 2, name: "길버트", status: "active", image: "https://ca.slack-edge.com/T6TPDPPSL-U016D3J0V70-d60770cf7eb6-512" },
-        // { id: 3, name: "매튜", status: "active", image: "https://ca.slack-edge.com/T6TPDPPSL-UNTQY9CQ3-7166ae8bba92-512" },
-        // { id: 4, name: "할리", status: "active", image: "https://ca.slack-edge.com/T6TPDPPSL-U019G7HDU81-371bb17a9475-512" },
-        // { id: 5, name: "지쿠터1", status: "inactive", image: "https://gbike.io/index_files/5c456b32d027f.png" },
-        // { id: 6, name: "지쿠터2", status: "inactive", image: "https://gbike.io/index_files/5c456b32d027f.png" },
-        // { id: 8, name: "지쿠터3", status: "inactive", image: "https://gbike.io/index_files/5c456b32d027f.png" },
-        // { id: 9, name: "지쿠터4", status: "inactive", image: "https://gbike.io/index_files/5c456b32d027f.png" },
-        // { id: 10, name: "지쿠터5", status: "inactive", image: "https://gbike.io/index_files/5c456b32d027f.png" },
-        // { id: 11, name: "지쿠터6", status: "inactive", image: "https://gbike.io/index_files/5c456b32d027f.png" },
-        // { id: 12, name: "지쿠터7", status: "inactive", image: "https://gbike.io/index_files/5c456b32d027f.png" },
+
       ],
     };
     this.contactList = this.contactList.bind(this);
   }
 
-  goToProfileScreen = () => {
-    this.props.navigation.navigate('UserProfile')
+  goToProfileScreen = item => {
+    this.props.navigation.navigate('UserProfile', item)
+  }
+
+  goToSearchScreen = () => {
+    this.props.navigation.navigate('SearchScreen')
   }
 
   renderItem = ({ item }) => {
     const Stack = createStackNavigator();
     return (
-      <TouchableOpacity onPress={this.goToProfileScreen}>
-        {
-          console.log('contact props', item)
-        }
+ 
+      <TouchableOpacity onPress={()=>this.goToProfileScreen(item)}>
         <View style={styles.row}>
-          <Image source={{ uri: item.image }} style={styles.pic} />
+          <Image source={{ uri: item.profile_image_url }} style={styles.pic} />
           <View>
             <View style={styles.nameContainer}>
               <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail">{item.nickname}</Text>
@@ -74,35 +68,73 @@ class ContactTap extends Component {
 
   contactList(state) {
 
-    
+
   }
 
-  async logout () {
+  async test() {
+
+
+    const snapshot = await firestore()
+    .collection('chattingList')    
+    .where('invitedUser', 'array-contains', '110329963856987142979')
+    .orderBy('latestMessage.createdAt', 'desc')
+    .get() 
+   
+ 
+    /**
+     * todo : 검색된 유저가 없을 때 ui 처리해야함.
+     */
+    snapshot.forEach(doc => {
+
+      console.log('testtesttest',doc.data())
+        
+    });
+
+  }
+
+  async logout() {
     try {
       await GoogleSignin.revokeAccess();
       await GoogleSignin.signOut();
 
 
       this.props.resetState()
- 
+
       this.props.navigation.navigate('SettingTap')
     } catch (error) {
       console.error(error);
     }
-    
+
 
 
     /**
      * 모든 steate reset
      */
   }
-
   
-
   render() {
     const Stack = createStackNavigator();
-    return ( 
-      <View style={{ flex: 1 }} >  
+    return (
+
+      /**
+       *  todo : 이 부분을 컴포넌트화 시키기
+       */
+      <View style={{ flex: 1 }} >
+
+        <Container style={{ backgroundColor: 'white' }}>
+          <Header>
+            {/* <Left><Icon name="md-person-add" style={{ paddingLeft: 10 }} /></Left> */}
+            {/* <Body><Text>anpigon</Text></Body> */}
+            <Right>
+              <TouchableHighlight onPress={()=>this.goToSearchScreen()}>
+              <Icon name="md-person-add" style={{ paddingLeft: 10 }} />
+              </TouchableHighlight>
+              </Right>
+          </Header>
+        </Container>
+
+
+        {console.log('this.props.userInfo', this.props.userInfo)}
 
         <TouchableOpacity onPress={this.goToProfileScreen}>
           <View style={styles.row}>
@@ -110,27 +142,29 @@ class ContactTap extends Component {
             <View>
               <View style={styles.nameContainer}>
                 <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail">{this.props.userInfo.nickname}</Text>
-                <Text style={styles.mblTxt}></Text>
+                <Text style={styles.mblTxt}> {this.props.userInfo.id}</Text>
               </View>
               <View style={styles.msgContainer}>
                 <Text style={styles.msgTxt}>{this.props.userInfo.email}</Text>
+
               </View>
             </View>
           </View>
         </TouchableOpacity>
 
 
-        <Button onPress={()=>this.logout()}>로그아웃</Button>
+        <Button onPress={() => this.logout()}>로그아웃</Button>
 
- 
+        <Button onPress={() => this.test()}>testtest</Button>
+        
         <FlatList
-          
+
           data={this.props.userInfo.contactList}
           keyExtractor={(item) => {
             return item.id;
           }}
           renderItem={this.renderItem} />
- 
+
 
       </View>
     );

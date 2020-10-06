@@ -24,7 +24,7 @@ import { bindActionCreators } from 'redux';
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 import firestore from '@react-native-firebase/firestore';
-
+import axios from 'axios';
  
 class RecordTap extends React.Component {
     constructor(props) {
@@ -161,6 +161,9 @@ class RecordTap extends React.Component {
 
         this.getRouteInfo() // .then?
         this.resetRecordStatus()
+
+
+        this.getRoadAPI(this.state.routeCoordinates)
     }
 
     getLapTime() {
@@ -268,7 +271,6 @@ class RecordTap extends React.Component {
             centerInfo: centerInfo,
             deltaInfo: deltaInfo,
         }
-
  
         this.props.addRecordedRoute(routeInfo) 
 
@@ -282,18 +284,12 @@ class RecordTap extends React.Component {
      * @param {*} routeItem 새로 생성된 아이템의 정보
      */
     addFireStoreInfo = routeItem => {
-        console.log('setFireStoreInfo called')
 
         const userIndex = this.props.userInfo.id
-        const collectionName = 'routeItemCollection'
+        const collectionName = 'user'+userIndex
+        const itemIndex = routeItem.itemIndex+'' 
 
-        const itemIndex = routeItem.itemIndex+''
-        console.log('itemIndex :')
-        console.log(itemIndex)
-
-        console.log(routeItem)
- 
-        const itemsRef = firestore().collection(userIndex+collectionName);
+        const itemsRef = firestore().collection(collectionName).doc('list').collection('routeItems');
 
         itemsRef.doc(itemIndex).set(
             { routeItem }
@@ -336,70 +332,63 @@ class RecordTap extends React.Component {
      */
     getRoadAPI  = routeCoordinates => { 
 
-        let newRouteCoordinates = 'points='
+    //     let newRouteCoordinates = 'points='
+    //     let routeLatitue = ''
+    //     let routeLongitude = ''
 
-        console.log('routeCoordinates lenth',routeCoordinates.length)
         
-        let routeLatitue = ''
-        let routeLongitude = ''
+    // for (var i = 0 ; i < routeCoordinates.length ; i++){
+    
+    //     routeLatitue   = routeCoordinates[i].latitude+','
 
-    for (var i = 0 ; i < routeCoordinates.length ; i++){
+    //     if( i == routeCoordinates.length-1){
+    //         routeLongitude = routeCoordinates[i].longitude  
+    //     }else{
+    //         routeLongitude = routeCoordinates[i].longitude+'|'  
+    //     }
         
-        routeLatitue   = routeCoordinates[i].latitude+','
+    //     newRouteCoordinates += routeLatitue+routeLongitude
+    // }
 
-        if( i == routeCoordinates.length-1){
-            routeLongitude = routeCoordinates[i].longitude  
-        }else{
-            routeLongitude = routeCoordinates[i].longitude+'|'  
-        }
-        
-        newRouteCoordinates += routeLatitue+routeLongitude
-
-    }
-
-        console.log('newRouteCoordinates',newRouteCoordinates)
-
-        // const url = 'https://roads.googleapis.com/v1/snapToRoads?'
-        // const params = newRouteCoordinates
-        // const option = '&interpolate=true&'
-        // const key = 'key=AIzaSyCiBqROXrj7009fX49-BxlGpd1NyhIldYA'
-        // const roadAPIpullPath = url+params+option+key
-        // const url = 'https://roads.googleapis.com/v1/snapToRoads?'
-
-        const url = 'https://apis.openapi.sk.com/tmap/road/matchToRoads?version=2&appKey=l7xxd873259fd9804fe693601cecb92bd4b7'
-        const params1 = newRouteCoordinates
  
-        const params2 = 'path=-35.27801,149.12958|-35.28032,149.12907|-35.28099,149.12929|-35.28144,149.12984|-35.28194,149.13003|-35.28282,149.12956|-35.28302,149.12881|-35.28473,149.12836'
-        const params21 = 'points=35.461337,-97.533734|35.462222,-97.531993'// 호주 좌표
-        const params22 = 'points=37.480483,126.930500|37.481247,126.930420'// 울나라 좌표
-        const params23 = 'points=35.343465,137.095879|35.344012,137.098465'// 닛본 좌표
-        
-        const params3 = 'points=37.575695,126.983571|37.576004,126.984328|37.576445,126.985374|37.576400,126.986200|37.576400,126.986200|37.574609,126.986849'
-        const params4 = 'path=29.759326,-95.368095|29.758332,-95.368954|29.757584,-95.369530|29.756243,-95.370550'
-  
-        const key = '&key=AIzaSyCiBqROXrj7009fX49-BxlGpd1NyhIldYA'
-        const roadAPIpullPath = url+params21+key
+        // const params1 = 'points=35.461337,-97.533734|35.462222,-97.531993'// 호주 좌표
+        // const params2 = '37.480483,126.930500|37.481247,126.930420'// 울나라 좌표
+        // const params3 = 'points=35.343465,137.095879|35.344012,137.098465'// 닛본 좌표
 
-        let roadUrl = 'https://apis.openapi.sk.com/tmap/road/matchToRoads?version=2&appKey=l7xxd873259fd9804fe693601cecb92bd4b7'
-          
-        fetch(roadUrl
-        
-            )
-            .then((response) => {
-           
-                    console.log('content-type',response.headers )
-               
-                return response; 
-               })
-            // .then((response) => response.json())
-            // .then((response) => response)
-            .then((json) => {
-                console.log('json');
-                console.log(json);
-            })
-        .catch((error) => {
-          console.error(error);
-        });
+        let roadUrlFull = 'https://apis.openapi.sk.com/tmap/road/matchToRoads?version=1&appKey=l7xxd873259fd9804fe693601cecb92bd4b7'
+
+        const queryString = require('query-string');
+ 
+        const data = { 
+            responseType: '1',
+            coords: '126.87793387437,35.237431207701|126.87819495169,35.237856164051|126.87844491764,35.238331114558|126.87871432615,35.23881162032|126.87900595473,35.239300458849|126.87930591512,35.239819849619|126.8796392052,35.240367015588|126.87994472025',
+        };
+        const options = {
+            method: 'POST',
+            headers: { 'content-type': 'application/x-www-form-urlencoded' },
+            data: queryString.stringify(data),
+        };
+        axios(roadUrlFull,options)
+        .then(response => {console.log(response)})
+        .catch(reason => {console.log('reason', reason)})
+ 
+        // const FormData = require('form-data');
+ 
+        // const formData = new FormData();
+        // formData.append('responseType', '1');
+        // formData.append('coords', '37.480483,126.930500|37.481247,126.930420');
+         
+        // fetch(roadUrlFull, {
+        //     method: 'POST',
+            
+        //     body: JSON.stringify({
+        //         responseType: '1',
+        //         coords: '37.480483,126.930500|37.481247,126.930420',
+        //     })
+        // }).then(response => {console.log('response', response)})
+        // .catch(reason=>{console.log('reason', reason)})
+
+ 
     }
 
     setSnappedPoint = (json) => {

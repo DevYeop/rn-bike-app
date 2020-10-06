@@ -17,7 +17,7 @@ import {
 
 import KakaoLoginButton from './KakaLoginButton'
 
-import firestore from '@react-native-firebase/firestore'; 
+import firestore, { firebase } from '@react-native-firebase/firestore'; 
  
 class SettingTap extends React.Component {
 
@@ -33,30 +33,13 @@ class SettingTap extends React.Component {
       forceConsentPrompt: true,
     });
   }
- 
-  // async deleteAll() {
-  //   alert('User deleted!')
-  //   console.log('deleteAll called')
-
-  //   const userIndex = this.props.userInfo.id
-  //   const collectionName = 'routeItemCollection'
-
-  //   firestore()
-  //     .collection(userIndex)
-  //     .delete()
-  //     .then(() => {
-  //       alert('User deleted!')
-  //     });
-  // }
-
+  
   async getContactList() {
+ 
+    const userIndex = this.props.userInfo.id 
 
-    console.log('getContactList called')
-
-    const userIndex = this.props.userInfo.id
-    const collectionName = 'contactList_test'
-
-    const snapshot = await firestore().collection(userIndex+collectionName).get()
+    const snapshot = await firestore().collection('user'+userIndex).doc('list').collection('contactList').get()
+    
     snapshot.docs.map(doc => console.log("frineds_docs",doc.data()));
 
     let contactList = []
@@ -64,7 +47,7 @@ class SettingTap extends React.Component {
     snapshot.docs.map(doc => contactList.push(doc.data()));
 
     console.log('contactList', contactList)
- 
+  
     this.props.setContactItems(contactList)
 }
 
@@ -85,10 +68,6 @@ async addContactList() {
   
   const friendRef = firestore().collection(userIndex+collectionName)
   
-  
- 
-
-
   friendRef.doc(friendIndex).set(
       { friendInfo }
   );
@@ -96,25 +75,17 @@ async addContactList() {
 
   async getPreRouteItems() {
 
-    console.log('getMarker called')
-
-    const userIndex = this.props.userInfo.id
-    const collectionName = 'routeItemCollection'
-
-    const snapshot = await firestore().collection(userIndex+collectionName).get()
-    // .orderBy('latestMessage.createdAt', 'desc')
-    
-    snapshot.docs.map(doc => doc.data());
-
     let preRouteItems = []
-    
-    snapshot.docs.map(doc => preRouteItems.push(doc.data()));
+    const userIndex = this.props.userInfo.id
+    const collectionName = 'user'+userIndex
 
-    console.log('preRouteItems', preRouteItems)
-
+    const itemsRef = await firestore().collection(collectionName).doc('list').collection('routeItems').get()
+    itemsRef.docs.map(doc => preRouteItems.push(doc.data()));
+  
     this.props.setPreRouteItems(preRouteItems)
 }
   
+ 
   _signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
@@ -125,7 +96,9 @@ async addContactList() {
       this.getPreRouteItems()
  
       this.getContactList()
- 
+
+      this.setUserInfoFireStore()
+
       this.props.navigation.navigate('BottomTapNavigator')
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -139,6 +112,27 @@ async addContactList() {
       }
     }
   };
+
+  /**
+   * 유저의 fireStore 루트 Collection에 유저정보를 document로 저장한다.
+   * 나중에 친구 추가,검색 및 채팅 초대 등을 위해 유저정보를 참조하기 위해 쓰인다.
+   */
+  setUserInfoFireStore = () => {
+ 
+    const userIndex = this.props.userInfo.id
+    const collectionName = 'user'+userIndex
+ 
+    const itemsRef = firestore().collection('userInfo');
+ 
+    itemsRef.doc(userIndex).set(
+        { 
+          id : this.props.userInfo.id,
+          email : this.props.userInfo.email,
+          nickname : this.props.userInfo.nickname,
+          profile_image_url : this.props.userInfo.profile_image_url
+        }
+    );
+  }
  
   signOut = async () => {
     try {
@@ -154,7 +148,7 @@ async addContactList() {
     const roomName = 'test-1'
 
     firestore()
-      .collection('THREADS2')
+      .collection('THREADS3')
       .add({
         name: roomName,
         latestMessage: {

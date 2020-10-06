@@ -26,7 +26,7 @@ export default function RoomScreen({ route }) {
     const text = messages[0].text;
 
     firestore()
-      .collection('THREADS2')
+      .collection('THREADS3')
       .doc(thread._id)
       .collection('MESSAGES')
       .add({
@@ -39,7 +39,7 @@ export default function RoomScreen({ route }) {
       });
 
     await firestore()
-      .collection('THREADS2')
+      .collection('THREADS3')
       .doc(thread._id)
       .set(
         {
@@ -54,7 +54,7 @@ export default function RoomScreen({ route }) {
 
   useEffect(() => {
     const messagesListener = firestore()
-      .collection('THREADS2')
+      .collection('THREADS3')
       .doc(thread._id)
       .collection('MESSAGES')
       .orderBy('createdAt', 'desc')
