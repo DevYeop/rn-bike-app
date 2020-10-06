@@ -2,19 +2,20 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
-  View, 
-} from 'react-native'; 
+  View,
+  Image,
+} from 'react-native';
 import { Button } from 'react-native-paper';
 
 export default class GraphDetail extends Component {
 
   constructor(props) {
     super(props);
+
   }
- 
-  chatWithThisUser =() => {
+
+  chatWithThisUser = () => {
     this.props.navigation.navigate('ChatScreen')
-  
   }
 
   /**
@@ -22,73 +23,61 @@ export default class GraphDetail extends Component {
    * @param {} friendInfo 채팅룸의 인덱스로 활용
    */
   setChatRoom = friendInfo => {
-  
-      console.log('setFireStoreInfo called')
 
-      const userIndex = this.props.userInfo.id
-      const collectionName = 'chatroomList'
+    console.log('setFireStoreInfo called')
 
-      const friendIdx = friendInfo
-       
-      const itemsRef = firestore().collection(userIndex+collectionName)
+    const userIndex = this.props.userInfo.id
+    const collectionName = 'chatroomList'
+
+    const friendIdx = friendInfo
+
+    const itemsRef = firestore().collection(userIndex + collectionName)
       .doc(friendIdx).collection('messages').doc('message')
-       
-  }
-
-  getChatList = friendInfo => {
 
   }
-   
-
-  async getChatList() { 
+ 
+  async getChatList() {
     const userIndex = this.props.userInfo.id
     const collectionName = 'chatRoom'
 
-    const snapshot = await firestore().collection(userIndex+collectionName).get()
-    snapshot.docs.map(doc => console.log("frineds_docs",doc.data()));
+    const snapshot = await firestore().collection(userIndex + collectionName).get()
+    snapshot.docs.map(doc => console.log("frineds_docs", doc.data()));
 
     let contactList = []
-    
-    snapshot.docs.map(doc => contactList.push(doc.data()));
- 
-    // this.props.setContactItems(contactList)
-}
 
-    
+    snapshot.docs.map(doc => contactList.push(doc.data()));
+
+    // this.props.setContactItems(contactList)
+  }
+
+
   render() {
     return (
-      <View> 
-          <Button onPress={()=>this.chatWithThisUser()}>gotochat</Button>
+
+      <View style={styles.container}>
+        {console.log('userProfile props:', this.props)}
+
+        <Image source={{ uri: this.props.route.params.profile_image_url }} style={styles.pic} />
+
+        <Text>{this.props.route.params.nickname}</Text>
+        
+
+        <Button onPress={() => this.chatWithThisUser()}>채팅하기</Button>
       </View>
     );
   }
 }
- 
+
 const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    backgroundColor: '#dbdbca',
-    borderColor: 'white',
-  },
-  nameContainer: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    width: 280,
-  },
   container: {
-    width: 275,
-    height: 150,
-    padding: 10,
-    margin: 10,
+    flex: 1,
+    backgroundColor: 'white',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  map: {
-    ...StyleSheet.absoluteFillObject,
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+  pic: {
+    borderRadius: 60,
+    width: 120,
+    height: 120,
   },
 });
- 

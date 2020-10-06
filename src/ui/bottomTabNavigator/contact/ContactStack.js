@@ -20,17 +20,11 @@ class ContactStack extends React.Component {
     return ( 
           <Stack.Navigator
             initialRouteName="ContactTab"
-           
             >
             
             <Stack.Screen name="ContactTab" 
             component={ContactTab}
-            options={{
-              title: '친구',
-              headerLeft: null,
-              headerRight: props => <ContactHeader {...props} /> 
-            }}
-               
+            options={{ headerShown: false }}
             />
             <Stack.Screen name="UserProfile" component={UserProfile} />
             <Stack.Screen name="ChatScreen" component={ChatScreen} />

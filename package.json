@@ -32,6 +32,7 @@
     "form-data": "^3.0.0",
     "haversine": "^1.1.1",
     "mariadb": "^2.4.2",
+    "native-base": "^2.13.14",
     "npx": "^10.2.2",
     "query-string": "^6.13.5",
     "react": "16.13.1",

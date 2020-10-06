@@ -7,6 +7,7 @@ import {
   Image,
   FlatList,
 } from 'react-native';
+import { Icon, Container, Content, Header, Left, Body, Right } from 'native-base';
 
 
 import { bindActionCreators } from 'redux';
@@ -22,6 +23,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import { Button } from 'react-native-paper';
 import firestore from '@react-native-firebase/firestore';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 
 class ContactTap extends Component {
 
@@ -30,25 +32,25 @@ class ContactTap extends Component {
     this.state = {
       userInfo: {},
       calls: [
-     
+
       ],
     };
     this.contactList = this.contactList.bind(this);
   }
 
-  goToProfileScreen = () => {
+  goToProfileScreen = item => {
+    this.props.navigation.navigate('UserProfile', item)
+  }
+
+  goToSearchScreen = () => {
     this.props.navigation.navigate('SearchScreen')
   }
- 
+
   renderItem = ({ item }) => {
     const Stack = createStackNavigator();
     return (
-
  
-
-
- 
-      <TouchableOpacity onPress={this.goToProfileScreen}>
+      <TouchableOpacity onPress={()=>this.goToProfileScreen(item)}>
         {
           console.log('contact props', item)
         }
@@ -92,22 +94,7 @@ class ContactTap extends Component {
      * 모든 steate reset
      */
   }
-
-
-  async searchFriend(nickname) {
- 
-    const userInfoRef = await firestore().collection('userInfo')
-    const snapshot = await userInfoRef.where('nickname', '==', '바이크타는개발자').get()
-
-    snapshot.forEach(doc => {
-      console.log('userInfo doc :', doc)
-    });
-  }
-
- 
-
-
-
+  
   render() {
     const Stack = createStackNavigator();
     return (
@@ -117,7 +104,20 @@ class ContactTap extends Component {
        */
       <View style={{ flex: 1 }} >
 
-        {console.log('this.props.userInfo',this.props.userInfo)}
+        <Container style={{ backgroundColor: 'white' }}>
+          <Header>
+            {/* <Left><Icon name="md-person-add" style={{ paddingLeft: 10 }} /></Left> */}
+            {/* <Body><Text>anpigon</Text></Body> */}
+            <Right>
+              <TouchableHighlight onPress={()=>this.goToSearchScreen()}>
+              <Icon name="md-person-add" style={{ paddingLeft: 10 }} />
+              </TouchableHighlight>
+              </Right>
+          </Header>
+        </Container>
+
+
+        {console.log('this.props.userInfo', this.props.userInfo)}
 
         <TouchableOpacity onPress={this.goToProfileScreen}>
           <View style={styles.row}>
@@ -137,8 +137,6 @@ class ContactTap extends Component {
 
 
         <Button onPress={() => this.logout()}>로그아웃</Button>
-
-        <Button onPress={() => this.searchFriend()}>친구검색</Button>
  
         <FlatList
 
