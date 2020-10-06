@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import {
   StyleSheet, 
   View, 
+  Text,
+  Image,
 } from 'react-native';
 import MapView, {
   Polyline,
@@ -13,9 +15,11 @@ import { bindActionCreators } from 'redux';
 import { Dimensions } from 'react-native';
 
 import { LineChart } from "react-native-chart-kit";
+import { Button } from 'react-native-paper';
  
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
+
  
 class GraphDetail extends Component {
   constructor(props) {
@@ -26,31 +30,35 @@ class GraphDetail extends Component {
         { id: 0, latlng: [] },
       ],
     };
-  }
-
-  goToGraphDetail = () => {
-    this.props.navigation.navigate('GraphDetail')
-  }
-
+  } 
+ 
   getBoundInfo = () => ({
     northEast: this.props.route.params.routeInfo.boundInfo.northEast,
     southWest: this.props.route.params.routeInfo.boundInfo.southWest,
   })
+
+  shareRouteItem = () => {
+
+    let itemInfo = []
+
+    itemInfo.push(this.props.route.params.routeInfo)
+    
+    this.props.navigation.navigate('ChatRoomListToShare',
+    {
+      itemInfo : itemInfo
+    }
+    )
+    
+  }
  
   render() {
     return (
-      <View style={styles.rootContainer}>
-        {console.log('클릭된 아이템의 this.props.route.params.routeInfo'),
-          console.log(this.props.route.params.routeInfo)}
+      <View style={styles.rootContainer}> 
         <View style={styles.mapContainer}>
           <MapView style={styles.map}
             initialRegion={{
               latitude: this.props.route.params.routeInfo.centerInfo.latitude,
               longitude: this.props.route.params.routeInfo.centerInfo.longitude,
-              /**
-               * 델타값에 2를 곱해주는 이유:
-               * - 
-               */
               latitudeDelta: this.props.route.params.routeInfo.deltaInfo.latitudeDelta*2,
               longitudeDelta: this.props.route.params.routeInfo.deltaInfo.longitudeDelta*2,
             }}
@@ -59,25 +67,57 @@ class GraphDetail extends Component {
           setMapBoundaries={this.getBoundInfo()}
           >
 
-              <Marker
-                coordinate={
-                  {
-                    latitude:this.props.route.params.routeInfo.routeCoordinates[0].latitude,
-                    longitude: this.props.route.params.routeInfo.routeCoordinates[0].longitude,
-                  }
+            <Marker
+              coordinate={
+                {
+                  latitude: this.props.route.params.routeInfo.routeCoordinates[0].latitude,
+                  longitude: this.props.route.params.routeInfo.routeCoordinates[0].longitude,
                 }
-                title='출발점'
-                description='출발시각 :'
-              />
+              }
+              title='출발'>
+              <View>
+                <Image
+                  style={{ alignItems: 'flex-start', height: 50, width: 50, resizeMode: 'center' }}
+                  source={require('../../res/start-flag.png')} // first way (local)
+                  resizeMethod='resize' />
+              </View>
+            </Marker>
+
+            <Marker
+              coordinate={
+                {
+                  latitude: this.props.route.params.routeInfo.routeCoordinates[this.props.route.params.routeInfo.routeCoordinates.length-1].latitude,
+                  longitude: this.props.route.params.routeInfo.routeCoordinates[this.props.route.params.routeInfo.routeCoordinates.length-1].longitude,
+                }
+              }
+              title='출발'>
+                  <View>
+                <Image
+                  style={{ alignItems: 'flex-start', height: 50, width: 50, resizeMode: 'stretch' }}
+                  source={require('../../res/goal-flag.png')} // first way (local)
+                  resizeMethod='resize' />
+              </View>
+               
+            </Marker>
+
+
+
+            <Polyline
+              coordinates={this.props.route.params.routeInfo.routeCoordinates}
+              strokeWidth={12}
+              strokeColor="#03c2fc"
+            />
 
             <Polyline
               coordinates={this.props.route.params.routeInfo.routeCoordinates}
               strokeWidth={6}
-              strokeColor="#fc3d03"
-            // geodesic={true}
+              strokeColor="#233ff7"
             />
+
           </MapView>
         </View>
+
+        <Button onPress={()=>this.shareRouteItem()}>share</Button>
 
         <View style={styles.graphContainer}>
           <View>
@@ -101,12 +141,12 @@ class GraphDetail extends Component {
               height={screenHeight/2}
  
               yAxisSuffix="km/h"
-              yAxisInterval={1} // optional, defaults to 1
-
+              yAxisInterval={1} 
+              
               chartConfig={{ //함수로 뺄까?
-                backgroundColor: "#e26a00",
-                backgroundGradientFrom: "#fb8c00",
-                backgroundGradientTo: "#ffa726",
+                backgroundColor: "#233ff7",
+                backgroundGradientFrom: "#233ff7",
+                backgroundGradientTo: "#3d6091",
                 decimalPlaces: 2, // optional, defaults to 2dp
                 color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                 labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,

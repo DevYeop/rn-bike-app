@@ -8,7 +8,9 @@ import {
     SAVE_USER_INFO_GOOGLE, 
     SAVE_USER_INFO_KAKAO,
     ADD_RECORDED_ROUTE,
-    SET_PRE_ROUTE_ITEMS
+    SET_PRE_ROUTE_ITEMS,
+    SET_CONTACT_ITEMS,
+    RESET_STATE
 } from '../actions/types'
 
 /**
@@ -20,6 +22,7 @@ const INITIAL_SATTE = {
     nickname:'',
     profile_image_url:'',
     routeItem:[],
+    contactList:[],
 }
  
 const RootReducer = (state = INITIAL_SATTE, action) => {
@@ -78,6 +81,11 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
 
             return Object.assign({}, state, kakaoUserInfo)
  
+            //js문법 
+            //베타 이너 
+            //구글플레이 계정 올려서 초대.
+            //10월 8월 (목)리뷰
+            //구글캘린더에 초대해서, 
 
         case ADD_RECORDED_ROUTE:
  
@@ -130,13 +138,41 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
                     speedArray: preRouteItems[i].routeItem.speedArray,
                     routeCoordinates: preRouteItems[i].routeItem.routeCoordinates
                 })
-
             }
 
-            
             return Object.assign({}, state, routeItem)
 
+
+            case SET_CONTACT_ITEMS:
+
+                const {contactList} = state
+
+                const friendArray = action.payload
+
+                for ( var i = 0 ; i < friendArray.length ; i++) {
+                    
+                    contactList.push({
+                        id: friendArray[i].friendInfo.id,
+                        image: friendArray[i].friendInfo.image,
+                        nickname: friendArray[i].friendInfo.nickname,
+                    })
+                }
+
+                console.log('contactList 결과',contactList)
+ 
+            return Object.assign({}, state, contactList)
+
+
+            case RESET_STATE :
+
+                let {preState} = state
+
+                preState = []
+
+            return preState
+            
         default:
+            
             return state
     }
 }

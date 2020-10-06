@@ -7,13 +7,23 @@ import {
   Image,
   FlatList,
 } from 'react-native';
+
+
+import { bindActionCreators } from 'redux'; 
+import { resetState } from '../../../actions/Actions'
+
+
+import {
+  GoogleSignin, 
+} from '@react-native-community/google-signin';
+
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { connect } from 'react-redux';
+import { Button } from 'react-native-paper';
 
 class ContactTap extends Component {
 
-  
   constructor(props) {
     super(props);
     this.state = {
@@ -36,19 +46,22 @@ class ContactTap extends Component {
   }
 
   goToProfileScreen = () => {
-    alert('profileScreen 필요')
+    this.props.navigation.navigate('UserProfile')
   }
 
   renderItem = ({ item }) => {
     const Stack = createStackNavigator();
     return (
       <TouchableOpacity onPress={this.goToProfileScreen}>
+        {
+          console.log('contact props', item)
+        }
         <View style={styles.row}>
           <Image source={{ uri: item.image }} style={styles.pic} />
           <View>
             <View style={styles.nameContainer}>
-              <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
-              <Text style={styles.mblTxt}>G지빌리티</Text>
+              <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail">{item.nickname}</Text>
+              <Text style={styles.mblTxt}>{item.id}</Text>
             </View>
             <View style={styles.msgContainer}>
               <Text style={styles.msgTxt}>{item.status}</Text>
@@ -60,28 +73,44 @@ class ContactTap extends Component {
   }
 
   contactList(state) {
+
+    
   }
+
+  async logout () {
+    try {
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+
+
+      this.props.resetState()
+ 
+      this.props.navigation.navigate('SettingTap')
+    } catch (error) {
+      console.error(error);
+    }
+    
+
+
+    /**
+     * 모든 steate reset
+     */
+  }
+
+  
 
   render() {
     const Stack = createStackNavigator();
-    return (
+    return ( 
+      <View style={{ flex: 1 }} >  
 
-      /**
-       *  todo : 유저의 정보를 나타네는 컴포넌트를 모듈화 해야함.
-       */
-      <View style={{ flex: 1 }} > 
-
-      {
-        console.log('contact this.props'),
-        console.log(this.props)
-      }
         <TouchableOpacity onPress={this.goToProfileScreen}>
           <View style={styles.row}>
             <Image source={{ uri: this.props.userInfo.profile_image_url }} style={styles.pic} />
             <View>
               <View style={styles.nameContainer}>
                 <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail">{this.props.userInfo.nickname}</Text>
-                <Text style={styles.mblTxt}>{this.props.userInfo.id}</Text>
+                <Text style={styles.mblTxt}></Text>
               </View>
               <View style={styles.msgContainer}>
                 <Text style={styles.msgTxt}>{this.props.userInfo.email}</Text>
@@ -89,14 +118,20 @@ class ContactTap extends Component {
             </View>
           </View>
         </TouchableOpacity>
+
+
+        <Button onPress={()=>this.logout()}>로그아웃</Button>
+
  
         <FlatList
-          extraData={this.state}
-          data={this.state.calls}
+          
+          data={this.props.userInfo.contactList}
           keyExtractor={(item) => {
             return item.id;
           }}
           renderItem={this.renderItem} />
+ 
+
       </View>
     );
   }
@@ -106,6 +141,12 @@ const mapStateToProps = (state) => {
   const { userInfo } = state
   return { userInfo }
 };
+
+const mapDispatchToProps = dispatch => (
+  bindActionCreators({
+    resetState
+  }, dispatch)
+);
 
 const styles = StyleSheet.create({
   row: {
@@ -150,4 +191,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(mapStateToProps)(ContactTap);
+export default connect(mapStateToProps, mapDispatchToProps)(ContactTap);

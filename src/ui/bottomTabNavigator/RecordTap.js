@@ -19,7 +19,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 
 import { connect } from 'react-redux';
-import { addRecordedRoute } from '../../actions/FriendsActions'
+import { addRecordedRoute } from '../../actions/Actions'
 import { bindActionCreators } from 'redux'; 
 import { TouchableOpacity } from "react-native-gesture-handler";
 
@@ -141,18 +141,14 @@ class RecordTap extends React.Component {
     startRecording() {
  
         const time = new Date().getTime();
-        const date = new Date(time);
-        const startRecordTime = this.formatDate(date)
+        const date = new Date(time); 
  
         this.setState({
             startRecordMilli : time,
             recordStatus: true,
             countDone: false
         })
-   
-        /**
-         * todo : 이미 시작된 watchPosigion이 있는지 검사 후 실행하도록 수정해야함.
-         */
+    
         this.startWatchPosigion();
     }
 
@@ -226,7 +222,6 @@ class RecordTap extends React.Component {
             }else if(maxLong < info[i].longitude){
                 maxLong = info[i].longitude
             }
-
         }
 
         const northEast = {
@@ -275,27 +270,11 @@ class RecordTap extends React.Component {
         }
 
  
-        this.props.addRecordedRoute(routeInfo)
-        /**
-         * 여기서 fire-store로 저장해야함. add
-         * 
-         * 
-         * collection(유저 아이디)
-         * - doc
-         * - doc
-         * - doc (유저 정보)
-         * .
-         * .
-         * .
-         * - doc (아템 목록)
-         *  -- collection (아템 목록)
-         *   --- doc (아템 아이디)
-         * 
-         */
+        this.props.addRecordedRoute(routeInfo) 
+
         this.addFireStoreInfo(routeInfo) 
  
     }
-
 
     /**
      * 
@@ -306,7 +285,7 @@ class RecordTap extends React.Component {
         console.log('setFireStoreInfo called')
 
         const userIndex = this.props.userInfo.id
-        const collectionName = 'routeItemCollection_new'
+        const collectionName = 'routeItemCollection'
 
         const itemIndex = routeItem.itemIndex+''
         console.log('itemIndex :')
@@ -320,42 +299,7 @@ class RecordTap extends React.Component {
             { routeItem }
         );
     }
-
-//     async getPreRouteItems() {
-
-//         console.log('getMarker called')
-
-//         const userIndex = this.props.userInfo.id
-//         const collectionName = 'routeItemCollection'
-
-//         const snapshot = await firestore().collection(userIndex+collectionName).get()
-//         snapshot.docs.map(doc => console.log("docs",doc.data()));
-//     }
-
-//     getFireStoreInfo = () => {
-
-//         const userIndex = this.props.userInfo.id
-
-//         const itemsRef = firestore().collection(userIndex)
-        
-//         console.log("콜렉션 :");
-//         console.log(itemsRef);
-
-//         itemsRef.get().then(function (doc) {
-//             if (doc.exists) {
-//                 console.log("Document data:", doc.data());
-//             } else {
-//                 // doc.data() will be undefined in this case
-//                 console.log("No such document!");
-//             }
-//         }).catch(function (error) {
-//             console.log("Error getting document:", error);
-//         });
-
-//   }
-
-
-
+  
 
     getAvgSpeed = () => {
         const speedArray = this.state.speedArray
@@ -386,8 +330,11 @@ class RecordTap extends React.Component {
         )
     }
 
+    /**
+     * 
+     * @param {} routeCoordinates 
+     */
     getRoadAPI  = routeCoordinates => { 
-
 
         let newRouteCoordinates = 'points='
 
@@ -407,7 +354,7 @@ class RecordTap extends React.Component {
         }
         
         newRouteCoordinates += routeLatitue+routeLongitude
-        // newRouteCoordinates = 
+
     }
 
         console.log('newRouteCoordinates',newRouteCoordinates)
@@ -417,49 +364,42 @@ class RecordTap extends React.Component {
         // const option = '&interpolate=true&'
         // const key = 'key=AIzaSyCiBqROXrj7009fX49-BxlGpd1NyhIldYA'
         // const roadAPIpullPath = url+params+option+key
-
-
         // const url = 'https://roads.googleapis.com/v1/snapToRoads?'
-        const url = 'https://roads.googleapis.com/v1/nearestRoads?'
+
+        const url = 'https://apis.openapi.sk.com/tmap/road/matchToRoads?version=2&appKey=l7xxd873259fd9804fe693601cecb92bd4b7'
         const params1 = newRouteCoordinates
  
         const params2 = 'path=-35.27801,149.12958|-35.28032,149.12907|-35.28099,149.12929|-35.28144,149.12984|-35.28194,149.13003|-35.28282,149.12956|-35.28302,149.12881|-35.28473,149.12836'
         const params21 = 'points=35.461337,-97.533734|35.462222,-97.531993'// 호주 좌표
         const params22 = 'points=37.480483,126.930500|37.481247,126.930420'// 울나라 좌표
         const params23 = 'points=35.343465,137.095879|35.344012,137.098465'// 닛본 좌표
-       
-
         
         const params3 = 'points=37.575695,126.983571|37.576004,126.984328|37.576445,126.985374|37.576400,126.986200|37.576400,126.986200|37.574609,126.986849'
         const params4 = 'path=29.759326,-95.368095|29.758332,-95.368954|29.757584,-95.369530|29.756243,-95.370550'
- 
-        // 
-
-        // const option = '&interpolate=true&'
+  
         const key = '&key=AIzaSyCiBqROXrj7009fX49-BxlGpd1NyhIldYA'
         const roadAPIpullPath = url+params21+key
-   
 
-        /**
-         * todo : 녹화 중에 계속 road api를 호출하지 않았으면 좋겟는데.. 잠시보류
-         */
-        fetch(roadAPIpullPath)
-        .then((response) => response.json())
-        .then((json) => {
-            console.log('json');
-            console.log(json);   
-
-            // 아니 이 놈이 왜 우리나라 좌표만 안돼 지원 끊겻나본데 이거
-            // this.setSnappedPoint(json)
-        //   return json.movies;
-        })
+        let roadUrl = 'https://apis.openapi.sk.com/tmap/road/matchToRoads?version=2&appKey=l7xxd873259fd9804fe693601cecb92bd4b7'
+          
+        fetch(roadUrl
+        
+            )
+            .then((response) => {
+           
+                    console.log('content-type',response.headers )
+               
+                return response; 
+               })
+            // .then((response) => response.json())
+            // .then((response) => response)
+            .then((json) => {
+                console.log('json');
+                console.log(json);
+            })
         .catch((error) => {
           console.error(error);
         });
-
-        
-
-        // alert('getRoadAPI')
     }
 
     setSnappedPoint = (json) => {
@@ -539,7 +479,7 @@ class RecordTap extends React.Component {
                       {
                           console.log('스냅 데이터', this.state.snappedRouteCoordinates)
                       }
-                    <Polyline coordinates={this.state.snappedRouteCoordinates} strokeWidth={12} strokeColor="#4334eb" />
+                    <Polyline coordinates={this.state.routeCoordinates} strokeWidth={12} strokeColor="#4334eb" />
  
                     <Polyline coordinates={this.state.routeCoordinates} strokeWidth={6} strokeColor="#fc3d03" />
 
@@ -559,7 +499,7 @@ class RecordTap extends React.Component {
                     </ActionButton.Item>
                 </ActionButton>
                 <TouchableOpacity onPress={()=>this.getRoadAPI()}>
-                <Button title='road api'/>
+                {/* <Button title='road api'/> */}
                 </TouchableOpacity>
                 {/* {!this.state.countDone ? ( todo : roadAPI 적용 후 개발완료 할 것
                     <CountdownCircleTimer
