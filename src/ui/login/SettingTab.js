@@ -124,11 +124,14 @@ async addContactList() {
     const userIndex = this.props.userInfo.id
     const collectionName = 'user'+userIndex
  
-    const itemsRef = firestore().collection(collectionName);
-
-    itemsRef.doc('userInfo').set(
+    const itemsRef = firestore().collection('userInfo');
+ 
+    itemsRef.doc(userIndex).set(
         { 
-          ...this.props.userInfo
+          id : this.props.userInfo.id,
+          email : this.props.userInfo.email,
+          nickname : this.props.userInfo.nickname,
+          profile_image_url : this.props.userInfo.profile_image_url
         }
     );
   }

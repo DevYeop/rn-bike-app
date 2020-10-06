@@ -14,8 +14,6 @@ export default class GraphDetail extends Component {
  
   chatWithThisUser =() => {
     this.props.navigation.navigate('ChatScreen')
-
-    this,this.setChatRoom('test-1')
   
   }
 
