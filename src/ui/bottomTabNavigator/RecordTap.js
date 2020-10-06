@@ -271,7 +271,6 @@ class RecordTap extends React.Component {
             centerInfo: centerInfo,
             deltaInfo: deltaInfo,
         }
-
  
         this.props.addRecordedRoute(routeInfo) 
 

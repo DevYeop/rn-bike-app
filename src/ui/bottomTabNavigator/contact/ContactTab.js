@@ -43,14 +43,17 @@ class ContactTap extends Component {
   renderItem = ({ item }) => {
     const Stack = createStackNavigator();
     return (
-  
+
+ 
+
+
  
       <TouchableOpacity onPress={this.goToProfileScreen}>
         {
           console.log('contact props', item)
         }
         <View style={styles.row}>
-          <Image source={{ uri: item.image }} style={styles.pic} />
+          <Image source={{ uri: item.profile_image_url }} style={styles.pic} />
           <View>
             <View style={styles.nameContainer}>
               <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail">{item.nickname}</Text>
@@ -114,6 +117,8 @@ class ContactTap extends Component {
        */
       <View style={{ flex: 1 }} >
 
+        {console.log('this.props.userInfo',this.props.userInfo)}
+
         <TouchableOpacity onPress={this.goToProfileScreen}>
           <View style={styles.row}>
             <Image source={{ uri: this.props.userInfo.profile_image_url }} style={styles.pic} />
@@ -131,13 +136,10 @@ class ContactTap extends Component {
         </TouchableOpacity>
 
 
-
         <Button onPress={() => this.logout()}>로그아웃</Button>
 
-
         <Button onPress={() => this.searchFriend()}>친구검색</Button>
-
-
+ 
         <FlatList
 
           data={this.props.userInfo.contactList}

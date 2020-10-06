@@ -9,11 +9,11 @@ import firestore from '@react-native-firebase/firestore';
 
 
 import { bindActionCreators } from 'redux';
-import { resetState } from '../../../actions/Actions'
+import { updateContactList } from '../../../actions/Actions'
 
 import { connect } from 'react-redux';
 
-const SearchScreen = ({userInfo}) => {
+const SearchScreen = ({userInfo, updateContactList}) => {
     const [search, setSearchQuery] = useState('')
     const [filteredDataSource, setFilteredDataSource] = useState([]);
     const [masterDataSource, setMasterDataSource] = useState([]);
@@ -75,6 +75,16 @@ const SearchScreen = ({userInfo}) => {
         setImageUrl(friendInfo.profile_image_url)
     }
 
+    const addFirend = () => {
+         
+        addFriendFireStore()
+
+        /**
+         * todo : redux-store에서 updateContactList 작업 처리해줘야함.
+         */
+  
+    }
+
     async function addFriendFireStore() {
 
         const userIndex = userInfo.id
@@ -89,8 +99,7 @@ const SearchScreen = ({userInfo}) => {
                 profile_image_url: imageUri,
             }
         );
-
-        // todo : 추가 완료되면 토스트라도 띄워야 함.
+ 
     }
 
     return (
@@ -109,7 +118,7 @@ const SearchScreen = ({userInfo}) => {
 
                 <Text>{nickname}</Text>
 
-                <Button onPress={addFriendFireStore}>친구 추가</Button>
+                <Button onPress={addFirend}>친구 추가</Button>
 
             </View>
         </SafeAreaView>
@@ -121,14 +130,13 @@ const mapStateToProps = (state) => {
     const { userInfo } = state
     return { userInfo }
   };
-  
-  const mapDispatchToProps = dispatch => (
+   
+const mapDispatchToProps = dispatch => (
     bindActionCreators({
-    //   resetState
-    // steate에 컨택트 리스트 추가하는 거 추가해야하마
+        updateContactList
     }, dispatch)
   );
-
+ 
 const styles = StyleSheet.create({
     container: {
         flex:1,

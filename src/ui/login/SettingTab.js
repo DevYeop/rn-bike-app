@@ -35,13 +35,11 @@ class SettingTap extends React.Component {
   }
   
   async getContactList() {
+ 
+    const userIndex = this.props.userInfo.id 
 
-    console.log('getContactList called')
-
-    const userIndex = this.props.userInfo.id
-    const collectionName = 'contactList_test'
-
-    const snapshot = await firestore().collection(userIndex+collectionName).get()
+    const snapshot = await firestore().collection('user'+userIndex).doc('list').collection('contactList').get()
+    
     snapshot.docs.map(doc => console.log("frineds_docs",doc.data()));
 
     let contactList = []

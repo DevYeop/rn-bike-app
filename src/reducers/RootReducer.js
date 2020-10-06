@@ -8,9 +8,10 @@ import {
     SAVE_USER_INFO_GOOGLE, 
     SAVE_USER_INFO_KAKAO,
     ADD_RECORDED_ROUTE,
-    SET_PRE_ROUTE_ITEMS,
-    SET_CONTACT_ITEMS,
-    RESET_STATE
+    SET_PRE_ROUTE_ITEMS, 
+    RESET_STATE,
+    UPDATE_CONTACT_LIST,
+    SET_CONTACT_LIST
 } from '../actions/types'
 
 /**
@@ -141,25 +142,25 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
             }
 
             return Object.assign({}, state, routeItem)
+ 
 
-
-            case SET_CONTACT_ITEMS:
+            case SET_CONTACT_LIST:
 
                 const {contactList} = state
 
-                const friendArray = action.payload
+                const receivedContactList = action.payload
 
-                for ( var i = 0 ; i < friendArray.length ; i++) {
+                for (let i = 0 ; i < receivedContactList.length ; i++){
                     
                     contactList.push({
-                        id: friendArray[i].friendInfo.id,
-                        image: friendArray[i].friendInfo.image,
-                        nickname: friendArray[i].friendInfo.nickname,
+                        id: receivedContactList[i].id,
+                        nickname: receivedContactList[i].nickname,
+                        profile_image_url: receivedContactList[i].profile_image_url,
                     })
                 }
 
-                console.log('contactList 결과',contactList)
- 
+                console.log('리듀서 contactList', contactList)
+
             return Object.assign({}, state, contactList)
 
 
@@ -170,6 +171,28 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
                 preState = []
 
             return preState
+
+          
+
+            // case UPDATE_CONTACT_LIST:
+             
+            
+            //     console.log('testtestetsetstes')
+    
+    
+                    // for ( var i = 0 ; i < friendArray.length ; i++) {
+                        
+                    //     contactList.push({
+                    //         id: friendArray[i].friendInfo.id,
+                    //         image: friendArray[i].friendInfo.image,
+                    //         nickname: friendArray[i].friendInfo.nickname,
+                    //     })
+                    // }
+                    // return
+    
+
+
+        
             
         default:
             
