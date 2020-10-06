@@ -285,18 +285,12 @@ class RecordTap extends React.Component {
      * @param {*} routeItem 새로 생성된 아이템의 정보
      */
     addFireStoreInfo = routeItem => {
-        console.log('setFireStoreInfo called')
 
         const userIndex = this.props.userInfo.id
-        const collectionName = 'routeItemCollection'
+        const collectionName = 'user'+userIndex
+        const itemIndex = routeItem.itemIndex+'' 
 
-        const itemIndex = routeItem.itemIndex+''
-        console.log('itemIndex :')
-        console.log(itemIndex)
-
-        console.log(routeItem)
- 
-        const itemsRef = firestore().collection(userIndex+collectionName);
+        const itemsRef = firestore().collection(collectionName).doc('list').collection('routeItems');
 
         itemsRef.doc(itemIndex).set(
             { routeItem }

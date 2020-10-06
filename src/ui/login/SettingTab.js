@@ -77,21 +77,13 @@ async addContactList() {
 
   async getPreRouteItems() {
 
-    console.log('getMarker called')
-
-    const userIndex = this.props.userInfo.id
-    const collectionName = 'routeItemCollection'
-
-    const snapshot = await firestore().collection(userIndex+collectionName).get()
-    
-    snapshot.docs.map(doc => doc.data());
-
     let preRouteItems = []
-    
-    snapshot.docs.map(doc => preRouteItems.push(doc.data()));
+    const userIndex = this.props.userInfo.id
+    const collectionName = 'user'+userIndex
 
-    console.log('preRouteItems', preRouteItems)
-
+    const itemsRef = await firestore().collection(collectionName).doc('list').collection('routeItems').get()
+    itemsRef.docs.map(doc => preRouteItems.push(doc.data()));
+  
     this.props.setPreRouteItems(preRouteItems)
 }
   
@@ -106,8 +98,9 @@ async addContactList() {
       this.getPreRouteItems()
  
       this.getContactList()
-  
- 
+
+      this.setUserInfoFireStore()
+
       this.props.navigation.navigate('BottomTapNavigator')
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -121,6 +114,24 @@ async addContactList() {
       }
     }
   };
+
+  /**
+   * 유저의 fireStore 루트 Collection에 유저정보를 document로 저장한다.
+   * 나중에 친구 추가,검색 및 채팅 초대 등을 위해 유저정보를 참조하기 위해 쓰인다.
+   */
+  setUserInfoFireStore = () => {
+ 
+    const userIndex = this.props.userInfo.id
+    const collectionName = 'user'+userIndex
+ 
+    const itemsRef = firestore().collection(collectionName);
+
+    itemsRef.doc('userInfo').set(
+        { 
+          ...this.props.userInfo
+        }
+    );
+  }
  
   signOut = async () => {
     try {
