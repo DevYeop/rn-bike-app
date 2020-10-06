@@ -7,11 +7,14 @@ import {
     ADD_FRIEND, 
     SAVE_USER_INFO_GOOGLE, 
     SAVE_USER_INFO_KAKAO,
-    ADD_RECORDED_ROUTE } from '../actions/types'
+    ADD_RECORDED_ROUTE,
+    SET_PRE_ROUTE_ITEMS
+} from '../actions/types'
+
 /**
  * INITIAL_STATE variable with possible friends to add to your social network
  */
-const INITIAL_SATTE = {
+const INITIAL_SATTE = { 
     id:'',
     email:'',
     nickname:'',
@@ -78,8 +81,11 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
 
         case ADD_RECORDED_ROUTE:
  
-            let {routeItem} = state
+            var {routeItem} = state
 
+            /**
+             * todo : 하나로 묶자
+             */
             const {routeCoordinates} = action.payload
             const {boundInfo} = action.payload
             const {deltaInfo} = action.payload
@@ -88,27 +94,47 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
             const {lapTime} = action.payload
             const {speedArray} = action.payload
             const {avgSpeed} = action.payload
-  
-            routeItem.push({ 
-                id: routeItem.length+1, 
-                boundInfo : boundInfo ,
-                deltaInfo : deltaInfo ,
-                centerInfo : centerInfo,
-                avgSpeed : avgSpeed,
-                distance : distance,
-                lapTime : lapTime,
-                speedArray : speedArray,
-                routeCoordinates : routeCoordinates})
-          
+            const {itemIndex} = action.payload 
+
+            routeItem.push({
+                itemIndex: itemIndex,
+                boundInfo: boundInfo,
+                deltaInfo: deltaInfo,
+                centerInfo: centerInfo,
+                avgSpeed: avgSpeed,
+                distance: distance,
+                lapTime: lapTime,
+                speedArray: speedArray,
+                routeCoordinates: routeCoordinates
+            })
+
             return Object.assign({}, state, routeItem)
-            /**&
-             * latlng 배열을 받는다 + 시간별 위치,거리,속도
-             * 가장 첫번째와 마지막의 latlng을 출발 도착지로 설정한다
-             * 경로상 가장 동서남북인 쪽으 각각 구하고 전체맵상 북서쪽 남동쪽을 구한다
-             * 위에서 구한 값으로 지도의 배율을 맞춘다.
-             * 경로상 중간으 ㅣ위치를 맵의 중간으로 잡는다
-             * 출발 도착에 핀을 꽂는다
-             */             
+
+
+        case SET_PRE_ROUTE_ITEMS:
+
+            var {routeItem} = state
+
+            const preRouteItems = action.payload
+ 
+            for (var i = 0 ; i < preRouteItems.length ; i ++){
+ 
+                routeItem.push({
+                    itemIndex: preRouteItems[i].routeItem.itemIndex,
+                    boundInfo: preRouteItems[i].routeItem.boundInfo,
+                    deltaInfo: preRouteItems[i].routeItem.deltaInfo,
+                    centerInfo: preRouteItems[i].routeItem.centerInfo,
+                    avgSpeed: preRouteItems[i].routeItem.avgSpeed,
+                    distance: preRouteItems[i].routeItem.distance,
+                    lapTime: preRouteItems[i].routeItem.lapTime,
+                    speedArray: preRouteItems[i].routeItem.speedArray,
+                    routeCoordinates: preRouteItems[i].routeItem.routeCoordinates
+                })
+
+            }
+
+            
+            return Object.assign({}, state, routeItem)
 
         default:
             return state

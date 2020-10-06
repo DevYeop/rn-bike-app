@@ -19,6 +19,11 @@ import com.dooboolab.kakaologins.RNKakaoLoginsPackage;
 
 import androidx.multidex.MultiDexApplication;
 
+import com.facebook.react.shell.MainReactPackage;
+
+import io.invertase.firebase.auth.ReactNativeFirebaseAuthPackage;
+import io.invertase.firebase.firestore.ReactNativeFirebaseFirestorePackage;
+ 
 public class MainApplication extends MultiDexApplication implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost =
@@ -35,6 +40,9 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
           packages.add(new RNKakaoLoginsPackage());
+          // packages.add(new MainReactPackage());
+          // packages.add(new ReactNativeFirebaseAuthPackage());
+          // packages.add(new ReactNativeFirebaseFirestorePackage());
           return packages;
         }
 

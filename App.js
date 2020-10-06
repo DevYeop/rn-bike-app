@@ -18,7 +18,6 @@ import RequestLocationPermission from './src/lib/RequestLocationPermission'
 
 import SettingTap from './src/ui/login/SettingTab';
 
-
 const Stack = createStackNavigator();
 
 const devTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
@@ -29,7 +28,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <Provider store={store}>
+      <Provider store={store}> 
         <NavigationContainer>
           <Stack.Navigator
             initialRouteName="SettingTap"
