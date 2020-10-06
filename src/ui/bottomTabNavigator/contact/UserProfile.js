@@ -20,16 +20,13 @@ class GraphDetail extends Component {
    * 
    * @param {*} friendIndex 
    */
-  chatWithThisUser = friendIndex => {
-    // this.props.navigation.navigate('ChatScreen')
+  gotoChatScreen = (roomId, userIndex, friendIdx) => {
+    this.props.navigation.navigate('ChatScreen',{roomId, userIndex, friendIdx})
 
-
-    // this.getChattingRoom(friendIndex)
-    this.checkRoomExists(friendIndex)
   }
 
   createChattingRoom = friendIndex => { 
-
+ 
     const invitedUser = []
     const userIndex = this.props.userInfo.id
 
@@ -51,10 +48,8 @@ class GraphDetail extends Component {
         text: `You have joined the room.`,
         createdAt: new Date().getTime()
       }
-    }).then(function(docRef) {
-      console.log("Document written with ID: ", docRef.id);
-
-      // 이 아이디를 물고 챗 스크린으로넘어가야함
+    }).then( docRef => { 
+      this.gotoChatScreen(docRef.id, userIndex, friendIndex)
   })
   .catch(function(error) {
       console.error("Error adding document: ", error);
@@ -91,11 +86,10 @@ class GraphDetail extends Component {
       console.log('roomId',roomId)
       console.log('유저가 참여한 방들 :', invitedUser)
 
-      if(invitedUser.includes(userIndex) &&  invitedUser.includes(userIndex) ){
+      if(invitedUser.includes(userIndex) &&  invitedUser.includes(friendIndex) ){
         isReturned = true
-        return (
-          console.log('1:1방 존재함 해당방 아이디', roomId)
-           // 이 아이디를 물고 챗 스크린으로넘어가야함
+        return ( 
+          this.gotoChatScreen(roomId, userIndex, friendIndex)
         )}
     });
 
@@ -152,7 +146,7 @@ class GraphDetail extends Component {
         <Text>{this.props.route.params.nickname}</Text>
         
 
-        <Button onPress={() => this.chatWithThisUser(this.props.route.params.id)}>채팅하기</Button>
+        <Button onPress={() => this.checkRoomExists(this.props.route.params.id)}>채팅하기</Button>
       </View>
     );
   }

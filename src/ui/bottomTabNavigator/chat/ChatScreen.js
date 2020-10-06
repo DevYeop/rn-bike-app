@@ -19,9 +19,11 @@ import RouteItemView from './RouteItemView'
 function ChatScreen({ route, userInfo }) {
 
   useStatsBar('light-content');
-
+ 
+  console.log('chatscreen route props' ,route)
+   
   const [messages, setMessages] = useState([]);
-  const { thread } = route.params;
+  const {roomId, userIndex, friendIdx} = route.params;
   const { user } = useContext(AuthContext);
   // const currentUser = user.toJSON();
   const userIdx = userInfo.id
@@ -30,10 +32,13 @@ function ChatScreen({ route, userInfo }) {
   async function handleSend(messages) {
     const text = messages[0].text;
 
+    /**
+     * 채팅메세지들을 차곡차곡 더한다
+     */
     firestore()
-      .collection('THREADS3')
-      .doc(thread._id)
-      .collection('MESSAGES')
+      .collection('chattingList')
+      .doc(roomId)
+      .collection('message')
       .add({
         createdAt: new Date().getTime(),
         user: {
@@ -43,11 +48,19 @@ function ChatScreen({ route, userInfo }) {
         text: text,
       });
 
+
+      /**
+       * 채팅룸리스트에서 챗팅룸이 표시해야할 마지막 채팅정보를 셋팅한다.
+       */
     await firestore()
-      .collection('THREADS3')
-      .doc(thread._id)
+      .collection('chattingList')
+      .doc(roomId)
       .set(
         {
+          invitedUser:[
+            userIndex,
+            friendIdx
+        ],
           latestMessage: {
             text,
             createdAt: new Date().getTime()
@@ -56,12 +69,12 @@ function ChatScreen({ route, userInfo }) {
         { merge: true }
       );
   }
-
+ 
   useEffect(() => {
     const messagesListener = firestore()
-      .collection('THREADS3')
-      .doc(thread._id)
-      .collection('MESSAGES')
+      .collection('chattingList')
+      .doc(roomId)
+      .collection('message')
       .orderBy('createdAt', 'desc')
       .onSnapshot(querySnapshot => {
         const messages = querySnapshot.docs.map(doc => {

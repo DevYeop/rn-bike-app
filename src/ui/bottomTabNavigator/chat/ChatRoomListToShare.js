@@ -76,7 +76,7 @@ export default function ChatRoomList({ navigation, route }) {
     console.log('userIdx :', userIdx)
     console.log('thread._id',threadID)
 
-    firestore()
+    await firestore()
       .collection('THREADS3')
       .doc(threadID)
       .collection('MESSAGES')
