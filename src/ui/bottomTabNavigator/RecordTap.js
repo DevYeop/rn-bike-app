@@ -24,7 +24,8 @@ import { bindActionCreators } from 'redux';
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 import firestore from '@react-native-firebase/firestore';
-  
+
+ 
 class RecordTap extends React.Component {
     constructor(props) {
         super(props);
@@ -36,6 +37,7 @@ class RecordTap extends React.Component {
             latitude: 0, // todo : 유저 현 위치의 latlong으로 설정해야 함
             longitude: 0,
             speedArray: [],
+            snappedRouteCoordinates : [],
             routeCoordinates: [],           // 녹화된 드라이빙 코스의 경위도 좌표 집합.
             distanceTravelled: 0,           // 드라이브 코스의 총 직선거리. 
             prevLatLng: {},
@@ -250,6 +252,16 @@ class RecordTap extends React.Component {
         const lapTime = this.getLapTime()
         const avgSpeed = this.getAvgSpeed()
 
+
+        /**
+         * 여기서 routecorodinate를 roead로 스냅후 전달할 것
+         * 
+         */
+
+        this.getRoadAPI(this.state.routeCoordinates)
+
+
+         
         const routeInfo = {
             itemIndex : this.state.startRecordMilli,
             speedArray : this.state.speedArray,
@@ -374,22 +386,138 @@ class RecordTap extends React.Component {
         )
     }
 
-    getRoadAPI  = () => { 
+    getRoadAPI  = routeCoordinates => { 
+
+
+        let newRouteCoordinates = 'points='
+
+        console.log('routeCoordinates lenth',routeCoordinates.length)
+        
+        let routeLatitue = ''
+        let routeLongitude = ''
+
+    for (var i = 0 ; i < routeCoordinates.length ; i++){
+        
+        routeLatitue   = routeCoordinates[i].latitude+','
+
+        if( i == routeCoordinates.length-1){
+            routeLongitude = routeCoordinates[i].longitude  
+        }else{
+            routeLongitude = routeCoordinates[i].longitude+'|'  
+        }
+        
+        newRouteCoordinates += routeLatitue+routeLongitude
+        // newRouteCoordinates = 
+    }
+
+        console.log('newRouteCoordinates',newRouteCoordinates)
+
+        // const url = 'https://roads.googleapis.com/v1/snapToRoads?'
+        // const params = newRouteCoordinates
+        // const option = '&interpolate=true&'
+        // const key = 'key=AIzaSyCiBqROXrj7009fX49-BxlGpd1NyhIldYA'
+        // const roadAPIpullPath = url+params+option+key
+
+
+        // const url = 'https://roads.googleapis.com/v1/snapToRoads?'
+        const url = 'https://roads.googleapis.com/v1/nearestRoads?'
+        const params1 = newRouteCoordinates
+ 
+        const params2 = 'path=-35.27801,149.12958|-35.28032,149.12907|-35.28099,149.12929|-35.28144,149.12984|-35.28194,149.13003|-35.28282,149.12956|-35.28302,149.12881|-35.28473,149.12836'
+        const params21 = 'points=35.461337,-97.533734|35.462222,-97.531993'// 호주 좌표
+        const params22 = 'points=37.480483,126.930500|37.481247,126.930420'// 울나라 좌표
+        const params23 = 'points=35.343465,137.095879|35.344012,137.098465'// 닛본 좌표
+       
+
+        
+        const params3 = 'points=37.575695,126.983571|37.576004,126.984328|37.576445,126.985374|37.576400,126.986200|37.576400,126.986200|37.574609,126.986849'
+        const params4 = 'path=29.759326,-95.368095|29.758332,-95.368954|29.757584,-95.369530|29.756243,-95.370550'
+ 
+        // 
+
+        // const option = '&interpolate=true&'
+        const key = '&key=AIzaSyCiBqROXrj7009fX49-BxlGpd1NyhIldYA'
+        const roadAPIpullPath = url+params21+key
+   
+
         /**
          * todo : 녹화 중에 계속 road api를 호출하지 않았으면 좋겟는데.. 잠시보류
          */
-        fetch('https://roads.googleapis.com/v1/snapToRoads?path=-35.27801,149.12958|-35.28032,149.12907|-35.28099,149.12929|-35.28144,149.12984|-35.28194,149.13003|-35.28282,149.12956|-35.28302,149.12881|-35.28473,149.12836&interpolate=true&key=AIzaSyCiBqROXrj7009fX49-BxlGpd1NyhIldYA')
+        fetch(roadAPIpullPath)
         .then((response) => response.json())
         .then((json) => {
             console.log('json');
-            console.log(json);  
-          return json.movies;
+            console.log(json);   
+
+            // 아니 이 놈이 왜 우리나라 좌표만 안돼 지원 끊겻나본데 이거
+            // this.setSnappedPoint(json)
+        //   return json.movies;
         })
         .catch((error) => {
           console.error(error);
         });
 
-        alert('getRoadAPI')
+        
+
+        // alert('getRoadAPI')
+    }
+
+    setSnappedPoint = (json) => {
+ 
+        console.log('json.snappedPoints',json.snappedPoints)
+        
+        const snappedPoints = json.snappedPoints
+        const snappedPointArray = []
+
+        let snappedPoint = {
+            latitude:0,
+            longitude:0,
+        };
+
+        let snappedLat
+        let snappedLong
+
+        for (var i = 0; i < snappedPoints.length; i++) {
+             
+            snappedLat = snappedPoints[i].location.latitude
+            snappedLong = snappedPoints[i].location.longitude
+ 
+            snappedPoint.latitude = snappedLat
+            snappedPoint.longitude = snappedLong
+
+            snappedPointArray.push(snappedPoint)
+
+        }
+
+ 
+
+        console.log('snappedPointArray', snappedPointArray)
+ 
+
+        this.setState({
+            snappedRouteCoordinates: snappedPointArray,
+            latitude: snappedPointArray[0].latitude,
+            longitude: snappedPointArray[0].longitude,
+        })
+
+        console.log('스냅 후 state ', this.state)
+
+        // this.setState({
+        //     latitude,
+        //     longitude,
+        //     heading,
+        //     speed, // todo : 유저가 정지해 있을 때 0으로 set 해줘야함.
+        //     speedArray: speedArray.concat(parseInt(speed)),
+        //     routeCoordinates: routeCoordinates.concat([newCoordinate]),
+        //     distanceTravelled:
+        //         distanceTravelled + this.calcDistance(newCoordinate),
+        //     prevLatLng: newCoordinate
+        // });
+
+        
+
+        
+        
     }
 
     render() {
@@ -407,7 +535,14 @@ class RecordTap extends React.Component {
                     zoomControlEnabled={true}
                     rotateEnabled={true}
                     camera={this.getMapCamera()}>
+                      
+                      {
+                          console.log('스냅 데이터', this.state.snappedRouteCoordinates)
+                      }
+                    <Polyline coordinates={this.state.snappedRouteCoordinates} strokeWidth={12} strokeColor="#4334eb" />
+ 
                     <Polyline coordinates={this.state.routeCoordinates} strokeWidth={6} strokeColor="#fc3d03" />
+
                 </MapView>
                 <Text style={styles.speed}>{this.showSpeed()}km/h</Text>
                 <ActionButton
