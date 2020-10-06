@@ -58,7 +58,7 @@ function ChatScreen({ route, userInfo }) {
       .set(
         {
           invitedUser:[
-            userIndex,
+            userIdx,
             friendIdx
         ],
           latestMessage: {
@@ -173,7 +173,6 @@ function ChatScreen({ route, userInfo }) {
       />
     );
   }
-
 
   return (
 

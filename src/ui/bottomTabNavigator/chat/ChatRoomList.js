@@ -13,13 +13,14 @@ function ChatRoomList({ navigation, userInfo }) {
   const [threads, setThreads] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const userIndex = userInfo.id
   
   useEffect( () => { 
  
     getUnsubscribe()
 
   }, []); 
-  
+
   const getUnsubscribe = async () => {
 
     console.log('in chatroom userInfo.id', userInfo.id)
@@ -66,6 +67,17 @@ function ChatRoomList({ navigation, userInfo }) {
     return <Loading />;
   }
 
+  const getOpponentInfo = async () => {
+ 
+    await firestore()
+    .collection('userInfo')
+    
+    .where('invitedUser', 'array-contains', userInfo.id)
+    .orderBy('latestMessage.createdAt', 'desc')
+
+    return
+  }
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -78,6 +90,9 @@ function ChatRoomList({ navigation, userInfo }) {
           >
 
             <View style={{flexDirection:'column'}}>
+
+            {/* <Image source={{ uri: getOpponentInfo(item.invitedUser) }} style={styles.pic} /> */}
+             
               <List.Item
                 title={item.name}
                 description={item.latestMessage.text}

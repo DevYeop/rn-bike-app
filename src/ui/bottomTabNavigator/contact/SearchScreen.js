@@ -114,7 +114,7 @@ const SearchScreen = ({userInfo, updateContactList}) => {
             <View style={styles.container}>
                 
 
-                <Image style={styles.pic} source={{ uri: imageUri }} />
+                <Image style={styles} source={{ uri: imageUri }} />
 
                 <Text>{nickname}</Text>
 
