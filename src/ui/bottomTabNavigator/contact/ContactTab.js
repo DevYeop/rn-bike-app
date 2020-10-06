@@ -12,7 +12,6 @@ import { Icon, Container, Content, Header, Left, Body, Right } from 'native-base
 
 import { bindActionCreators } from 'redux';
 import { resetState } from '../../../actions/Actions'
-
 import { connect } from 'react-redux';
 
 import {

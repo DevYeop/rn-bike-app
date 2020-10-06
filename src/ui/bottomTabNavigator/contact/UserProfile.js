@@ -5,17 +5,107 @@ import {
   View,
   Image,
 } from 'react-native';
-import { Button } from 'react-native-paper';
+import { Button } from 'react-native-paper'; 
+import firestore from '@react-native-firebase/firestore';
+import { connect } from 'react-redux';
 
-export default class GraphDetail extends Component {
+class GraphDetail extends Component {
 
   constructor(props) {
     super(props);
 
   }
 
-  chatWithThisUser = () => {
-    this.props.navigation.navigate('ChatScreen')
+  /**
+   * 
+   * @param {*} friendIndex 
+   */
+  chatWithThisUser = friendIndex => {
+    // this.props.navigation.navigate('ChatScreen')
+
+
+    // this.getChattingRoom(friendIndex)
+    this.checkRoomExists(friendIndex)
+  }
+
+  createChattingRoom = friendIndex => { 
+
+    const invitedUser = []
+    const userIndex = this.props.userInfo.id
+
+    invitedUser.push(userIndex)
+    invitedUser.push(friendIndex)
+   
+    /**
+     * 방을 추가하기 전에,
+     * 기존에 상대방이랑 채팅하고 있떤 방이 있는기 검샏해야함.
+     * 없으면 생성. 있으면 기존의 방 id 반환.
+     * 1:1채팅상황임
+     */
+    firestore()
+    .collection('roomList') 
+    .add({
+      name: "roomname",
+      invitedUser : invitedUser,
+      latestMessage: {
+        text: `You have joined the room.`,
+        createdAt: new Date().getTime()
+      }
+    }).then(function(docRef) {
+      console.log("Document written with ID: ", docRef.id);
+
+      // 이 아이디를 물고 챗 스크린으로넘어가야함
+  })
+  .catch(function(error) {
+      console.error("Error adding document: ", error);
+  });
+    // 생성하면 채ㅐ팅 스크린으로 이동해야하마!
+  }
+
+  /**
+   * 해당 유저와 진행했던 1:1 채팅방이 존재하고 있는 지 확인.
+   * 존재하면 기존에 있던 방의 id를 return,
+   * 없으면 새로운 방을 만들고 새로 만들어진 방의 id를 return.
+   * 
+   * @param {*} friendIndex  
+   */
+  async checkRoomExists(friendIndex) {
+    console.log('checkRoomExists called')
+
+    let isReturned = false;
+    const userIndex = this.props.userInfo.id
+
+    const userInfoRef = await firestore().collection('roomList')
+    const snapshot = await userInfoRef.where('invitedUser', 'array-contains', userIndex).get()
+   
+    if (snapshot.size == 0){
+      return this.createChattingRoom(friendIndex)
+    }
+
+    console.log ('snapshot size :', snapshot.size)
+    snapshot.forEach(doc => {
+
+      let roomId = doc.id
+      let {invitedUser} = doc.data()
+
+      console.log('roomId',roomId)
+      console.log('유저가 참여한 방들 :', invitedUser)
+
+      if(invitedUser.includes(userIndex) &&  invitedUser.includes(userIndex) ){
+        isReturned = true
+        return (
+          console.log('1:1방 존재함 해당방 아이디', roomId)
+           // 이 아이디를 물고 챗 스크린으로넘어가야함
+        )}
+    });
+
+    if (isReturned){
+      console.log('이미 반환됨')
+    }else{
+      console.log('없음 생성해야 됨.')
+      this.createChattingRoom(friendIndex)
+    }
+    
   }
 
   /**
@@ -62,11 +152,16 @@ export default class GraphDetail extends Component {
         <Text>{this.props.route.params.nickname}</Text>
         
 
-        <Button onPress={() => this.chatWithThisUser()}>채팅하기</Button>
+        <Button onPress={() => this.chatWithThisUser(this.props.route.params.id)}>채팅하기</Button>
       </View>
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  const { userInfo } = state
+  return { userInfo }
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -81,3 +176,6 @@ const styles = StyleSheet.create({
     height: 120,
   },
 });
+
+
+export default connect(mapStateToProps)(GraphDetail);
