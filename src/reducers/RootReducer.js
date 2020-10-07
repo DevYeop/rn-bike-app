@@ -121,30 +121,29 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
             return Object.assign({}, state, routeItem)
 
 
-        case SET_PRE_ROUTE_ITEMS:
- 
-            let newRouteItem = []
-            const preRouteItems = action.payload
+        case SET_PRE_ROUTE_ITEMS: // 로그인한 유저가 가지고 있던 녹화된 코스들을 저장한다.
 
-            for (var i = 0; i < preRouteItems.length; i++) {
+            let newRouteItem = []
+            const receivedRouteItems = action.payload
+
+            for (var i = 0; i < receivedRouteItems.length; i++) {
 
                 newRouteItem.push({
-                    itemIndex: preRouteItems[i].routeItem.itemIndex,
-                    boundInfo: preRouteItems[i].routeItem.boundInfo,
-                    deltaInfo: preRouteItems[i].routeItem.deltaInfo,
-                    centerInfo: preRouteItems[i].routeItem.centerInfo,
-                    avgSpeed: preRouteItems[i].routeItem.avgSpeed,
-                    distance: preRouteItems[i].routeItem.distance,
-                    lapTime: preRouteItems[i].routeItem.lapTime,
-                    speedArray: preRouteItems[i].routeItem.speedArray,
-                    routeCoordinates: preRouteItems[i].routeItem.routeCoordinates
+                    itemIndex: receivedRouteItems[i].routeItem.itemIndex,
+                    boundInfo: receivedRouteItems[i].routeItem.boundInfo,
+                    deltaInfo: receivedRouteItems[i].routeItem.deltaInfo,
+                    centerInfo: receivedRouteItems[i].routeItem.centerInfo,
+                    avgSpeed: receivedRouteItems[i].routeItem.avgSpeed,
+                    distance: receivedRouteItems[i].routeItem.distance,
+                    lapTime: receivedRouteItems[i].routeItem.lapTime,
+                    speedArray: receivedRouteItems[i].routeItem.speedArray,
+                    routeCoordinates: receivedRouteItems[i].routeItem.routeCoordinates
                 })
             }
 
-            return Object.assign({}, state, {routeItem: newRouteItem})
+            return Object.assign({}, state, { routeItem: newRouteItem })
 
-       
-        case SET_CONTACT_LIST:  // 로그인한 유저가 가지고 있는 친구목록을 저장한다.
+        case SET_CONTACT_LIST:  // 로그인한 유저가 가지고 있던 친구목록을 저장한다.
 
             let newContactList = []
             const receivedContactList = action.payload
