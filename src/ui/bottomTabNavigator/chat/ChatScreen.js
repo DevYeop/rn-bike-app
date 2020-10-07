@@ -7,7 +7,7 @@ import {
 } from 'react-native-gifted-chat';
 import { ActivityIndicator, View, StyleSheet, Text } from 'react-native';
 import { IconButton, Button } from 'react-native-paper';
-import { AuthContext } from '../../../navigation/AuthProvider'
+// import { AuthContext } from '../../../navigation/AuthProvider'
 import firestore from '@react-native-firebase/firestore';
 import useStatsBar from '../../../utils/useStatusBar'
 
@@ -24,7 +24,7 @@ function ChatScreen({ route, userInfo }) {
    
   const [messages, setMessages] = useState([]);
   const {roomId, userIndex, friendIdx} = route.params;
-  const { user } = useContext(AuthContext);
+  // const { user } = useContext(AuthContext);
   // const currentUser = user.toJSON();
   const userIdx = userInfo.id
   const userNick = userInfo.nickname

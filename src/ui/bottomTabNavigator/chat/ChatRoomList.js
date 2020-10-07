@@ -66,27 +66,42 @@ function ChatRoomList({ navigation, userInfo }) {
   if (loading) {
     return <Loading />;
   }
+  
+  /**
+   * 채팅화면으로 넘어가기전에 필요한 인자들을 구한 뒤 전달한다.
+   * @param {*} item 
+   */
+  const gotoChatScreen = item => {
 
-  const getOpponentInfo = async () => {
+    const roomId = item._id
+     
+    item.invitedUser.forEach(element => {
  
-    await firestore()
-    .collection('userInfo')
-    
-    .where('invitedUser', 'array-contains', userInfo.id)
-    .orderBy('latestMessage.createdAt', 'desc')
+      if (userIndex == element){
+ 
+        console.log('invitedUser in you' , element)
 
-    return
+        const frindIndex = element
+
+        navigation.navigate('Room', {roomId, userIndex, frindIndex})
+
+      } 
+    
+    });
   }
 
   return (
     <View style={styles.container}>
+      
       <FlatList
         data={threads}
         keyExtractor={item => item._id}
         ItemSeparatorComponent={() => <Divider />}
         renderItem={({ item }) => (
+          
           <TouchableOpacity
-            onPress={() => navigation.navigate('Room', { thread: item })}
+          onPress={() => gotoChatScreen(item)}
+             
           >
 
             <View style={{flexDirection:'column'}}>
