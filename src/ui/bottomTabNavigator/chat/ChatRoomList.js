@@ -94,6 +94,35 @@ function ChatRoomList({ navigation, userInfo }) {
     
     })
   }
+ 
+  const getOpponentInfo = async (item) => {
+     
+    let friendIndex = ''
+     
+    item.invitedUser.forEach(element => {
+      if (userIndex != element)  friendIndex = element
+    })
+
+
+    // const citiesRef = db.collection('userInfo');
+    // const snapshot = await citiesRef.get();
+    // snapshot.forEach(doc => {
+    //   console.log(doc.id, '=>', doc.data());
+    // });
+
+
+    const snapshot = await firestore().collection('userInfo').doc(friendIndex).get()
+    
+    const friendInfo = snapshot.data()
+
+    console.log('nick', friendInfo.nickname)
+    console.log('imgae', friendInfo.profile_image_url)
+  
+    return friendInfo.nickname
+
+
+  }
+
 
   return (
     <View style={styles.container}>
@@ -103,16 +132,22 @@ function ChatRoomList({ navigation, userInfo }) {
         keyExtractor={item => item._id}
         ItemSeparatorComponent={() => <Divider />}
         renderItem={({ item }) => (
-          
+
+
+
+
           <TouchableOpacity
-          onPress={() => gotoChatScreen(item)}
-             
+            onPress={() => gotoChatScreen(item)}
           >
 
-            <View style={{flexDirection:'column'}}>
+            <View style={{ flexDirection: 'column' }}>
 
-            {/* <Image source={{ uri: getOpponentInfo(item.invitedUser) }} style={styles.pic} /> */}
-             
+              <Button onPress={()=>getOpponentInfo(item)}>asdfasdf</Button>
+
+              {/* <Image source={{ uri: getOpponentInfo(item.invitedUser) }} style={styles.pic} /> */}
+
+              {/* <Text>{getOpponentInfo(item)}</Text> */}
+
               <List.Item
                 title={item.name}
                 description={item.latestMessage.text}

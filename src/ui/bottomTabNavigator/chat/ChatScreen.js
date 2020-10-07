@@ -18,9 +18,9 @@ import RouteItemView from './RouteItemView'
 
 function ChatScreen({ route, userInfo }) {
 
-  useStatsBar('light-content');  
+  useStatsBar('light-content');
   const [messages, setMessages] = useState([]);
-  const {roomId, userIndex, friendIndex} = route.params;
+  const { roomId, userIndex, friendIndex } = route.params;
 
 
 
@@ -28,18 +28,13 @@ function ChatScreen({ route, userInfo }) {
   // const currentUser = user.toJSON();
   const userIdx = userInfo.id
   const userNick = userInfo.nickname
-
- 
-  console.log('chatscreen route props' ,route)
-  console.log('user-IDX in chatscreen' ,userIdx)
-  console.log('frindIndex in chatscreen' ,friendIndex)
-
+  const profile_image_url = userInfo.profile_image_url
 
   async function handleSend(messages) {
     const text = messages[0].text;
 
     /**
-     * 채팅메세지들을 차곡차곡 더한다
+     * 채팅방앙ㄴ에서의 채팅메세지들을 차곡차곡 더한다
      */
     firestore()
       .collection('chattingList')
@@ -49,24 +44,25 @@ function ChatScreen({ route, userInfo }) {
         createdAt: new Date().getTime(),
         user: {
           _id: userIdx,
-          nickname: userNick
+          name: userNick,
+          avatar: profile_image_url
         },
         text: text,
       });
 
 
-      /**
-       * 채팅룸리스트에서 챗팅룸이 표시해야할 마지막 채팅정보를 셋팅한다.
-       */
+    /**
+     * 채팅방에 들어가기전 채팅룸리스트에서 챗팅룸이 표시해야할 마지막 채팅정보를 셋팅한다.
+     */
     await firestore()
       .collection('chattingList')
       .doc(roomId)
       .set(
         {
-          invitedUser:[
+          invitedUser: [
             userIdx,
             friendIndex
-        ],
+          ],
           latestMessage: {
             text,
             createdAt: new Date().getTime()
@@ -75,7 +71,7 @@ function ChatScreen({ route, userInfo }) {
         { merge: true }
       );
   }
- 
+
   useEffect(() => {
     const messagesListener = firestore()
       .collection('chattingList')
@@ -111,13 +107,10 @@ function ChatScreen({ route, userInfo }) {
   }, []);
 
   function renderBubble(props) {
-    
+
     if (props.currentMessage.itemInfo) {
-
-      console.log('지도 버블 :', props.currentMessage.itemInfo)
-
       return (
-        <RouteItemView itemInfo={props.currentMessage.itemInfo}/>
+        <RouteItemView itemInfo={props.currentMessage.itemInfo} />
       )
     } else {
       return (
@@ -139,8 +132,6 @@ function ChatScreen({ route, userInfo }) {
         />
       )
     }
-
-    ;
   }
 
   function renderLoading() {
@@ -184,10 +175,14 @@ function ChatScreen({ route, userInfo }) {
     <GiftedChat
       messages={messages}
       onSend={handleSend}
-      user={{ _id: userIdx }}
+      user={{
+        _id: userIdx,
+        name: userNick,
+        avatar: profile_image_url
+      }}
       placeholder=''
       alwaysShowSend
-      showUserAvatar
+      showUserAvatar={true}
       scrollToBottom
       renderBubble={renderBubble}
       renderLoading={renderLoading}
