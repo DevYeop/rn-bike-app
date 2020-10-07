@@ -50,7 +50,7 @@ class ContactTap extends Component {
  
       <TouchableOpacity onPress={()=>this.goToProfileScreen(item)}>
         <View style={styles.row}>
-          <Image source={{ uri: item.profile_image_url }} style={styles.pic} />
+          <Image source={{ uri: item.profile_image_url}} style={styles.pic} />
           <View>
             <View style={styles.nameContainer}>
               <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail">{item.nickname}</Text>
@@ -67,22 +67,16 @@ class ContactTap extends Component {
 
   async logout() {
     try {
-      await GoogleSignin.revokeAccess();
-      await GoogleSignin.signOut();
-
-
-      this.props.resetState()
-
+       GoogleSignin.revokeAccess();
+       GoogleSignin.signOut();
       this.props.navigation.navigate('SettingTap')
+      this.props.resetState()
     } catch (error) {
       console.error(error);
     }
  
-    /**
-     * 모든 steate reset
-     */
   }
-  
+
   render() {
     const Stack = createStackNavigator();
     return (
@@ -109,25 +103,18 @@ class ContactTap extends Component {
 
         <TouchableOpacity onPress={this.goToProfileScreen}>
           <View style={styles.row}>
-            <Image source={{ uri: this.props.userInfo.profile_image_url }} style={styles.pic} />
+            <Image
+              source={{ uri: this.props.userInfo.profile_image_url}}
+              style={styles.pic} />
             <View>
-              <View style={styles.nameContainer}>
-                <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail">{this.props.userInfo.nickname}</Text>
-                <Text style={styles.mblTxt}> {this.props.userInfo.id}</Text>
-              </View>
-              <View style={styles.msgContainer}>
-                <Text style={styles.msgTxt}>{this.props.userInfo.email}</Text>
-
-              </View>
+              <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail"> {this.props.userInfo.nickname} </Text>
             </View>
           </View>
         </TouchableOpacity>
 
-
         <Button onPress={() => this.logout()}>로그아웃</Button>
  
         <FlatList
-
           data={this.props.userInfo.contactList}
           keyExtractor={(item) => {
             return item.id;
@@ -164,11 +151,6 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     width: 60,
     height: 60,
-  },
-  nameContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: 280,
   },
   nameTxt: {
     marginLeft: 15,

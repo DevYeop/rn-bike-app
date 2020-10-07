@@ -143,30 +143,6 @@ async addContactList() {
     }
   };
 
-  async setChatRoom() {
-
-    const roomName = 'test-1'
-
-    firestore()
-      .collection('THREADS3')
-      .add({
-        name: roomName,
-        latestMessage: {
-          text: `You have joined the room ${roomName}.`,
-          createdAt: new Date().getTime()
-        }
-      })
-      .then(docRef => {
-        docRef.collection('MESSAGES').add({
-          text: `You have joined the room ${roomName}.`,
-          createdAt: new Date().getTime(),
-          system: true
-        });
-        navigation.navigate('Home');
-      });
-
-  }
-
   render() {
     return (
       <View style={styles.container}>

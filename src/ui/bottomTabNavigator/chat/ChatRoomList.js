@@ -102,7 +102,6 @@ function ChatRoomList({ navigation, userInfo }) {
     item.invitedUser.forEach(element => {
       if (userIndex != element)  friendIndex = element
     })
-
  
       const snapshot = await firestore().collection('userInfo').doc(friendIndex).get()
     
@@ -110,43 +109,29 @@ function ChatRoomList({ navigation, userInfo }) {
   
       console.log('nick', friendInfo.nickname)
       console.log('imgae', friendInfo.profile_image_url)
- 
-  
   
     return 'test'
   }
- 
-
+  
   return (
     <View style={styles.container}>
-      
       <FlatList
         data={threads}
         keyExtractor={item => item._id}
         ItemSeparatorComponent={() => <Divider />}
         renderItem={({ item }) => (
-
-
-
-
-          <TouchableOpacity
-            onPress={() => gotoChatScreen(item)}
-          >
-
+          <TouchableOpacity onPress={() => gotoChatScreen(item)}>
             <View style={{ flexDirection: 'column' }}>
-  
               <List.Item
                 title={item.latestMessage.createdAt}
                 description={item.latestMessage.text}
                 titleNumberOfLines={1}
                 titleStyle={styles.listTitle}
                 descriptionStyle={styles.listDescription}
-                descriptionNumberOfLines={1}
-              />
+                descriptionNumberOfLines={1}/>
             </View>
           </TouchableOpacity>
-        )}
-      />
+        )}/>
     </View>
   );
 }
