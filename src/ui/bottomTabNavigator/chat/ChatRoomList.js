@@ -103,26 +103,19 @@ function ChatRoomList({ navigation, userInfo }) {
       if (userIndex != element)  friendIndex = element
     })
 
-
-    // const citiesRef = db.collection('userInfo');
-    // const snapshot = await citiesRef.get();
-    // snapshot.forEach(doc => {
-    //   console.log(doc.id, '=>', doc.data());
-    // });
-
-
-    const snapshot = await firestore().collection('userInfo').doc(friendIndex).get()
+ 
+      const snapshot = await firestore().collection('userInfo').doc(friendIndex).get()
     
-    const friendInfo = snapshot.data()
-
-    console.log('nick', friendInfo.nickname)
-    console.log('imgae', friendInfo.profile_image_url)
+      const friendInfo = snapshot.data()
   
-    return friendInfo.nickname
-
-
+      console.log('nick', friendInfo.nickname)
+      console.log('imgae', friendInfo.profile_image_url)
+ 
+  
+  
+    return 'test'
   }
-
+ 
 
   return (
     <View style={styles.container}>
@@ -141,15 +134,9 @@ function ChatRoomList({ navigation, userInfo }) {
           >
 
             <View style={{ flexDirection: 'column' }}>
-
-              <Button onPress={()=>getOpponentInfo(item)}>asdfasdf</Button>
-
-              {/* <Image source={{ uri: getOpponentInfo(item.invitedUser) }} style={styles.pic} /> */}
-
-              {/* <Text>{getOpponentInfo(item)}</Text> */}
-
+  
               <List.Item
-                title={item.name}
+                title={item.latestMessage.createdAt}
                 description={item.latestMessage.text}
                 titleNumberOfLines={1}
                 titleStyle={styles.listTitle}
