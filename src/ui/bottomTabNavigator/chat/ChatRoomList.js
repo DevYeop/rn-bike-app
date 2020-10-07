@@ -23,7 +23,7 @@ function ChatRoomList({ navigation, userInfo }) {
 
   const getUnsubscribe = async () => {
 
-    console.log('in chatroom userInfo.id', userInfo.id)
+    console.log('현재 로그인한 유저의 인덱스, 초대된유저 검사할 때 씀', userInfo.id)
  
     const unsubscribe =   
     await firestore()
@@ -74,20 +74,25 @@ function ChatRoomList({ navigation, userInfo }) {
   const gotoChatScreen = item => {
 
     const roomId = item._id
+    let friendIndex = ''
      
     item.invitedUser.forEach(element => {
  
-      if (userIndex == element){
+      if (userIndex != element){
  
-        console.log('invitedUser in you' , element)
+        friendIndex = element
 
-        const frindIndex = element
-
-        navigation.navigate('Room', {roomId, userIndex, frindIndex})
-
+        console.log('해당 채팅방에 들어가는 유저 아이디', userIndex)
+        console.log('해당 채팅방에 있는 친구 아이디', friendIndex)
+   
+        /**
+         * 멀쳇 구현시 친구 인덱스를 배열로 푸시해줘야할 듯
+         */
       } 
+ 
+      return navigation.navigate('Room', {roomId, userIndex, friendIndex})
     
-    });
+    })
   }
 
   return (

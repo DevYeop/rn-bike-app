@@ -27,14 +27,13 @@ import { TouchableHighlight } from 'react-native-gesture-handler';
 class ContactTap extends Component {
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
-      userInfo: {},
-      calls: [
+      // userInfo: {},
+      // calls: [
 
-      ],
-    };
-    this.contactList = this.contactList.bind(this);
+      // ],
+    }
   }
 
   goToProfileScreen = item => {
@@ -64,33 +63,7 @@ class ContactTap extends Component {
         </View>
       </TouchableOpacity>
     );
-  }
-
-  contactList(state) {
-
-
-  }
-
-  async test() {
-
-
-    const snapshot = await firestore()
-    .collection('chattingList')    
-    .where('invitedUser', 'array-contains', '110329963856987142979')
-    .orderBy('latestMessage.createdAt', 'desc')
-    .get() 
-   
- 
-    /**
-     * todo : 검색된 유저가 없을 때 ui 처리해야함.
-     */
-    snapshot.forEach(doc => {
-
-      console.log('testtesttest',doc.data())
-        
-    });
-
-  }
+  } 
 
   async logout() {
     try {
@@ -104,9 +77,7 @@ class ContactTap extends Component {
     } catch (error) {
       console.error(error);
     }
-
-
-
+ 
     /**
      * 모든 steate reset
      */
@@ -154,9 +125,7 @@ class ContactTap extends Component {
 
 
         <Button onPress={() => this.logout()}>로그아웃</Button>
-
-        <Button onPress={() => this.test()}>testtest</Button>
-        
+ 
         <FlatList
 
           data={this.props.userInfo.contactList}

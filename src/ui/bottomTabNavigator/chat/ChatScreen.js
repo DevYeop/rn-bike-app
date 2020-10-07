@@ -18,16 +18,22 @@ import RouteItemView from './RouteItemView'
 
 function ChatScreen({ route, userInfo }) {
 
-  useStatsBar('light-content');
- 
-  console.log('chatscreen route props' ,route)
-   
+  useStatsBar('light-content');  
   const [messages, setMessages] = useState([]);
-  const {roomId, userIndex, friendIdx} = route.params;
+  const {roomId, userIndex, friendIndex} = route.params;
+
+
+
   // const { user } = useContext(AuthContext);
   // const currentUser = user.toJSON();
   const userIdx = userInfo.id
   const userNick = userInfo.nickname
+
+ 
+  console.log('chatscreen route props' ,route)
+  console.log('user-IDX in chatscreen' ,userIdx)
+  console.log('frindIndex in chatscreen' ,friendIndex)
+
 
   async function handleSend(messages) {
     const text = messages[0].text;
@@ -59,7 +65,7 @@ function ChatScreen({ route, userInfo }) {
         {
           invitedUser:[
             userIdx,
-            friendIdx
+            friendIndex
         ],
           latestMessage: {
             text,
@@ -105,8 +111,7 @@ function ChatScreen({ route, userInfo }) {
   }, []);
 
   function renderBubble(props) {
-
-    console.log('buble props : ', props)
+    
     if (props.currentMessage.itemInfo) {
 
       console.log('지도 버블 :', props.currentMessage.itemInfo)

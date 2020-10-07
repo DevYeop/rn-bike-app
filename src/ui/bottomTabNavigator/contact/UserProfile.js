@@ -20,8 +20,8 @@ class GraphDetail extends Component {
    * 
    * @param {*} friendIndex 
    */
-  gotoChatScreen = (roomId, userIndex, friendIdx) => {
-    this.props.navigation.navigate('ChatScreen',{roomId, userIndex, friendIdx})
+  gotoChatScreen = (roomId, userIndex, friendIndex) => {
+    this.props.navigation.navigate('ChatScreen',{roomId, userIndex, friendIndex})
 
   }
 
