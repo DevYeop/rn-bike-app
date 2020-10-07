@@ -122,14 +122,13 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
 
 
         case SET_PRE_ROUTE_ITEMS:
-
-            var { routeItem } = state
-
+ 
+            let newRouteItem = []
             const preRouteItems = action.payload
 
             for (var i = 0; i < preRouteItems.length; i++) {
 
-                routeItem.push({
+                newRouteItem.push({
                     itemIndex: preRouteItems[i].routeItem.itemIndex,
                     boundInfo: preRouteItems[i].routeItem.boundInfo,
                     deltaInfo: preRouteItems[i].routeItem.deltaInfo,
@@ -142,28 +141,23 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
                 })
             }
 
-            return Object.assign({}, state, routeItem)
+            return Object.assign({}, state, {routeItem: newRouteItem})
 
+       
+        case SET_CONTACT_LIST:  // 로그인한 유저가 가지고 있는 친구목록을 저장한다.
 
-        case SET_CONTACT_LIST:
-
-            const { contactList } = state
-            let newContactListFormat = []
+            let newContactList = []
             const receivedContactList = action.payload
 
-            console.log('뭐여 contactList',contactList)
-            console.log('뭐여 receivedContactList',receivedContactList)
-
             for (let i = 0; i < receivedContactList.length; i++) {
-
-                newContactListFormat.push({
+                newContactList.push({
                     id: receivedContactList[i].id,
                     nickname: receivedContactList[i].nickname,
                     profile_image_url: receivedContactList[i].profile_image_url,
                 })
-            } 
+            }
 
-            return Object.assign({}, state, {contactList: newContactListFormat})
+            return Object.assign({}, state, { contactList: newContactList })
 
         case RESET_STATE:
 
