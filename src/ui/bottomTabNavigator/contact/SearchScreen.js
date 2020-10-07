@@ -114,7 +114,12 @@ const SearchScreen = ({userInfo, updateContactList}) => {
             <View style={styles.container}>
                 
 
-                <Image style={styles} source={{ uri: imageUri }} />
+                { // 검색한 유저의 프로필사진이 없는경우, 기본 프사를 표시한다.
+                    imageUri ?
+                    <Image style={styles.pic} source={{ uri: imageUri }} />
+                    :
+                    <Image style={styles.pic} source={require('../../../res/default-profile-image.png')} />
+                }
 
                 <Text>{nickname}</Text>
 
@@ -148,7 +153,6 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     pic: {
-
         borderRadius: 60,
         width: 120,
         height: 120,
