@@ -13,9 +13,15 @@ import MapView, { Polyline } from "react-native-maps";
 
 const RouteItemView = ({ itemInfo, userInfo }) => {
  
-    const saveRouteItemFirestore = () => {
-    
-      alert('아템저장완료')
+
+    const saveRouteItem = () => {
+      console.log('RouteItemView itemInfo', itemInfo)
+      console.log('RouteItemView userInfo', userInfo)
+
+    }
+
+    const saveRouteItemFirestore = () => {    
+
       // 아이템을 저장
     };
 
@@ -25,7 +31,7 @@ const RouteItemView = ({ itemInfo, userInfo }) => {
  
     return (
       <TouchableOpacity
-        onPress={saveRouteItemFirestore}
+        onPress={saveRouteItem}
         style={{ backgroundColor: 'gray', width: 250, height: 250 }}>
         <MapView style={{height:250, width:250}}
 

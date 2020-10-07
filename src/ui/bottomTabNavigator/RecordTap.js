@@ -25,8 +25,11 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 
 import firestore from '@react-native-firebase/firestore';
 import axios from 'axios';
+
+import {addRouteItem, test} from '../../query/accessFireStore'
  
 class RecordTap extends React.Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -273,28 +276,10 @@ class RecordTap extends React.Component {
         }
  
         this.props.addRecordedRoute(routeInfo) 
-
-        this.addFireStoreInfo(routeInfo) 
  
+        addRouteItem(routeInfo, this.props.userInfo.id) 
     }
 
-    /**
-     * 
-     * 
-     * @param {*} routeItem 새로 생성된 아이템의 정보
-     */
-    addFireStoreInfo = routeItem => {
-
-        const userIndex = this.props.userInfo.id
-        const collectionName = 'user'+userIndex
-        const itemIndex = routeItem.itemIndex+'' 
-
-        const itemsRef = firestore().collection(collectionName).doc('list').collection('routeItems');
-
-        itemsRef.doc(itemIndex).set(
-            { routeItem }
-        );
-    }
   
 
     getAvgSpeed = () => {

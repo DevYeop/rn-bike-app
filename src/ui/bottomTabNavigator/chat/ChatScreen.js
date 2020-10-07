@@ -110,7 +110,7 @@ function ChatScreen({ route, userInfo }) {
 
     if (props.currentMessage.itemInfo) {
       return (
-        <RouteItemView itemInfo={props.currentMessage.itemInfo} />
+        <RouteItemView itemInfo={props.currentMessage.itemInfo} userInfo={userInfo} />
       )
     } else {
       return (
