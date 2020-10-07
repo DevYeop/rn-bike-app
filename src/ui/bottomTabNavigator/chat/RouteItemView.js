@@ -11,13 +11,19 @@ import {
 
 import MapView, { Polyline } from "react-native-maps";
 
-const RouteItemView = ({ itemInfo, userInfo }) => {
- 
+import {addRouteItem} from '../../../query/accessFireStore'
 
+const RouteItemView = ({ itemInfo, userInfo }) => {
+  
     const saveRouteItem = () => {
+ 
+      let routeItemObj = Object.assign({}, ...itemInfo )
+
       console.log('RouteItemView itemInfo', itemInfo)
       console.log('RouteItemView userInfo', userInfo)
+      console.log('RouteItemView routeItem', routeItemObj)
 
+      addRouteItem(routeItemObj, userInfo.id)
     }
 
     const saveRouteItemFirestore = () => {    

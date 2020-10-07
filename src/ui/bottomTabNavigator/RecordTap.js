@@ -264,7 +264,7 @@ class RecordTap extends React.Component {
 
          
         const routeInfo = {
-            itemIndex : this.state.startRecordMilli,
+            itemIndex : this.state.startRecordMilli+''+this.props.userInfo.id,
             speedArray : this.state.speedArray,
             avgSpeed : avgSpeed,
             lapTime : lapTime,
