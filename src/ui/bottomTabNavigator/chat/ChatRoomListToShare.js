@@ -4,114 +4,129 @@ import { List, Divider, Button } from 'react-native-paper';
 import firestore from '@react-native-firebase/firestore';
 import Loading from '../../../components/Loading'
 import useStatsBar from '../../../utils/useStatusBar'
- 
-export default function ChatRoomList({ navigation, route }) {
+
+export default function ChatRoomListToShare({ navigation, route }) {
   useStatsBar('light-content');
 
-  const {itemInfo} = route.params;
+  const { itemInfo } = route.params;
+  const { userInfo } = route.params;
 
-  console.log('itemInfo received : ', itemInfo)
+  console.log('aaa userInfo received : ', userInfo)
+  console.log('aaa temInfo received : ', itemInfo)
 
   const [threads, setThreads] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  /**
-   * Fetch threads from Firestore
-   */
   useEffect(() => {
-    const unsubscribe = firestore()
-      .collection('THREADS3') 
-      .orderBy('latestMessage.createdAt', 'desc')
-      .onSnapshot(querySnapshot => {
-        const threads = querySnapshot.docs.map(documentSnapshot => {
-          return {
-            _id: documentSnapshot.id,
-            // give defaults
-            name: '',
 
-            latestMessage: {
-              text: ''
-            },
-            ...documentSnapshot.data()
-          };
-        });
+    getUnsubscribe()
 
-        setThreads(threads);
-
-        console.log('threads id:' , threads)
-
-        if (loading) {
-          setLoading(false);
-        }
-      });
-
-    /**
-     * unsubscribe listener
-     */
-    return () => unsubscribe();
   }, []);
+
+  const getUnsubscribe = async () => {
+
+    console.log('현재 로그인한 유저의 인덱스, 초대된유저 검사할 때 씀', userInfo.id)
+
+    const unsubscribe =
+      await firestore()
+        .collection('chattingList')
+        .where('invitedUser', 'array-contains', userInfo.id)
+        .orderBy('latestMessage.createdAt', 'desc')
+        .onSnapshot(querySnapshot => {
+
+          const threads = querySnapshot.docs.map(documentSnapshot => {
+
+            return {
+              _id: documentSnapshot.id,
+              // give defaults
+              name: '',
+
+              latestMessage: {
+                text: ''
+              },
+              ...documentSnapshot.data()
+            };
+
+          });
+
+          setThreads(threads);
+
+          console.log('threads id:', threads)
+
+          if (loading) {
+            setLoading(false);
+          }
+        })
+
+    return () => unsubscribe();
+
+  }
 
   if (loading) {
     return <Loading />;
   }
 
-  function sendSharedItem() {
- 
-
-    alert('click')
-
-  }
-
   function goPreScreen() {
-    () => navigation.goback()
+    // navigation.goback()
   }
 
-  async function handleSend() {
 
-    const text = 'SharedItem';
+  ///////////
+  async function handleSend(info) {
+    // const text = messages[0].text;
 
-    const userIdx = '110329963856987142979'
-    const threadID = 'ImxrNjznbQre4RWifS62'
+    console.log('클릭한 방의 정보', info)
 
-    console.log('userIdx :', userIdx)
-    console.log('thread._id',threadID)
+    const roomId = info._id
+    const {invitedUser} = info
 
-    await firestore()
-      .collection('THREADS3')
-      .doc(threadID)
-      .collection('MESSAGES')
+    console.log('클릭한 방invitedUser', invitedUser)
+
+    /**
+     * 채팅방앙ㄴ에서의 채팅메세지들을 차곡차곡 더한다
+     */
+    firestore()
+      .collection('chattingList')
+      .doc(roomId)
+      .collection('message')
       .add({
-        text,
         createdAt: new Date().getTime(),
         user: {
-          _id: userIdx,
-          email: userIdx
+          _id: userInfo.id,
+          name: userInfo.nickname,
+          avatar: userInfo.profile_image_url
         },
+        text: 'sharedItem',
         itemInfo: itemInfo,
-      });
+      }).then(
+        goPreScreen(),
+        alert('공유 완료')
+      )
 
+
+    // /**
+    //  * 채팅방에 들어가기전 채팅룸리스트에서 챗팅룸이 표시해야할 마지막 채팅정보를 셋팅한다.
+    //  */
     await firestore()
-      .collection('THREADS3')
-      .doc(threadID)
+      .collection('chattingList')
+      .doc(roomId)
       .set(
         {
+          invitedUser: [
+            invitedUser[0]+'',
+            invitedUser[1]+'',
+          ],
           latestMessage: {
-            text,
+            text: '드라이빙 코스가 공유되었습니다.',
             createdAt: new Date().getTime()
           }
         },
         { merge: true }
-      ).then( 
-        goPreScreen(),
-        alert('공유 완료')
-        );
-
+      );
   }
 
   return (
     <View style={styles.container}>
- 
-
       <Button>아이템을 공유할 채팅방을 클릭</Button>
       <FlatList
         data={threads}
@@ -119,10 +134,9 @@ export default function ChatRoomList({ navigation, route }) {
         ItemSeparatorComponent={() => <Divider />}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={() => handleSend()}
-          >
+            onPress={() => handleSend(item)}>
             <List.Item
-              title={item.name}
+              title={item.latestMessage.createdAt}
               description={item.latestMessage.text}
               titleNumberOfLines={1}
               titleStyle={styles.listTitle}
@@ -135,7 +149,7 @@ export default function ChatRoomList({ navigation, route }) {
     </View>
   );
 }
- 
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#f5f5f5',
@@ -148,4 +162,3 @@ const styles = StyleSheet.create({
     fontSize: 16
   }
 });
- 

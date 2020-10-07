@@ -3,29 +3,30 @@
  * The reducer is instrumental in keeping the current state of friends updated throughout the app as it changes.
  */
 import { combineReducers } from 'redux';
-import { 
-    ADD_FRIEND, 
-    SAVE_USER_INFO_GOOGLE, 
+import {
+    ADD_FRIEND,
+    SAVE_USER_INFO_GOOGLE,
     SAVE_USER_INFO_KAKAO,
     ADD_RECORDED_ROUTE,
-    SET_PRE_ROUTE_ITEMS, 
+    SET_PRE_ROUTE_ITEMS,
     RESET_STATE,
     UPDATE_CONTACT_LIST,
     SET_CONTACT_LIST
 } from '../actions/types'
+import { State } from 'react-native-gesture-handler';
 
 /**
  * INITIAL_STATE variable with possible friends to add to your social network
  */
-const INITIAL_SATTE = { 
-    id:'',
-    email:'',
-    nickname:'',
-    profile_image_url:'',
-    routeItem:[],
-    contactList:[],
+const INITIAL_SATTE = {
+    id: '',
+    email: '',
+    nickname: '',
+    profile_image_url: '',
+    routeItem: [],
+    contactList: [],
 }
- 
+
 const RootReducer = (state = INITIAL_SATTE, action) => {
 
     console.log('리듀서 state.status')
@@ -34,7 +35,7 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
     console.log(action.type)
     console.log('리듀서 action.payload')
     console.log(action.payload)
-    
+
     switch (action.type) {
         /**
          * pulls the current and possible friends out of the previous state. 
@@ -67,43 +68,43 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
 
             const userInfo = action.payload
 
-            var {id, email, name:nickname, photo:profile_image_url} = userInfo.user
+            var { id, email, name: nickname, photo: profile_image_url } = userInfo.user
 
-            const googleUser = {id, email, nickname, profile_image_url}
+            const googleUser = { id, email, nickname, profile_image_url }
 
             return Object.assign({}, state, googleUser)
 
 
         case SAVE_USER_INFO_KAKAO:
 
-            var {id, email, nickname, profile_image_url} = action.payload
+            var { id, email, nickname, profile_image_url } = action.payload
 
-            const kakaoUserInfo = {id, email, nickname, profile_image_url}
+            const kakaoUserInfo = { id, email, nickname, profile_image_url }
 
             return Object.assign({}, state, kakaoUserInfo)
- 
-            //js문법 
-            //베타 이너 
-            //구글플레이 계정 올려서 초대.
-            //10월 8월 (목)리뷰
-            //구글캘린더에 초대해서, 
+
+        //js문법 
+        //베타 이너 
+        //구글플레이 계정 올려서 초대.
+        //10월 8월 (목)리뷰
+        //구글캘린더에 초대해서, 
 
         case ADD_RECORDED_ROUTE:
- 
-            var {routeItem} = state
+
+            var { routeItem } = state
 
             /**
              * todo : 하나로 묶자
              */
-            const {routeCoordinates} = action.payload
-            const {boundInfo} = action.payload
-            const {deltaInfo} = action.payload
-            const {centerInfo} = action.payload
-            const {distance} = action.payload
-            const {lapTime} = action.payload
-            const {speedArray} = action.payload
-            const {avgSpeed} = action.payload
-            const {itemIndex} = action.payload 
+            const { routeCoordinates } = action.payload
+            const { boundInfo } = action.payload
+            const { deltaInfo } = action.payload
+            const { centerInfo } = action.payload
+            const { distance } = action.payload
+            const { lapTime } = action.payload
+            const { speedArray } = action.payload
+            const { avgSpeed } = action.payload
+            const { itemIndex } = action.payload
 
             routeItem.push({
                 itemIndex: itemIndex,
@@ -120,82 +121,61 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
             return Object.assign({}, state, routeItem)
 
 
-        case SET_PRE_ROUTE_ITEMS:
+        case SET_PRE_ROUTE_ITEMS: // 로그인한 유저가 가지고 있던 녹화된 코스들을 저장한다.
 
-            var {routeItem} = state
+            let newRouteItem = []
+            const receivedRouteItems = action.payload
 
-            const preRouteItems = action.payload
- 
-            for (var i = 0 ; i < preRouteItems.length ; i ++){
- 
-                routeItem.push({
-                    itemIndex: preRouteItems[i].routeItem.itemIndex,
-                    boundInfo: preRouteItems[i].routeItem.boundInfo,
-                    deltaInfo: preRouteItems[i].routeItem.deltaInfo,
-                    centerInfo: preRouteItems[i].routeItem.centerInfo,
-                    avgSpeed: preRouteItems[i].routeItem.avgSpeed,
-                    distance: preRouteItems[i].routeItem.distance,
-                    lapTime: preRouteItems[i].routeItem.lapTime,
-                    speedArray: preRouteItems[i].routeItem.speedArray,
-                    routeCoordinates: preRouteItems[i].routeItem.routeCoordinates
+            for (var i = 0; i < receivedRouteItems.length; i++) {
+
+                newRouteItem.push({
+                    itemIndex: receivedRouteItems[i].routeItem.itemIndex,
+                    boundInfo: receivedRouteItems[i].routeItem.boundInfo,
+                    deltaInfo: receivedRouteItems[i].routeItem.deltaInfo,
+                    centerInfo: receivedRouteItems[i].routeItem.centerInfo,
+                    avgSpeed: receivedRouteItems[i].routeItem.avgSpeed,
+                    distance: receivedRouteItems[i].routeItem.distance,
+                    lapTime: receivedRouteItems[i].routeItem.lapTime,
+                    speedArray: receivedRouteItems[i].routeItem.speedArray,
+                    routeCoordinates: receivedRouteItems[i].routeItem.routeCoordinates
                 })
             }
 
-            return Object.assign({}, state, routeItem)
+            return Object.assign({}, state, { routeItem: newRouteItem })
+
+        case SET_CONTACT_LIST:  // 로그인한 유저가 가지고 있던 친구목록을 저장한다.
+
+            let newContactList = []
+            const receivedContactList = action.payload
+
+            for (let i = 0; i < receivedContactList.length; i++) {
+                newContactList.push({
+                    id: receivedContactList[i].id,
+                    nickname: receivedContactList[i].nickname,
+                    profile_image_url: receivedContactList[i].profile_image_url,
+                })
+            }
+
+            return Object.assign({}, state, { contactList: newContactList })
  
+            
+        case UPDATE_CONTACT_LIST:
 
-            case SET_CONTACT_LIST:
+            const { contactList } = state
+            const addedContactList = action.payload
 
-                const {contactList} = state
-
-                const receivedContactList = action.payload
-
-                for (let i = 0 ; i < receivedContactList.length ; i++){
-                    
-                    contactList.push({
-                        id: receivedContactList[i].id,
-                        nickname: receivedContactList[i].nickname,
-                        profile_image_url: receivedContactList[i].profile_image_url,
-                    })
-                }
-
-                console.log('리듀서 contactList', contactList)
-
+            contactList.push(addedContactList)
+  
             return Object.assign({}, state, contactList)
 
 
-            case RESET_STATE :
+        case RESET_STATE:
 
-                let {preState} = state
-
-                preState = []
-
-            return preState
-
-          
-
-            // case UPDATE_CONTACT_LIST:
-             
-            
-            //     console.log('testtestetsetstes')
-    
-    
-                    // for ( var i = 0 ; i < friendArray.length ; i++) {
-                        
-                    //     contactList.push({
-                    //         id: friendArray[i].friendInfo.id,
-                    //         image: friendArray[i].friendInfo.image,
-                    //         nickname: friendArray[i].friendInfo.nickname,
-                    //     })
-                    // }
-                    // return
-    
+            return state
 
 
-        
-            
         default:
-            
+
             return state
     }
 }

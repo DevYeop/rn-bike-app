@@ -27,14 +27,7 @@ import { TouchableHighlight } from 'react-native-gesture-handler';
 class ContactTap extends Component {
 
   constructor(props) {
-    super(props);
-    this.state = {
-      userInfo: {},
-      calls: [
-
-      ],
-    };
-    this.contactList = this.contactList.bind(this);
+    super(props)
   }
 
   goToProfileScreen = item => {
@@ -48,10 +41,14 @@ class ContactTap extends Component {
   renderItem = ({ item }) => {
     const Stack = createStackNavigator();
     return (
- 
-      <TouchableOpacity onPress={()=>this.goToProfileScreen(item)}>
+      <TouchableOpacity onPress={() => this.goToProfileScreen(item)}>
         <View style={styles.row}>
-          <Image source={{ uri: item.profile_image_url }} style={styles.pic} />
+          {
+            item.profile_image_url ?
+              <Image style={styles.pic} source={{ uri: item.profile_image_url }} />
+              :
+              <Image style={styles.pic} source={require('../../../res/default-profile-image.png')} />
+          }
           <View>
             <View style={styles.nameContainer}>
               <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail">{item.nickname}</Text>
@@ -64,54 +61,19 @@ class ContactTap extends Component {
         </View>
       </TouchableOpacity>
     );
-  }
-
-  contactList(state) {
-
-
-  }
-
-  async test() {
-
-
-    const snapshot = await firestore()
-    .collection('chattingList')    
-    .where('invitedUser', 'array-contains', '110329963856987142979')
-    .orderBy('latestMessage.createdAt', 'desc')
-    .get() 
-   
- 
-    /**
-     * todo : 검색된 유저가 없을 때 ui 처리해야함.
-     */
-    snapshot.forEach(doc => {
-
-      console.log('testtesttest',doc.data())
-        
-    });
-
-  }
+  } 
 
   async logout() {
     try {
-      await GoogleSignin.revokeAccess();
-      await GoogleSignin.signOut();
-
-
-      this.props.resetState()
-
+       GoogleSignin.revokeAccess();
+       GoogleSignin.signOut();
       this.props.navigation.navigate('SettingTap')
+      this.props.resetState()
     } catch (error) {
       console.error(error);
     }
-
-
-
-    /**
-     * 모든 steate reset
-     */
   }
-  
+
   render() {
     const Stack = createStackNavigator();
     return (
@@ -132,33 +94,25 @@ class ContactTap extends Component {
               </Right>
           </Header>
         </Container>
-
-
-        {console.log('this.props.userInfo', this.props.userInfo)}
-
+ 
         <TouchableOpacity onPress={this.goToProfileScreen}>
           <View style={styles.row}>
-            <Image source={{ uri: this.props.userInfo.profile_image_url }} style={styles.pic} />
+            {
+              this.props.userInfo.profile_image_url ?
+                <Image style={styles.pic} source={{ uri: this.props.userInfo.profile_image_url}} />
+                :
+                <Image style={styles.pic} source={require('../../../res/default-profile-image.png')} />
+            }
             <View>
-              <View style={styles.nameContainer}>
-                <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail">{this.props.userInfo.nickname}</Text>
-                <Text style={styles.mblTxt}> {this.props.userInfo.id}</Text>
-              </View>
-              <View style={styles.msgContainer}>
-                <Text style={styles.msgTxt}>{this.props.userInfo.email}</Text>
-
-              </View>
+              <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail"> {this.props.userInfo.nickname} </Text>
             </View>
           </View>
         </TouchableOpacity>
 
-
         <Button onPress={() => this.logout()}>로그아웃</Button>
-
-        <Button onPress={() => this.test()}>testtest</Button>
-        
+ 
+        {console.log('컨택트탭에서 컨택트리스트 : ', this.props.userInfo)}
         <FlatList
-
           data={this.props.userInfo.contactList}
           keyExtractor={(item) => {
             return item.id;
@@ -195,11 +149,6 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     width: 60,
     height: 60,
-  },
-  nameContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: 280,
   },
   nameTxt: {
     marginLeft: 15,

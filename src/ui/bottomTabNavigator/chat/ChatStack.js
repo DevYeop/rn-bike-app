@@ -3,28 +3,12 @@ import { Alert } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { IconButton } from 'react-native-paper';
 import ChatRoomList from './ChatRoomList'
-import AddRoomScreen from '../../../screens/AddRoomScreen';
 import ChatScreen from './ChatScreen'
-import { AuthContext } from '../../../navigation/AuthProvider'
-
-const ChatAppStack = createStackNavigator();
-const ModalStack = createStackNavigator();
-
-
+// import { AuthContext } from '../../../navigation/AuthProvider'
 import { connect } from 'react-redux';
-
-/**
- * All chat app related screens
- */
-
+ 
+const ChatAppStack = createStackNavigator(); 
 // const { logout } = useContext(AuthContext);
- 
-
-const mapStateToProps = (state) => {
-  const { userInfo } = state
-  return { userInfo }
-};
- 
 
 class HomeStack extends Component {
 
@@ -70,9 +54,9 @@ class HomeStack extends Component {
           name='Room'
           component={ChatScreen}  
           options={
-            { headerShown: false },
-            ({ route }) => ({
-            title: route.params.thread.name }) 
+            { headerShown: false }
+            // ({ route }) => ({
+            // title: route.params.thread.name }) 
         }
         />
       </ChatAppStack.Navigator>
@@ -80,5 +64,10 @@ class HomeStack extends Component {
   }
   
 }
+
+const mapStateToProps = (state) => {
+  const { userInfo } = state
+  return { userInfo }
+};
 
 export default connect(mapStateToProps)(HomeStack);

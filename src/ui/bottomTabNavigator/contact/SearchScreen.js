@@ -21,6 +21,7 @@ const SearchScreen = ({userInfo, updateContactList}) => {
     const [id, setId] = useState('null')
     const [nickname, setNickname] = useState('null')
     const [imageUri, setImageUrl] = useState('null')
+ 
 
     useEffect(() => {
 
@@ -75,9 +76,21 @@ const SearchScreen = ({userInfo, updateContactList}) => {
         setImageUrl(friendInfo.profile_image_url)
     }
 
-    const addFirend = () => {
+    const addFirend = (id,nickname,imageUri) => {
+
+        console.log('addFirend params id:', id)
+        console.log('addFirend params nickname:', nickname)
+        console.log('addFirend params imageUri:', imageUri)
+
+        const newFriend = {
+            id: id,
+            nickname: nickname,
+            profile_image_url: imageUri,
+        }
          
         addFriendFireStore()
+
+        updateContactList(newFriend)
 
         /**
          * todo : redux-store에서 updateContactList 작업 처리해줘야함.
@@ -114,11 +127,16 @@ const SearchScreen = ({userInfo, updateContactList}) => {
             <View style={styles.container}>
                 
 
-                <Image style={styles} source={{ uri: imageUri }} />
+                { // 검색한 유저의 프로필사진이 없는경우, 기본 프사를 표시한다.
+                    imageUri ?
+                    <Image style={styles.pic} source={{ uri: imageUri }} />
+                    :
+                    <Image style={styles.pic} source={require('../../../res/default-profile-image.png')} />
+                }
 
                 <Text>{nickname}</Text>
 
-                <Button onPress={addFirend}>친구 추가</Button>
+                <Button onPress={()=>addFirend(id,nickname,imageUri)}>친구 추가</Button>
 
             </View>
         </SafeAreaView>
@@ -136,6 +154,15 @@ const mapDispatchToProps = dispatch => (
         updateContactList
     }, dispatch)
   );
+
+//   const mapDispatchToProps = dispatch => {
+//     bindActionCreators({
+//         updateContactList
+//     }, dispatch)
+//     return {
+//         updateContactList : () => dispatch(updateContactList())
+//     }
+//   }
  
 const styles = StyleSheet.create({
     container: {
@@ -148,7 +175,6 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     pic: {
-
         borderRadius: 60,
         width: 120,
         height: 120,

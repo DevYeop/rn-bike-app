@@ -4,9 +4,7 @@ import ContactStack from './contact/ContactStack';
 import ChatStack from './chat/ChatStack'
 import RecrodTab from './RecordTap';
 import GraphTab from './GraphTab';
-
-import AddRoom from '../../screens/AddRoomScreen'
-
+  
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 
