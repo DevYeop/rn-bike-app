@@ -28,12 +28,6 @@ class ContactTap extends Component {
 
   constructor(props) {
     super(props)
-    this.state = {
-      // userInfo: {},
-      // calls: [
-
-      // ],
-    }
   }
 
   goToProfileScreen = item => {
@@ -47,10 +41,14 @@ class ContactTap extends Component {
   renderItem = ({ item }) => {
     const Stack = createStackNavigator();
     return (
- 
-      <TouchableOpacity onPress={()=>this.goToProfileScreen(item)}>
+      <TouchableOpacity onPress={() => this.goToProfileScreen(item)}>
         <View style={styles.row}>
-          <Image source={{ uri: item.profile_image_url}} style={styles.pic} />
+          {
+            item.profile_image_url ?
+              <Image style={styles.pic} source={{ uri: item.profile_image_url }} />
+              :
+              <Image style={styles.pic} source={require('../../../res/default-profile-image.png')} />
+          }
           <View>
             <View style={styles.nameContainer}>
               <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail">{item.nickname}</Text>
@@ -74,7 +72,6 @@ class ContactTap extends Component {
     } catch (error) {
       console.error(error);
     }
- 
   }
 
   render() {
@@ -103,9 +100,12 @@ class ContactTap extends Component {
 
         <TouchableOpacity onPress={this.goToProfileScreen}>
           <View style={styles.row}>
-            <Image
-              source={{ uri: this.props.userInfo.profile_image_url}}
-              style={styles.pic} />
+            {
+              this.props.userInfo.profile_image_url ?
+                <Image style={styles.pic} source={{ uri: this.props.userInfo.profile_image_url}} />
+                :
+                <Image style={styles.pic} source={require('../../../res/default-profile-image.png')} />
+            }
             <View>
               <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail"> {this.props.userInfo.nickname} </Text>
             </View>
