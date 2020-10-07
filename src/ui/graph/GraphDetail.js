@@ -45,7 +45,8 @@ class GraphDetail extends Component {
     
     this.props.navigation.navigate('ChatRoomListToShare',
     {
-      itemInfo : itemInfo
+      userInfo: this.props.userInfo,
+      itemInfo: itemInfo
     }
     )
     
