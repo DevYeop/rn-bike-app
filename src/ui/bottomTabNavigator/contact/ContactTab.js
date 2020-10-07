@@ -94,10 +94,7 @@ class ContactTap extends Component {
               </Right>
           </Header>
         </Container>
-
-
-        {console.log('this.props.userInfo', this.props.userInfo)}
-
+ 
         <TouchableOpacity onPress={this.goToProfileScreen}>
           <View style={styles.row}>
             {
@@ -114,6 +111,7 @@ class ContactTap extends Component {
 
         <Button onPress={() => this.logout()}>로그아웃</Button>
  
+        {console.log('컨택트탭에서 컨택트리스트 : ', this.props.userInfo)}
         <FlatList
           data={this.props.userInfo.contactList}
           keyExtractor={(item) => {

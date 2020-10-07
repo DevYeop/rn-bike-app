@@ -21,6 +21,7 @@ const SearchScreen = ({userInfo, updateContactList}) => {
     const [id, setId] = useState('null')
     const [nickname, setNickname] = useState('null')
     const [imageUri, setImageUrl] = useState('null')
+ 
 
     useEffect(() => {
 
@@ -75,9 +76,21 @@ const SearchScreen = ({userInfo, updateContactList}) => {
         setImageUrl(friendInfo.profile_image_url)
     }
 
-    const addFirend = () => {
+    const addFirend = (id,nickname,imageUri) => {
+
+        console.log('addFirend params id:', id)
+        console.log('addFirend params nickname:', nickname)
+        console.log('addFirend params imageUri:', imageUri)
+
+        const newFriend = {
+            id: id,
+            nickname: nickname,
+            profile_image_url: imageUri,
+        }
          
         addFriendFireStore()
+
+        updateContactList(newFriend)
 
         /**
          * todo : redux-store에서 updateContactList 작업 처리해줘야함.
@@ -123,7 +136,7 @@ const SearchScreen = ({userInfo, updateContactList}) => {
 
                 <Text>{nickname}</Text>
 
-                <Button onPress={addFirend}>친구 추가</Button>
+                <Button onPress={()=>addFirend(id,nickname,imageUri)}>친구 추가</Button>
 
             </View>
         </SafeAreaView>
@@ -141,6 +154,15 @@ const mapDispatchToProps = dispatch => (
         updateContactList
     }, dispatch)
   );
+
+//   const mapDispatchToProps = dispatch => {
+//     bindActionCreators({
+//         updateContactList
+//     }, dispatch)
+//     return {
+//         updateContactList : () => dispatch(updateContactList())
+//     }
+//   }
  
 const styles = StyleSheet.create({
     container: {

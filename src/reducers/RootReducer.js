@@ -157,31 +157,21 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
             }
 
             return Object.assign({}, state, { contactList: newContactList })
+ 
+            
+        case UPDATE_CONTACT_LIST:
+
+            const { contactList } = state
+            const addedContactList = action.payload
+
+            contactList.push(addedContactList)
+  
+            return Object.assign({}, state, contactList)
+
 
         case RESET_STATE:
 
             return state
-
-
-
-        // case UPDATE_CONTACT_LIST:
-
-
-        //     console.log('testtestetsetstes')
-
-
-        // for ( var i = 0 ; i < friendArray.length ; i++) {
-
-        //     contactList.push({
-        //         id: friendArray[i].friendInfo.id,
-        //         image: friendArray[i].friendInfo.image,
-        //         nickname: friendArray[i].friendInfo.nickname,
-        //     })
-        // }
-        // return
-
-
-
 
 
         default:

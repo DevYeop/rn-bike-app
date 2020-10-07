@@ -51,10 +51,10 @@ export const resetState = reset => (
     } 
 )
 
-export const updateContactList = reset => (
+export const updateContactList = data => (
     {
         type: UPDATE_CONTACT_LIST,
-        payload: reset, 
+        payload: data, 
     } 
 )
 
