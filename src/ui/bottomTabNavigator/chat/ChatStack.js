@@ -62,7 +62,6 @@ class HomeStack extends Component {
       </ChatAppStack.Navigator>
     );
   }
-  
 }
 
 const mapStateToProps = (state) => {

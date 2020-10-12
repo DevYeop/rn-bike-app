@@ -5,4 +5,3 @@ export const addFriend = friendsIndex => (
         payload: friendsIndex, 
     } 
 )
- 

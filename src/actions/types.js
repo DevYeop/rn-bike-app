@@ -8,5 +8,4 @@ export const UPDATE_CONTACT_LIST = 'UPDATE_CONTACT_LIST';
 export const SET_CONTACT_LIST = 'SET_CONTACT_LIST';
 
 export const GOOGLE_MAPS_APIKEY = 'AIzaSyCiBqROXrj7009fX49-BxlGpd1NyhIldYA'; 
-export const TMAP_MAPS_APIKEY = 'l7xxd873259fd9804fe693601cecb92bd4b7'; 
-
+export const TMAP_MAPS_APIKEY = 'l7xxd873259fd9804fe693601cecb92bd4b7';

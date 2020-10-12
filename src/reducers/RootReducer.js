@@ -1,7 +1,3 @@
-/**
- * A reducer is a pure function that takes the previous state and an action as arguments and returns a new state. 
- * The reducer is instrumental in keeping the current state of friends updated throughout the app as it changes.
- */
 import { combineReducers } from 'redux';
 import {
     ADD_FRIEND,
@@ -13,11 +9,7 @@ import {
     UPDATE_CONTACT_LIST,
     SET_CONTACT_LIST
 } from '../actions/types'
-import { State } from 'react-native-gesture-handler';
 
-/**
- * INITIAL_STATE variable with possible friends to add to your social network
- */
 const INITIAL_SATTE = {
     id: '',
     email: '',
@@ -36,30 +28,18 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
     console.log('리듀서 action.payload')
     console.log(action.payload)
 
-    switch (action.type) {
-        /**
-         * pulls the current and possible friends out of the previous state. 
-         * Array.splice() retrieves the friend from the array of possible friends. 
-         * Array.push adds the friend to array of current friends. After ther changes are made, the state is updated.
-         */
+    switch (action.type) { 
 
-        case ADD_FRIEND:
-            // Pulls current and possible out of previous state
-            // We do not want to alter state directly in case
-            // another action is altering it at the same time
+        case ADD_FRIEND: 
             const {
                 current,
                 possible,
             } = state;
-
-            // Pull friend out of friends.possible
-            // Note that action.payload === friendIndex
+ 
             const addedFriend = possible.splice(action.payload, 1);
-
-            // And put friend in friends.current
+ 
             current.push(addedFriend);
-
-            // Finally, update the redux state
+ 
             const newState = { current, possible };
 
             return newState;
@@ -82,13 +62,7 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
             const kakaoUserInfo = { id, email, nickname, profile_image_url }
 
             return Object.assign({}, state, kakaoUserInfo)
-
-        //js문법 
-        //베타 이너 
-        //구글플레이 계정 올려서 초대.
-        //10월 8월 (목)리뷰
-        //구글캘린더에 초대해서, 
-
+ 
         case ADD_RECORDED_ROUTE:
 
             var { routeItem } = state
@@ -179,10 +153,7 @@ const RootReducer = (state = INITIAL_SATTE, action) => {
             return state
     }
 }
-
-/**
- * exporting friendsReducer as a property called friends.
- */
+ 
 export default combineReducers({
     userInfo: RootReducer,
     //todo : reducer도메인별로 분할하고 여기서 합쳐야함,

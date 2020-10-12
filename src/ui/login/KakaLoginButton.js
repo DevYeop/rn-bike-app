@@ -3,9 +3,9 @@ import { StyleSheet, View, Image } from 'react-native';
 
 import KakaoLogins, { KAKAO_AUTH_TYPES } from '@react-native-seoul/kakao-login';
 
-import { connect } from 'react-redux';
+import { connect } from 'react-redux'
 import { saveUserInfoKakao, setPreRouteItems } from '../../actions/Actions'
-import { bindActionCreators } from 'redux';
+import { bindActionCreators } from 'redux'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 if (!KakaoLogins) {

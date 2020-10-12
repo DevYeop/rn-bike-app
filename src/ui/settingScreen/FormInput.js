@@ -1,8 +1,8 @@
 import React from 'react';
-import { StyleSheet, Dimensions } from 'react-native';
-import { TextInput } from 'react-native-paper';
+import { StyleSheet, Dimensions } from 'react-native'
+import { TextInput } from 'react-native-paper'
 
-const { width, height } = Dimensions.get('screen');
+const { width, height } = Dimensions.get('screen')
 
 export default function FormInput({ labelName, ...rest }) {
     return (

@@ -11,23 +11,14 @@ const ContactHeader = ({ navigation }) => {
         navigation.navigate('ChatScreen')
     }
 
-    return (
-
-
- 
-
-
-
+    return ( 
         <View style={{ flexDirection: 'row' }}>
             <TouchableHighlight onPress={gotoSearchFriend}>
                 <MaterialCommunityIcons name="contacts" color={'#03fc90'} size={26} />
             </TouchableHighlight>
             {/* <MaterialCommunityIcons name="contacts" color={'#03fc90'} size={26} /> */}
-
         </View>
     )
-
-
 }
 
 export default ContactHeader

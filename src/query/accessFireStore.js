@@ -27,6 +27,3 @@ export const addRouteItem = (routeItem, userIndex) => {
         { routeItem }
     ).then(console.log(userIndex + '유저에게 아이템이 저장됨.'))
 }
-
-
- 

@@ -7,8 +7,8 @@ import {
   Image,
   FlatList,
 } from 'react-native';
-import { Icon, Container, Content, Header, Left, Body, Right } from 'native-base';
-
+import { Content, Header, Left, Body, Right } from 'native-base';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { bindActionCreators } from 'redux';
 import { resetState } from '../../../actions/Actions'
@@ -20,9 +20,9 @@ import {
 
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { Button } from 'react-native-paper';
-import firestore from '@react-native-firebase/firestore';
-import { TouchableHighlight } from 'react-native-gesture-handler';
+import { Button } from 'react-native-paper'
+import firestore from '@react-native-firebase/firestore'
+import { TouchableHighlight } from 'react-native-gesture-handler'
 
 class ContactTap extends Component {
 
@@ -52,10 +52,10 @@ class ContactTap extends Component {
           <View>
             <View style={styles.nameContainer}>
               <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail">{item.nickname}</Text>
-              <Text style={styles.mblTxt}>{item.id}</Text>
+              {/* <Text style={styles.mblTxt}>{item.id}</Text> */}
             </View>
             <View style={styles.msgContainer}>
-              <Text style={styles.msgTxt}>{item.status}</Text>
+              {/* <Text style={styles.msgTxt}>{item.status}</Text> */}
             </View>
           </View>
         </View>
@@ -81,21 +81,24 @@ class ContactTap extends Component {
       /**
        *  todo : 이 부분을 컴포넌트화 시키기
        */
-      <View style={{ flex: 1 }} >
-
-        <Container style={{ backgroundColor: 'white' }}>
+      <View style={{ flex: 1 }} > 
           <Header>
-            {/* <Left><Icon name="md-person-add" style={{ paddingLeft: 10 }} /></Left> */}
-            {/* <Body><Text>anpigon</Text></Body> */}
+            <Left><Text style={styles.headerFont}>친구목록</Text></Left>
+            {/* <Body>
+         
+            </Body> */}
             <Right>
-              <TouchableHighlight onPress={()=>this.goToSearchScreen()}>
-              <Icon name="md-person-add" style={{ paddingLeft: 10 }} />
+              <TouchableHighlight style={{marginleft:15, marginRight:15}} onPress={()=>this.goToSearchScreen()}>
+              <MaterialCommunityIcons name="account-plus-outline" color='white'  size={30} />
+              </TouchableHighlight>
+             
+              <TouchableHighlight style={{marginleft:15, marginRight:5}} onPress={()=>this.logout()}>
+              <MaterialCommunityIcons name="logout" color='white'  size={30} />
               </TouchableHighlight>
               </Right>
-          </Header>
-        </Container>
+          </Header> 
  
-        <TouchableOpacity onPress={this.goToProfileScreen}>
+        <TouchableOpacity>
           <View style={styles.row}>
             {
               this.props.userInfo.profile_image_url ?
@@ -108,10 +111,7 @@ class ContactTap extends Component {
             </View>
           </View>
         </TouchableOpacity>
-
-        <Button onPress={() => this.logout()}>로그아웃</Button>
  
-        {console.log('컨택트탭에서 컨택트리스트 : ', this.props.userInfo)}
         <FlatList
           data={this.props.userInfo.contactList}
           keyExtractor={(item) => {
@@ -137,6 +137,10 @@ const mapDispatchToProps = dispatch => (
 );
 
 const styles = StyleSheet.create({
+  headerFont:{
+    color: '#fff',
+    fontSize:18,
+  },
   row: {
     flexDirection: 'row',
     alignItems: 'center',

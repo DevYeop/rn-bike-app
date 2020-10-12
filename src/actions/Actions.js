@@ -58,12 +58,9 @@ export const updateContactList = data => (
     } 
 )
 
-
 export const setContactItems = reset => (
     {
         type: SET_CONTACT_LIST,
         payload: reset, 
     } 
 )
-
- 

@@ -1,9 +1,8 @@
-import * as React from 'react';
-
-import ContactStack from './contact/ContactStack';
+import * as React from 'react'
+import ContactStack from './contact/ContactStack'
 import ChatStack from './chat/ChatStack'
-import RecrodTab from './RecordTap';
-import GraphTab from './GraphTab';
+import RecrodTab from './RecordTap'
+import GraphTab from './GraphTab'
   
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -28,12 +27,12 @@ class TabContainer extends React.Component {
       activeColor="#ffffff"
       labelStyle={{ fontSize: 12 }}>
       <Tab.Screen
-        name='ContactStack'
+        name='Contact'
         children={()=><ContactStack 
           />}
         options={{
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="contacts" color={color} size={26} />
+            <MaterialCommunityIcons name="account-group" color={color} size={26} />
           ),
 
           

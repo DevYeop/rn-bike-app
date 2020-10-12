@@ -1,6 +1,6 @@
 
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
+import React, { PureComponent } from 'react'
+import PropTypes from 'prop-types'
 
 import {
   NativeModules,
@@ -9,7 +9,7 @@ import {
   Platform,
   DeviceEventEmitter,
   StyleSheet,
-} from 'react-native';
+} from 'react-native'
 
 const { RNGoogleSignin } = NativeModules;
 const RNGoogleSigninButton = requireNativeComponent('RNGoogleSigninButton', null);
