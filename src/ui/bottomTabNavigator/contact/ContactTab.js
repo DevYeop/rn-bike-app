@@ -20,9 +20,9 @@ import {
 
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { Button } from 'react-native-paper';
-import firestore from '@react-native-firebase/firestore';
-import { TouchableHighlight } from 'react-native-gesture-handler';
+import { Button } from 'react-native-paper'
+import firestore from '@react-native-firebase/firestore'
+import { TouchableHighlight } from 'react-native-gesture-handler'
 
 class ContactTap extends Component {
 
