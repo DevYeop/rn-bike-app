@@ -11,8 +11,8 @@ import MapView, {
   Marker,
 } from "react-native-maps";
  
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux'; 
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
 import {GOOGLE_MAPS_APIKEY} from '../../actions/types'
 import { Time } from 'react-native-gifted-chat';
@@ -74,11 +74,6 @@ class GraphDetail extends Component {
               initialRegion={{
                 latitude: item.centerInfo.latitude,
                 longitude: item.centerInfo.longitude,
-                
-                /**
-                 * 델타값에 2를 곱해주는 이유:
-                 * - 
-                 */
                 latitudeDelta: item.deltaInfo.latitudeDelta*2,
                 longitudeDelta: item.deltaInfo.longitudeDelta*2,
               }}

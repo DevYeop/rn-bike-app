@@ -37,5 +37,4 @@ class ContactStack extends React.Component {
     )
   }
 }
-
 export default ContactStack;

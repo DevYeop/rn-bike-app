@@ -1,56 +1,22 @@
 
 import React, { useState, useEffect } from 'react';
 
-import { SafeAreaView, Text, StyleSheet, View, Image } from 'react-native';
-import { Searchbar, Button } from 'react-native-paper';
-
-import firestore from '@react-native-firebase/firestore';
-
-
-
-import { bindActionCreators } from 'redux';
+import { SafeAreaView, Text, StyleSheet, View, Image,ToastAndroid, Button } from 'react-native';
+import { Searchbar  } from 'react-native-paper'
+import firestore from '@react-native-firebase/firestore'
+import { bindActionCreators } from 'redux'
 import { updateContactList } from '../../../actions/Actions'
+import { connect } from 'react-redux'
 
-import { connect } from 'react-redux';
-
-const SearchScreen = ({userInfo, updateContactList}) => {
+const SearchScreen = ({userInfo, updateContactList, navigation}) => {
     const [search, setSearchQuery] = useState('')
     const [filteredDataSource, setFilteredDataSource] = useState([]);
     const [masterDataSource, setMasterDataSource] = useState([]);
     
     const [id, setId] = useState('null')
-    const [nickname, setNickname] = useState('null')
+    const [nickname, setNickname] = useState('')
     const [imageUri, setImageUrl] = useState('null')
- 
-
-    useEffect(() => {
-
-    }, []);
-
-    const searchFilterFunction = (text) => {
-        // Check if searched text is not blank
-        if (text) {
-            // Inserted text is not blank
-            // Filter the masterDataSource
-            // Update FilteredDataSource
-            const newData = masterDataSource.filter(function (item) {
-                const itemData = item.title
-                    ? item.title.toUpperCase()
-                    : ''.toUpperCase();
-                const textData = text.toUpperCase();
-                return itemData.indexOf(textData) > -1;
-            });
-            setFilteredDataSource(newData);
-            setSearch(text);
-        } else {
-            // Inserted text is blank
-            // Update FilteredDataSource with masterDataSource
-            setFilteredDataSource(masterDataSource);
-            setSearch(text);
-        }
-    };
-
-
+   
     const onChangeSearch = query => setSearchQuery(query);
 
     const onSubmitEditing = () => {
@@ -59,10 +25,20 @@ const SearchScreen = ({userInfo, updateContactList}) => {
 
     async function searchFriend() {
 
+        if(search==''){
+            showToastWithGravity("찾는 유저의 이메일을 입력해 주세요.")
+            return
+        }
+
         const userInfoRef = await firestore().collection('userInfo')
         const snapshot = await userInfoRef.where('email', '==', search).get()
 
         let friendInfo = {}
+
+        if(snapshot.size==0){
+            showToastWithGravity("검색된 결과가 없습니다.")
+            return
+        }
 
         /**
          * todo : 검색된 유저가 없을 때 ui 처리해야함.
@@ -92,11 +68,19 @@ const SearchScreen = ({userInfo, updateContactList}) => {
 
         updateContactList(newFriend)
 
-        /**
-         * todo : redux-store에서 updateContactList 작업 처리해줘야함.
-         */
+        navigation.goBack()
+
+        showToastWithGravity("친구가 추가되었습니다.")
   
     }
+
+    const showToastWithGravity = (text) => {
+        ToastAndroid.showWithGravity(
+          text,
+          ToastAndroid.SHORT,
+          ToastAndroid.CENTER
+        );
+      };
 
     async function addFriendFireStore() {
 
@@ -126,7 +110,6 @@ const SearchScreen = ({userInfo, updateContactList}) => {
 
             <View style={styles.container}>
                 
-
                 { // 검색한 유저의 프로필사진이 없는경우, 기본 프사를 표시한다.
                     imageUri ?
                     <Image style={styles.pic} source={{ uri: imageUri }} />
@@ -134,10 +117,15 @@ const SearchScreen = ({userInfo, updateContactList}) => {
                     <Image style={styles.pic} source={require('../../../res/default-profile-image.png')} />
                 }
 
-                <Text>{nickname}</Text>
-
-                <Button onPress={()=>addFirend(id,nickname,imageUri)}>친구 추가</Button>
-
+                <Text style={{fontSize:20, marginTop:15, marginBottom:15}}>{nickname}</Text>
+ 
+                { // 검색한 유저의 프로필사진이 없는경우, 기본 프사를 표시한다.
+                    nickname!='' ?
+                    <Button style={styles.button} title="    친구 추가    " onPress={()=>addFirend(id,nickname,imageUri)}/>
+                    :
+                    <Text></Text>
+                }
+ 
             </View>
         </SafeAreaView>
     );
@@ -153,18 +141,16 @@ const mapDispatchToProps = dispatch => (
     bindActionCreators({
         updateContactList
     }, dispatch)
-  );
-
-//   const mapDispatchToProps = dispatch => {
-//     bindActionCreators({
-//         updateContactList
-//     }, dispatch)
-//     return {
-//         updateContactList : () => dispatch(updateContactList())
-//     }
-//   }
- 
+  ); 
+  
 const styles = StyleSheet.create({
+    button:{
+        marginTop : 25,
+        width: '90%', 
+        color: '#fff',
+        padding: 10,
+        fontSize:30
+    },
     container: {
         flex:1,
         backgroundColor: 'white',

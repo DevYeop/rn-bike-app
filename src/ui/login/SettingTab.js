@@ -1,13 +1,13 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Text, StyleSheet, View, StatusBar, SafeAreaView, Button, Image, TouchableOpacity } from 'react-native';
-import { connect } from 'react-redux';
+import { connect } from 'react-redux'
 import { 
   saveUserInfoGoogle,
   setPreRouteItems,
   setContactItems,
  } from '../../actions/Actions'
-import { bindActionCreators } from 'redux'; 
+import { bindActionCreators } from 'redux'
 
 import {
   GoogleSignin,
@@ -160,7 +160,7 @@ async addContactList() {
             size={GoogleSigninButton.Size.Wide}
             color={GoogleSigninButton.Color.Dark}
             onPress={this._signIn}/>
-          <KakaoLoginButton navigation={this.props.navigation} />
+          {/* <KakaoLoginButton navigation={this.props.navigation} /> */}
         </View>
       </View>
     );

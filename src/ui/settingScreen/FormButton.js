@@ -1,8 +1,8 @@
 import React from 'react';
-import { StyleSheet, Dimensions, Text } from 'react-native';
-import { Button } from 'react-native-paper';
+import { StyleSheet, Dimensions, Text } from 'react-native'
+import { Button } from 'react-native-paper'
 
-const { width, height } = Dimensions.get('screen');
+const { width, height } = Dimensions.get('screen')
 
 export default function FormButton({ title, modeValue, ...rest }) {
   return (
@@ -25,4 +25,4 @@ const styles = StyleSheet.create({
     width: 250,
     height: 50
   }
-});
+})

@@ -1,8 +1,8 @@
 import { NativeModules, Platform } from 'react-native';
 
-const { RNGoogleSignin } = NativeModules;
+const { RNGoogleSignin } = NativeModules
 
-const IS_IOS = Platform.OS === 'ios';
+const IS_IOS = Platform.OS === 'ios'
 
 class GoogleSignin {
   configPromise;

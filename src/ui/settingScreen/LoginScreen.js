@@ -1,9 +1,9 @@
 
 import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text, Image } from 'react-native';
-import { Title } from 'react-native-paper';
-import FormInput from './FormInput';
-import FormButton from './FormButton';
+import { Title } from 'react-native-paper'
+import FormInput from './FormInput'
+import FormButton from './FormButton'
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');

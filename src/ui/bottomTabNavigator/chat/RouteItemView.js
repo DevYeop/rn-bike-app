@@ -6,35 +6,36 @@ import {
   Text,
   TouchableHighlight,
   TouchableOpacity,
-  View
+  ToastAndroid
 } from "react-native";
 
 import MapView, { Polyline } from "react-native-maps";
 
+import { connect } from 'react-redux'; 
+import { addRecordedRoute } from '../../../actions/Actions'
+import { bindActionCreators } from 'redux'; 
+
 import {addRouteItem} from '../../../query/accessFireStore'
 
-const RouteItemView = ({ itemInfo, userInfo }) => {
+const RouteItemView = ({ itemInfo, userInfo, addRecordedRoute }) => {
   
     const saveRouteItem = () => {
- 
+      showToastWithGravity('아이템이 저장되었습니다.')
       let routeItemObj = Object.assign({}, ...itemInfo )
-
-      console.log('RouteItemView itemInfo', itemInfo)
-      console.log('RouteItemView userInfo', userInfo)
-      console.log('RouteItemView routeItem', routeItemObj)
-
       addRouteItem(routeItemObj, userInfo.id)
-    }
-
-    const saveRouteItemFirestore = () => {    
-
-      // 아이템을 저장
-    };
-
-    const saveRouteItemStore = () => {
-
+      addRecordedRoute(routeItemObj)
+      
     }
  
+  const showToastWithGravity = (text) => {
+    ToastAndroid.showWithGravity(
+      text,
+      ToastAndroid.SHORT,
+      ToastAndroid.CENTER
+    );
+  };
+  
+
     return (
       <TouchableOpacity
         onPress={saveRouteItem}
@@ -57,15 +58,21 @@ const RouteItemView = ({ itemInfo, userInfo }) => {
             strokeWidth={5}
             strokeColor="#233ff7"
           />
-        </MapView>
-        <Text>asdf</Text>
-        
+        </MapView> 
       </TouchableOpacity>
     );
   };
-  
+   
+const mapStateToProps = (state) => {
+  const { userInfo } = state
+  return { userInfo }
+};
 
-
+const mapDispatchToProps = dispatch => (
+  bindActionCreators({
+      addRecordedRoute,
+  }, dispatch)
+);
 
 const styles = StyleSheet.create({
   centeredView: {
@@ -105,5 +112,5 @@ const styles = StyleSheet.create({
     textAlign: "center"
   }
 });
-
-export default RouteItemView
+ 
+export default connect(mapStateToProps, mapDispatchToProps)(RouteItemView);

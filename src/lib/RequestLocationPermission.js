@@ -37,5 +37,3 @@ const requestLocationPermission = async () => {
   };
 
   export default requestLocationPermission;
-  
-

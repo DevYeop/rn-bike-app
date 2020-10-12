@@ -4,10 +4,10 @@ import {
   Text,
   View,
   Image,
-} from 'react-native';
-import { Button } from 'react-native-paper';
-import firestore from '@react-native-firebase/firestore';
-import { connect } from 'react-redux';
+  Button
+} from 'react-native'
+import firestore from '@react-native-firebase/firestore'
+import { connect } from 'react-redux'
 
 class GraphDetail extends Component {
 
@@ -15,17 +15,17 @@ class GraphDetail extends Component {
     super(props);
   }
  
-  gotoChatScreen = (roomId, userIndex, friendIndex) => {
-    this.props.navigation.navigate('ChatScreen', { roomId, userIndex, friendIndex })
+  gotoChatScreen = (roomId, userIndex, friendInfo) => {
+    this.props.navigation.navigate('ChatScreen', { roomId, userIndex, friendInfo })
   }
 
-  createChattingRoom = friendIndex => {
+  createChattingRoom = friendInfo => {
 
     const invitedUser = []
     const userIndex = this.props.userInfo.id
 
     invitedUser.push(userIndex)
-    invitedUser.push(friendIndex)
+    invitedUser.push(friendInfo.id)
 
     /**
      * 방을 추가하기 전에,
@@ -43,7 +43,7 @@ class GraphDetail extends Component {
           createdAt: new Date().getTime()
         }
       }).then(docRef => {
-        this.gotoChatScreen(docRef.id, userIndex, friendIndex)
+        this.gotoChatScreen(docRef.id, userIndex, friendInfo)
       })
       .catch(function (error) {
         console.error("Error adding document: ", error);
@@ -55,9 +55,9 @@ class GraphDetail extends Component {
    * 존재하면 기존에 있던 방의 id를 return,
    * 없으면 새로운 방을 만들고 새로 만들어진 방의 id를 return.
    * 
-   * @param {*} friendIndex  
+   * @param {*} friendInfo  
    */
-  async checkRoomExists(friendIndex) { 
+  async checkRoomExists(friendInfo) { 
 
     let isReturned = false;
     const userIndex = this.props.userInfo.id
@@ -66,7 +66,7 @@ class GraphDetail extends Component {
     const snapshot = await userInfoRef.where('invitedUser', 'array-contains', userIndex).get()
 
     if (snapshot.size == 0) {
-      return this.createChattingRoom(friendIndex)
+      return this.createChattingRoom(friendInfo)
     }
 
     snapshot.forEach(doc => {
@@ -77,16 +77,16 @@ class GraphDetail extends Component {
       console.log('roomId', roomId)
       console.log('유저가 참여한 방들 :', invitedUser)
 
-      if (invitedUser.includes(userIndex) && invitedUser.includes(friendIndex)) {
+      if (invitedUser.includes(userIndex) && invitedUser.includes(friendInfo.id)) {
         isReturned = true
         return (
-          this.gotoChatScreen(roomId, userIndex, friendIndex)
+          this.gotoChatScreen(roomId, userIndex, friendInfo)
         )
       }
     });
 
     if (!isReturned) {
-      this.createChattingRoom(friendIndex)
+      this.createChattingRoom(friendInfo)
     }
   }
 
@@ -94,8 +94,8 @@ class GraphDetail extends Component {
     return (
       <View style={styles.container}>
         <Image source={{ uri: this.props.route.params.profile_image_url }} style={styles.pic} />
-        <Text>{this.props.route.params.nickname}</Text>
-        <Button onPress={() => this.checkRoomExists(this.props.route.params.id)}>채팅하기</Button>
+        <Text style={{marginTop:15, marginBottom:15, fontSize:20}}>{this.props.route.params.nickname}</Text>
+        <Button  title='    채팅 시작    ' onPress={() => this.checkRoomExists(this.props.route.params)}></Button>
       </View>
     )
   }

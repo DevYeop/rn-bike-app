@@ -1,22 +1,22 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {
   StyleSheet, 
   View, 
   Text,
   Image,
-} from 'react-native';
+  Button
+} from 'react-native'
 import MapView, {
   Polyline,
-  Marker,
-} from "react-native-maps";
+  Marker, 
+} from "react-native-maps"
 
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux'; 
-import { Dimensions } from 'react-native';
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { Dimensions } from 'react-native'
 
-import { LineChart } from "react-native-chart-kit";
-import { Button } from 'react-native-paper';
- 
+import { LineChart } from "react-native-chart-kit"; 
+
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
@@ -118,7 +118,7 @@ class GraphDetail extends Component {
           </MapView>
         </View>
 
-        <Button onPress={()=>this.shareRouteItem()}>share</Button>
+        <Button state={styles.button} title='이 아이템을 공유합니다.' onPress={()=>this.shareRouteItem()}></Button>
 
         <View style={styles.graphContainer}>
           <View>
@@ -184,10 +184,15 @@ const mapDispatchToProps = dispatch => (
 
 const styles = StyleSheet.create({
 
+  button:{
+    color:'red',
+    backgroundColor:'red'
+  },
+
   rootContainer: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: '#4287f5'
+    backgroundColor: 'red'
   },
 
   mapContainer: {

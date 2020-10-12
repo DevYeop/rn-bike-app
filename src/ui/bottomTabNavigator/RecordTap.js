@@ -18,16 +18,47 @@ import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 
-import { connect } from 'react-redux';
+import { connect } from 'react-redux'
 import { addRecordedRoute } from '../../actions/Actions'
 import { bindActionCreators } from 'redux'; 
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity } from "react-native-gesture-handler"
 
-import firestore from '@react-native-firebase/firestore';
-import axios from 'axios';
+import firestore from '@react-native-firebase/firestore'
+import axios from 'axios'
 
 import {addRouteItem, test} from '../../query/accessFireStore'
- 
+
+import RNActionButton from 'react-native-action-button'
+import { Animated } from 'react-native'
+
+RNActionButton.prototype.animateButton = function(animate = true) {
+    if (this.state.active) return this.reset();
+
+    if (animate) {
+      Animated.spring(this.anim, { toValue: 1, useNativeDriver: false }).start();
+    } else {
+      this.anim.setValue(1);
+    }
+
+    this.setState({ active: true, resetToken: this.state.resetToken });
+}
+
+RNActionButton.prototype.reset = function (animate = true) {
+    if (this.props.onReset) this.props.onReset();
+
+    if (animate) {
+      Animated.spring(this.anim, { toValue: 0, useNativeDriver: false }).start();
+    } else {
+      this.anim.setValue(0);
+    }
+
+    setTimeout(() => {
+      if (this.mounted) {
+        this.setState({ active: false, resetToken: this.state.resetToken });
+      }
+    }, 250);
+}
+
 class RecordTap extends React.Component {
 
     constructor(props) {
@@ -88,7 +119,7 @@ class RecordTap extends React.Component {
                     latitude,
                     longitude,
                     heading,
-                    speed, // todo : 유저가 정지해 있을 때 0으로 set 해줘야함.
+                    speed, 
                     speedArray: speedArray.concat(parseInt(speed)),
                     routeCoordinates: routeCoordinates.concat([newCoordinate]),
                     distanceTravelled:
@@ -161,11 +192,10 @@ class RecordTap extends React.Component {
         })
 
         Geolocation.clearWatch(this.watchID); 
-
-        this.getRouteInfo() // .then?
         this.resetRecordStatus()
 
-
+        this.getRouteInfo()  
+        
         this.getRoadAPI(this.state.routeCoordinates)
     }
 
@@ -459,7 +489,9 @@ class RecordTap extends React.Component {
 
                 </MapView>
                 <Text style={styles.speed}>{this.showSpeed()}km/h</Text>
-                <ActionButton
+
+                
+                {/* <ActionButton  waring : usenativedirver 이슈가 있어서 보류함.
                     buttonColor="rgba(231,76,60,1)"
                     position="center"
                     degrees={90}
@@ -471,7 +503,22 @@ class RecordTap extends React.Component {
                     <ActionButton.Item buttonColor='#9b59b6' title="New Task" active={false}>
                         <Icon name="md-stop" style={styles.actionButtonIcon} />
                     </ActionButton.Item>
-                </ActionButton>
+                </ActionButton> */}
+
+                <RNActionButton
+                    buttonColor="rgba(231,76,60,1)"
+                    position="center"
+                    degrees={90}
+                    backgroundTappable={true}
+                    onPress={() => this.checkRecordingStatus()}
+                    renderIcon={active => active ?
+                        (<Icon name="md-stop" style={styles.actionButtonIcon} />)
+                        : (<Icon name="logo-google-playstore" style={styles.actionButtonIcon} />)}>
+                    <ActionButton.Item buttonColor='#9b59b6' title="New Task" active={false}>
+                        <Icon name="md-stop" style={styles.actionButtonIcon} />
+                    </ActionButton.Item>
+                </RNActionButton>
+
                 <TouchableOpacity onPress={()=>this.getRoadAPI()}>
                 {/* <Button title='road api'/> */}
                 </TouchableOpacity>

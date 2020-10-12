@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, FlatList, TouchableOpacity, Alert } from 'react-native';
+import { View, StyleSheet, FlatList, TouchableOpacity, Alert, Image, Text, ToastAndroid } from 'react-native';
 import { List, Divider, Button } from 'react-native-paper';
 import firestore from '@react-native-firebase/firestore';
 import Loading from '../../../components/Loading'
 import useStatsBar from '../../../utils/useStatusBar'
+import { Icon, Container, Content, Header, Left, Body, Right } from 'native-base';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function ChatRoomListToShare({ navigation, route }) {
   useStatsBar('light-content');
@@ -66,25 +68,26 @@ export default function ChatRoomListToShare({ navigation, route }) {
     return <Loading />;
   }
 
-  function goPreScreen() {
-    // navigation.goback()
-  }
 
-
-  ///////////
-  async function handleSend(info) {
-    // const text = messages[0].text;
+  const showToastWithGravity = (text) => {
+    ToastAndroid.showWithGravity(
+      text,
+      ToastAndroid.SHORT,
+      ToastAndroid.CENTER
+    );
+  };
+ 
+  async function handleSend(info) { 
 
     console.log('클릭한 방의 정보', info)
 
     const roomId = info._id
-    const {invitedUser} = info
+    const { invitedUser } = info
 
     console.log('클릭한 방invitedUser', invitedUser)
+    showToastWithGravity('공유완료')
+    navigation.goBack()
 
-    /**
-     * 채팅방앙ㄴ에서의 채팅메세지들을 차곡차곡 더한다
-     */
     firestore()
       .collection('chattingList')
       .doc(roomId)
@@ -98,23 +101,16 @@ export default function ChatRoomListToShare({ navigation, route }) {
         },
         text: 'sharedItem',
         itemInfo: itemInfo,
-      }).then(
-        goPreScreen(),
-        alert('공유 완료')
-      )
-
-
-    // /**
-    //  * 채팅방에 들어가기전 채팅룸리스트에서 챗팅룸이 표시해야할 마지막 채팅정보를 셋팅한다.
-    //  */
+      }) 
+ 
     await firestore()
       .collection('chattingList')
       .doc(roomId)
       .set(
         {
           invitedUser: [
-            invitedUser[0]+'',
-            invitedUser[1]+'',
+            invitedUser[0] + '',
+            invitedUser[1] + '',
           ],
           latestMessage: {
             text: '드라이빙 코스가 공유되었습니다.',
@@ -122,35 +118,91 @@ export default function ChatRoomListToShare({ navigation, route }) {
           }
         },
         { merge: true }
-      );
+      )
   }
 
+  const getOpponentInfo = (item, require) => {
+
+    let opponentUserIndex
+
+    item.invitedUser.forEach(element => {
+      if (userInfo.id != element) {
+        opponentUserIndex = element
+        return
+      }
+    })
+
+    const urlArray = item.userInfo
+
+    let opponentNickname
+    let opponentImageUrl
+
+    urlArray.forEach(val => {
+
+      if (val.userIndex == opponentUserIndex) {
+
+        opponentNickname = val.userNickname
+        opponentImageUrl = val.userImageUrl
+
+      }
+    })
+
+    if (require == 'nickname') {
+      return opponentNickname
+    } else if (require == 'url') {
+      return opponentImageUrl
+    }
+  }
+
+  const getTime = (mill) => {
+    const date = new Date(mill)
+    return date.toLocaleDateString()
+  }
+  
+
+
   return (
-    <View style={styles.container}>
-      <Button>아이템을 공유할 채팅방을 클릭</Button>
+    <View style={styles.container}><Header>
+      <Body>
+        <Text style={styles.headerFont}>공유할 대상을 선택해 주세요.</Text>
+      </Body>
+    </Header>
+
       <FlatList
         data={threads}
         keyExtractor={item => item._id}
         ItemSeparatorComponent={() => <Divider />}
         renderItem={({ item }) => (
-          <TouchableOpacity
-            onPress={() => handleSend(item)}>
-            <List.Item
-              title={item.latestMessage.createdAt}
-              description={item.latestMessage.text}
-              titleNumberOfLines={1}
-              titleStyle={styles.listTitle}
-              descriptionStyle={styles.listDescription}
-              descriptionNumberOfLines={1}
-            />
+
+          <TouchableOpacity onPress={() => handleSend(item)}>
+            <View style={styles.row}>
+              {
+                getOpponentInfo(item, 'url') != null ?
+                  <Image style={styles.pic} source={{ uri: getOpponentInfo(item, 'url') }} />
+                  :
+                  <Image style={styles.pic} source={require('../../../res/default-profile-image.png')} />
+              }
+              <View>
+                {console.log(item)}
+                <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail"> {getOpponentInfo(item, 'nickname')} </Text>
+                <Text style={styles.mblTxt}>{item.latestMessage.text}</Text>
+              </View>
+              <View style={styles.msgContainer}>
+              
+                <Text style={styles.msgTxt}>  {getTime(item.latestMessage.createdAt)}</Text>
+              </View>
+            </View>
           </TouchableOpacity>
-        )}
-      />
+        )}/>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  headerFont: {
+    color: '#fff',
+    fontSize: 18,
+  },
   container: {
     backgroundColor: '#f5f5f5',
     flex: 1
@@ -160,5 +212,53 @@ const styles = StyleSheet.create({
   },
   listDescription: {
     fontSize: 16
-  }
-});
+  },
+
+  container: {
+    backgroundColor: '#f5f5f5',
+
+  },
+  listTitle: {
+    fontSize: 22
+  },
+  listDescription: {
+    fontSize: 16
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderColor: '#DCDCDC',
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    padding: 10,
+  },
+  pic: {
+    borderRadius: 30,
+    width: 60,
+    height: 60,
+  },
+  nameTxt: {
+    marginLeft: 15,
+    fontWeight: '200',
+    color: '#222',
+    fontSize: 15,
+    width: 200,
+  },
+  mblTxt: {
+    marginLeft: 15,
+    fontWeight: '200',
+    color: '#777',
+    fontSize: 15,
+  },
+  msgContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  msgTxt: {
+    fontWeight: '400',
+    color: '#008B8B',
+    fontSize: 15,
+    marginLeft: 15,
+  },
+
+})

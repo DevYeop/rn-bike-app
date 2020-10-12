@@ -20,15 +20,27 @@ function ChatScreen({ route, userInfo }) {
 
   useStatsBar('light-content');
   const [messages, setMessages] = useState([]);
-  const { roomId, userIndex, friendIndex } = route.params;
+  const { roomId, friendInfo } = route.params;
 
+  let friendIndex
+  let friendNickname
+  let friendImageUrl
 
+  for(let i in friendInfo){ 
 
-  // const { user } = useContext(AuthContext);
-  // const currentUser = user.toJSON();
-  const userIdx = userInfo.id
-  const userNick = userInfo.nickname
-  const profile_image_url = userInfo.profile_image_url
+    if(i == 'nickname' || i == 'userNickname'){
+      friendNickname = friendInfo[i]
+    }else if(i == 'id' || i == 'userIndex'){
+      friendIndex = friendInfo[i]
+    }else if(i == 'profile_image_url' || i == 'userImageUrl'){
+      friendImageUrl = friendInfo[i]
+    }
+
+  }
+  
+  const userIndex = userInfo.id
+  const userNickname = userInfo.nickname
+  const userIamgeUrl = userInfo.profile_image_url
 
   async function handleSend(messages) {
     const text = messages[0].text;
@@ -43,9 +55,9 @@ function ChatScreen({ route, userInfo }) {
       .add({
         createdAt: new Date().getTime(),
         user: {
-          _id: userIdx,
-          name: userNick,
-          avatar: profile_image_url
+          _id: userIndex,
+          name: userNickname,
+          avatar: userIamgeUrl
         },
         text: text,
       });
@@ -60,13 +72,24 @@ function ChatScreen({ route, userInfo }) {
       .set(
         {
           invitedUser: [
-            userIdx,
+            userIndex,
             friendIndex
           ],
           latestMessage: {
             text,
             createdAt: new Date().getTime()
-          }
+          },
+          userInfo: [
+            { userIndex: userIndex, 
+              userNickname: userNickname,
+              userImageUrl: userIamgeUrl,
+            },
+            { userIndex: friendIndex, 
+              userNickname: friendNickname,
+              userImageUrl: friendImageUrl,
+            },
+          ]
+          
         },
         { merge: true }
       );
@@ -176,9 +199,9 @@ function ChatScreen({ route, userInfo }) {
       messages={messages}
       onSend={handleSend}
       user={{
-        _id: userIdx,
-        name: userNick,
-        avatar: profile_image_url
+        _id: userIndex,
+        name: userNickname,
+        avatar: userIamgeUrl
       }}
       placeholder=''
       alwaysShowSend
