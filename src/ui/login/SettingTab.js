@@ -1,6 +1,5 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import { Text, StyleSheet, View, StatusBar, SafeAreaView, Button, Image, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, View, StatusBar, SafeAreaView, Button, Image, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import { 
   saveUserInfoGoogle,
@@ -13,17 +12,18 @@ import {
   GoogleSignin,
   GoogleSigninButton,
   statusCodes,
-} from '@react-native-community/google-signin';
+} from '@react-native-community/google-signin'
 
 import KakaoLoginButton from './KakaLoginButton'
 
-import firestore, { firebase } from '@react-native-firebase/firestore'; 
+import firestore from '@react-native-firebase/firestore'
 import {loadRouteItem, loadContactList} from '../../query/accessFireStore'
+import GoogleLoginButton from './GoogleLoginButton';
  
 class SettingTap extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
   }
 
   componentDidMount() {
@@ -32,7 +32,7 @@ class SettingTap extends React.Component {
       offlineAccess: true,
       hostedDomain: '',
       forceConsentPrompt: true,
-    });
+    })
   }
   
   async getContactList() { 
@@ -48,6 +48,28 @@ class SettingTap extends React.Component {
      
     this.props.setPreRouteItems(routeItems)
 }
+
+  /**
+   * 유저의 fireStore 루트 Collection에 유저정보를 document로 저장한다.
+   * 나중에 친구 추가,검색 및 채팅 초대 등을 위해 유저정보를 참조하기 위해 쓰인다.
+   */
+  setUserInfoFireStore = () => {
+ 
+    const userIndex = this.props.userInfo.id
+    const collectionName = 'user'+userIndex
+ 
+    const itemsRef = firestore().collection('userInfo');
+ 
+    itemsRef.doc(userIndex).set(
+        { 
+          id : this.props.userInfo.id,
+          email : this.props.userInfo.email,
+          nickname : this.props.userInfo.nickname,
+          profile_image_url : this.props.userInfo.profile_image_url
+        }
+    )
+  }
+ 
   
   _signIn = async () => {
     try {
@@ -74,29 +96,8 @@ class SettingTap extends React.Component {
         console.error(error);
       }
     }
-  };
-
-  /**
-   * 유저의 fireStore 루트 Collection에 유저정보를 document로 저장한다.
-   * 나중에 친구 추가,검색 및 채팅 초대 등을 위해 유저정보를 참조하기 위해 쓰인다.
-   */
-  setUserInfoFireStore = () => {
- 
-    const userIndex = this.props.userInfo.id
-    const collectionName = 'user'+userIndex
- 
-    const itemsRef = firestore().collection('userInfo');
- 
-    itemsRef.doc(userIndex).set(
-        { 
-          id : this.props.userInfo.id,
-          email : this.props.userInfo.email,
-          nickname : this.props.userInfo.nickname,
-          profile_image_url : this.props.userInfo.profile_image_url
-        }
-    );
   }
- 
+
   signOut = async () => {
     try {
       await GoogleSignin.revokeAccess();
@@ -104,7 +105,25 @@ class SettingTap extends React.Component {
     } catch (error) {
       console.error(error);
     }
-  };
+  }
+
+  initSetting() {
+
+    console.log('testtest')
+
+    // if (true) {
+    //   this.props.saveUserInfoGoogle(userInfo)
+    // } else {
+
+    // }
+
+    this.getRouteItems()
+
+    this.getContactList()
+
+    this.setUserInfoFireStore()
+
+  }
 
   render() {
     return (
@@ -113,27 +132,31 @@ class SettingTap extends React.Component {
  
           <Image
             style={{alignItems:'flex-start', height:500}}
-            source={require('../../res/brung.gif')} // first way (local)
+            source={require('../../res/brung.gif')}
             resizeMethod='resize' />
 
           <Text style={{fontSize:32}}> rn - bike - app  </Text>
+          
+          <GoogleLoginButton initSetting={this.initSetting} />
 
-          <GoogleSigninButton
+          {/* <GoogleSigninButton
             style={{ width: 250, height: 50, marginBottom : 25, }}
             size={GoogleSigninButton.Size.Wide}
             color={GoogleSigninButton.Color.Dark}
-            onPress={this._signIn}/>
-          {/* <KakaoLoginButton navigation={this.props.navigation} /> */}
+            onPress={this._signIn}/> */}
+
+          <KakaoLoginButton navigation={this.props.navigation} />
+
         </View>
       </View>
-    );
+    )
   }
 }
 
 const mapStateToProps = (state) => {
   const { userInfo } = state
   return { userInfo }
-};
+}
 
 const mapDispatchToProps = dispatch => (
   bindActionCreators({
@@ -141,15 +164,14 @@ const mapDispatchToProps = dispatch => (
     setPreRouteItems,
     setContactItems,
   }, dispatch)
-);
+)
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#f5f5f5',
     flex: 1,
-    // justifyContent: 'center',
     alignItems: 'center'
   },
-});
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(SettingTap);
+export default connect(mapStateToProps, mapDispatchToProps)(SettingTap)

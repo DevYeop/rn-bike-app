@@ -17,8 +17,7 @@ class KakaLoginButton extends React.Component {
     constructor(props) {
         super(props);
     }
-
-
+ 
     async getPreRouteItems() {
 
         console.log('getMarker called')
