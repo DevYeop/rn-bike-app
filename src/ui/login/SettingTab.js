@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, StyleSheet, View, StatusBar, SafeAreaView, Button, Image, TouchableOpacity } from 'react-native'
+import { StyleSheet, View, Image } from 'react-native'
 import { connect } from 'react-redux'
 import {
   saveUserInfoGoogle,

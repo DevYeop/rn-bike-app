@@ -5,17 +5,12 @@ import {
   View, 
   FlatList,
 } from 'react-native';
-import { Content, Header, Left, Body, Right } from 'native-base';
+import { Header, Left, Right } from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
 import { bindActionCreators } from 'redux';
 import { resetState } from '../../../actions/Actions'
 import { connect } from 'react-redux';
-
-import {
-  GoogleSignin,
-} from '@react-native-community/google-signin';
-
+import { GoogleSignin } from '@react-native-community/google-signin';
 import { createStackNavigator } from '@react-navigation/stack';
 import { TouchableHighlight } from 'react-native-gesture-handler'
 import UserItem from '../../../components/user/UserItem'
@@ -79,7 +74,10 @@ class ContactTap extends Component {
   renderItem = ({ item }) => {
     const Stack = createStackNavigator();
     return (
-      <UserItem userInfo={item} /> 
+      <UserItem 
+      userInfo={item} 
+      parentFunc={this.goToProfileScreen}
+      /> 
     )
   }
 }

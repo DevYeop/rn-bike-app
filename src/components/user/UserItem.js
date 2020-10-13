@@ -7,13 +7,17 @@ import {
     Image
 } from 'react-native';
 
-const UserItem = data => {
+const UserItem = (data, parentFunc) => {
 
     const imageUri = data.userInfo.profile_image_url
     const nickname = data.userInfo.nickname
 
     return (
         <TouchableOpacity>
+            {
+                console.log('data in UserItem', data),
+                console.log('parentFunc in UserItem', parentFunc)
+            }
             <View style={styles.row}>
                 {
                     imageUri ?
