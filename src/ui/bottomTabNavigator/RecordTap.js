@@ -2,7 +2,7 @@ import React from "react";
 import {
     StyleSheet,
     View,
-    Platform, 
+    Platform,
     Text,
     Button
 } from "react-native";
@@ -20,24 +20,23 @@ import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 
 import { connect } from 'react-redux'
 import { addRecordedRoute } from '../../actions/Actions'
-import { bindActionCreators } from 'redux'; 
+import { bindActionCreators } from 'redux';
 import { TouchableOpacity } from "react-native-gesture-handler"
 
-import firestore from '@react-native-firebase/firestore'
 import axios from 'axios'
 
-import {addRouteItem, test} from '../../query/accessFireStore'
+import { addRouteItem } from '../../query/accessFireStore'
 
 import RNActionButton from 'react-native-action-button'
 import { Animated } from 'react-native'
 
-RNActionButton.prototype.animateButton = function(animate = true) {
+RNActionButton.prototype.animateButton = function (animate = true) {
     if (this.state.active) return this.reset();
 
     if (animate) {
-      Animated.spring(this.anim, { toValue: 1, useNativeDriver: false }).start();
+        Animated.spring(this.anim, { toValue: 1, useNativeDriver: false }).start();
     } else {
-      this.anim.setValue(1);
+        this.anim.setValue(1);
     }
 
     this.setState({ active: true, resetToken: this.state.resetToken });
@@ -47,15 +46,15 @@ RNActionButton.prototype.reset = function (animate = true) {
     if (this.props.onReset) this.props.onReset();
 
     if (animate) {
-      Animated.spring(this.anim, { toValue: 0, useNativeDriver: false }).start();
+        Animated.spring(this.anim, { toValue: 0, useNativeDriver: false }).start();
     } else {
-      this.anim.setValue(0);
+        this.anim.setValue(0);
     }
 
     setTimeout(() => {
-      if (this.mounted) {
-        this.setState({ active: false, resetToken: this.state.resetToken });
-      }
+        if (this.mounted) {
+            this.setState({ active: false, resetToken: this.state.resetToken });
+        }
     }, 250);
 }
 
@@ -71,7 +70,7 @@ class RecordTap extends React.Component {
             latitude: 0, // todo : 유저 현 위치의 latlong으로 설정해야 함
             longitude: 0,
             speedArray: [],
-            snappedRouteCoordinates : [],
+            snappedRouteCoordinates: [],
             routeCoordinates: [],           // 녹화된 드라이빙 코스의 경위도 좌표 집합.
             distanceTravelled: 0,           // 드라이브 코스의 총 직선거리. 
             prevLatLng: {},
@@ -86,7 +85,7 @@ class RecordTap extends React.Component {
         };
 
         this.setState({
-            userInfo:this.props.userInfo,
+            userInfo: this.props.userInfo,
         })
     }
 
@@ -101,7 +100,7 @@ class RecordTap extends React.Component {
             position => {
                 const { routeCoordinates, distanceTravelled, speedArray } = this.state;
                 const { latitude, longitude, heading, speed } = position.coords;
-                
+
                 const newCoordinate = {
                     latitude,
                     longitude
@@ -119,7 +118,7 @@ class RecordTap extends React.Component {
                     latitude,
                     longitude,
                     heading,
-                    speed, 
+                    speed,
                     speedArray: speedArray.concat(parseInt(speed)),
                     routeCoordinates: routeCoordinates.concat([newCoordinate]),
                     distanceTravelled:
@@ -138,18 +137,18 @@ class RecordTap extends React.Component {
 
         );
     }
-  
+
     getMapCamera = () => ({
         center: {
             latitude: this.state.latitude,
             longitude: this.state.longitude,
-        },  
+        },
         pitch: 3,
         /**
          * 개발 중에 테스트하기 불편해서 잠시 주석처리 해놓음.
          */
         // heading: this.state.heading,
-        heading:0,
+        heading: 0,
         zoom: 18,
     });
 
@@ -157,7 +156,7 @@ class RecordTap extends React.Component {
         if (this.state.recordStatus) {
             // 녹화가 아직 시작된 상태가 아니라면, 녹화를 시작한다.
             this.stopRecording();
-            
+
         } else {
             // 녹화가 시작된 상태면, 녹화를 중단한다.
             this.startRecording();
@@ -173,16 +172,16 @@ class RecordTap extends React.Component {
     }
 
     startRecording() {
- 
+
         const time = new Date().getTime();
-        const date = new Date(time); 
- 
+        const date = new Date(time);
+
         this.setState({
-            startRecordMilli : time,
+            startRecordMilli: time,
             recordStatus: true,
             countDone: false
         })
-    
+
         this.startWatchPosigion();
     }
 
@@ -191,42 +190,42 @@ class RecordTap extends React.Component {
             recordStatus: false
         })
 
-        Geolocation.clearWatch(this.watchID); 
+        Geolocation.clearWatch(this.watchID);
         this.resetRecordStatus()
 
-        this.getRouteInfo()  
-        
+        this.getRouteInfo()
+
         this.getRoadAPI(this.state.routeCoordinates)
     }
 
     getLapTime() {
         const stopRecordMilli = new Date().getTime();
-        const timeGap = stopRecordMilli -  this.state.startRecordMilli
- 
-        const hour = Math.floor((timeGap/1000/60/60) << 0)
-        const min = Math.floor((timeGap/1000/60) << 0)
-        const sec = Math.floor((timeGap/1000) % 60)
+        const timeGap = stopRecordMilli - this.state.startRecordMilli
+
+        const hour = Math.floor((timeGap / 1000 / 60 / 60) << 0)
+        const min = Math.floor((timeGap / 1000 / 60) << 0)
+        const sec = Math.floor((timeGap / 1000) % 60)
 
         const lapTime = {
-            hour : hour,
-            min : min,
-            sec : sec,
+            hour: hour,
+            min: min,
+            sec: sec,
         }
 
         let lapTimeString = ''
-    
-        if(hour != 0){
-          lapTimeString = hour+'시 '
+
+        if (hour != 0) {
+            lapTimeString = hour + '시 '
         }
-        if(min != 0){
-          lapTimeString += min+'분 '
+        if (min != 0) {
+            lapTimeString += min + '분 '
         }
-        if(sec != 0){
-          lapTimeString += sec+'초'
+        if (sec != 0) {
+            lapTimeString += sec + '초'
         }
-        
+
         return lapTimeString;
-      }
+    }
 
     resetRecordStatus() {
         this.setState({
@@ -235,27 +234,27 @@ class RecordTap extends React.Component {
             speedArray: [],
         })
     }
- 
+
     /**
      * getRouteInfo를 따로 두고, 스토어에 저장하는 함수를 따로 만들어서 귀속시키는 게 깔끔할 듯
      */
     getRouteInfo = () => {
         const info = this.state.routeCoordinates
-  
-        let minLat = info[0].latitude 
+
+        let minLat = info[0].latitude
         let maxLat = info[0].latitude
-        let minLong= info[0].longitude
+        let minLong = info[0].longitude
         let maxLong = info[0].longitude
 
-        for (var i = 0; i < info.length ; i++){
-            
-            if (minLat > info[i].latitude){
+        for (var i = 0; i < info.length; i++) {
+
+            if (minLat > info[i].latitude) {
                 minLat = info[i].latitude
-            }else if (minLong > info[i].longitude){
+            } else if (minLong > info[i].longitude) {
                 minLong = info[i].longitude
-            }else if(maxLat < info[i].latitude){
+            } else if (maxLat < info[i].latitude) {
                 maxLat = info[i].latitude
-            }else if(maxLong < info[i].longitude){
+            } else if (maxLong < info[i].longitude) {
                 maxLong = info[i].longitude
             }
         }
@@ -269,17 +268,17 @@ class RecordTap extends React.Component {
             latitude: minLat,
             longitude: minLong
         }
-       
+
         const latitudeDelta = maxLat - minLat
         const longitudeDelta = maxLong - minLong
-        const deltaInfo = {latitudeDelta: latitudeDelta, longitudeDelta:longitudeDelta}
-        
-        const boundaryCenterLat = (latitudeDelta/2) + minLat
-        const boundaryCenterLong = (longitudeDelta/2) + minLong
-        
-        const distance = parseInt(this.state.distanceTravelled*1000)
-        const centerInfo = {latitude: boundaryCenterLat, longitude: boundaryCenterLong}
-        const boundInfo = {northEast: northEast, southWest: southWest}
+        const deltaInfo = { latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta }
+
+        const boundaryCenterLat = (latitudeDelta / 2) + minLat
+        const boundaryCenterLong = (longitudeDelta / 2) + minLong
+
+        const distance = parseInt(this.state.distanceTravelled * 1000)
+        const centerInfo = { latitude: boundaryCenterLat, longitude: boundaryCenterLong }
+        const boundInfo = { northEast: northEast, southWest: southWest }
         const lapTime = this.getLapTime()
         const avgSpeed = this.getAvgSpeed()
 
@@ -292,25 +291,25 @@ class RecordTap extends React.Component {
         this.getRoadAPI(this.state.routeCoordinates)
 
 
-         
+
         const routeInfo = {
-            itemIndex : this.state.startRecordMilli+''+this.props.userInfo.id,
-            speedArray : this.state.speedArray,
-            avgSpeed : avgSpeed,
-            lapTime : lapTime,
+            itemIndex: this.state.startRecordMilli + '' + this.props.userInfo.id,
+            speedArray: this.state.speedArray,
+            avgSpeed: avgSpeed,
+            lapTime: lapTime,
             routeCoordinates: this.state.routeCoordinates,
-            distance: distance, 
+            distance: distance,
             boundInfo: boundInfo,
             centerInfo: centerInfo,
             deltaInfo: deltaInfo,
         }
- 
-        this.props.addRecordedRoute(routeInfo) 
- 
-        addRouteItem(routeInfo, this.props.userInfo.id) 
+
+        this.props.addRecordedRoute(routeInfo)
+
+        addRouteItem(routeInfo, this.props.userInfo.id)
     }
 
-  
+
 
     getAvgSpeed = () => {
         const speedArray = this.state.speedArray
@@ -345,36 +344,38 @@ class RecordTap extends React.Component {
      * 
      * @param {} routeCoordinates 
      */
-    getRoadAPI  = routeCoordinates => { 
+    getRoadAPI = routeCoordinates => {
 
-    //     let newRouteCoordinates = 'points='
-    //     let routeLatitue = ''
-    //     let routeLongitude = ''
+        //     let newRouteCoordinates = 'points='
+        //     let routeLatitue = ''
+        //     let routeLongitude = ''
 
-        
-    // for (var i = 0 ; i < routeCoordinates.length ; i++){
-    
-    //     routeLatitue   = routeCoordinates[i].latitude+','
 
-    //     if( i == routeCoordinates.length-1){
-    //         routeLongitude = routeCoordinates[i].longitude  
-    //     }else{
-    //         routeLongitude = routeCoordinates[i].longitude+'|'  
-    //     }
-        
-    //     newRouteCoordinates += routeLatitue+routeLongitude
-    // }
+        // for (var i = 0 ; i < routeCoordinates.length ; i++){
 
- 
-        // const params1 = 'points=35.461337,-97.533734|35.462222,-97.531993'// 호주 좌표
-        // const params2 = '37.480483,126.930500|37.481247,126.930420'// 울나라 좌표
-        // const params3 = 'points=35.343465,137.095879|35.344012,137.098465'// 닛본 좌표
+        //     routeLatitue   = routeCoordinates[i].latitude+','
+
+        //     if( i == routeCoordinates.length-1){
+        //         routeLongitude = routeCoordinates[i].longitude  
+        //     }else{
+        //         routeLongitude = routeCoordinates[i].longitude+'|'  
+        //     }
+
+        //     newRouteCoordinates += routeLatitue+routeLongitude
+        // }
+
+        /**
+         * 이동한도로찾기 API는 1회 호출시 100개 GPS 좌표만 지원 가능합니다.
+    100개 이상의 다수의 GPS 좌표로 이동한 도로찾기 API를 이용하는 경우에는 GPS 좌표를 100개씩 분리하여
+    API를 호출하면서 각각의 거리를 합산하여 최종 결과를 산출하시면 됩니다.
+    단, 분리하여 호출하시는 경우에는 정확한 계산을 위해 GPS가 10% 정도 서로 중첩되게 호출하시기를 권장 드립니다.
+         */
 
         let roadUrlFull = 'https://apis.openapi.sk.com/tmap/road/matchToRoads?version=1&appKey=l7xxd873259fd9804fe693601cecb92bd4b7'
 
         const queryString = require('query-string');
- 
-        const data = { 
+
+        const data = {
             responseType: '1',
             coords: '126.87793387437,35.237431207701|126.87819495169,35.237856164051|126.87844491764,35.238331114558|126.87871432615,35.23881162032|126.87900595473,35.239300458849|126.87930591512,35.239819849619|126.8796392052,35.240367015588|126.87994472025',
         };
@@ -383,49 +384,32 @@ class RecordTap extends React.Component {
             headers: { 'content-type': 'application/x-www-form-urlencoded' },
             data: queryString.stringify(data),
         };
-        axios(roadUrlFull,options)
-        .then(response => {console.log(response)})
-        .catch(reason => {console.log('reason', reason)})
- 
-        // const FormData = require('form-data');
- 
-        // const formData = new FormData();
-        // formData.append('responseType', '1');
-        // formData.append('coords', '37.480483,126.930500|37.481247,126.930420');
-         
-        // fetch(roadUrlFull, {
-        //     method: 'POST',
-            
-        //     body: JSON.stringify({
-        //         responseType: '1',
-        //         coords: '37.480483,126.930500|37.481247,126.930420',
-        //     })
-        // }).then(response => {console.log('response', response)})
-        // .catch(reason=>{console.log('reason', reason)})
+        axios(roadUrlFull, options)
+            .then(response => { console.log(response) })
+            .catch(reason => { console.log('reason', reason) })
 
- 
     }
 
     setSnappedPoint = (json) => {
- 
-        console.log('json.snappedPoints',json.snappedPoints)
-        
+
+        console.log('json.snappedPoints', json.snappedPoints)
+
         const snappedPoints = json.snappedPoints
         const snappedPointArray = []
 
         let snappedPoint = {
-            latitude:0,
-            longitude:0,
+            latitude: 0,
+            longitude: 0,
         };
 
         let snappedLat
         let snappedLong
 
         for (var i = 0; i < snappedPoints.length; i++) {
-             
+
             snappedLat = snappedPoints[i].location.latitude
             snappedLong = snappedPoints[i].location.longitude
- 
+
             snappedPoint.latitude = snappedLat
             snappedPoint.longitude = snappedLong
 
@@ -433,10 +417,10 @@ class RecordTap extends React.Component {
 
         }
 
- 
+
 
         console.log('snappedPointArray', snappedPointArray)
- 
+
 
         this.setState({
             snappedRouteCoordinates: snappedPointArray,
@@ -458,10 +442,10 @@ class RecordTap extends React.Component {
         //     prevLatLng: newCoordinate
         // });
 
-        
 
-        
-        
+
+
+
     }
 
     render() {
@@ -479,18 +463,18 @@ class RecordTap extends React.Component {
                     zoomControlEnabled={true}
                     rotateEnabled={true}
                     camera={this.getMapCamera()}>
-                      
-                      {
-                          console.log('스냅 데이터', this.state.snappedRouteCoordinates)
-                      }
+
+                    {
+                        console.log('스냅 데이터', this.state.snappedRouteCoordinates)
+                    }
                     <Polyline coordinates={this.state.routeCoordinates} strokeWidth={12} strokeColor="#4334eb" />
- 
+
                     <Polyline coordinates={this.state.routeCoordinates} strokeWidth={6} strokeColor="#fc3d03" />
 
                 </MapView>
                 <Text style={styles.speed}>{this.showSpeed()}km/h</Text>
 
-                
+
                 {/* <ActionButton  waring : usenativedirver 이슈가 있어서 보류함.
                     buttonColor="rgba(231,76,60,1)"
                     position="center"
@@ -519,8 +503,8 @@ class RecordTap extends React.Component {
                     </ActionButton.Item>
                 </RNActionButton>
 
-                <TouchableOpacity onPress={()=>this.getRoadAPI()}>
-                {/* <Button title='road api'/> */}
+                <TouchableOpacity onPress={() => this.getRoadAPI()}>
+                    {/* <Button title='road api'/> */}
                 </TouchableOpacity>
                 {/* {!this.state.countDone ? ( todo : roadAPI 적용 후 개발완료 할 것
                     <CountdownCircleTimer
@@ -598,5 +582,5 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     }
 });
- 
+
 export default connect(mapStateToProps, mapDispatchToProps)(RecordTap);

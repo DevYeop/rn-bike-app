@@ -18,6 +18,7 @@ import {
 import KakaoLoginButton from './KakaLoginButton'
 
 import firestore, { firebase } from '@react-native-firebase/firestore'; 
+import {loadRouteItem, loadContactList} from '../../query/accessFireStore'
  
 class SettingTap extends React.Component {
 
@@ -34,58 +35,20 @@ class SettingTap extends React.Component {
     });
   }
   
-  async getContactList() {
- 
-    const userIndex = this.props.userInfo.id 
+  async getContactList() { 
 
-    const snapshot = await firestore().collection('user'+userIndex).doc('list').collection('contactList').get()
-    
-    snapshot.docs.map(doc => console.log("frineds_docs",doc.data()));
+    const contactList = await loadContactList(this.props.userInfo.id)
 
-    let contactList = []
-    
-    snapshot.docs.map(doc => contactList.push(doc.data()));
-
-    console.log('contactList', contactList)
-  
     this.props.setContactItems(contactList)
 }
-
-async addContactList() {
-
-  console.log('addContactList called')
- 
-  const userIndex = this.props.userInfo.id
-  const collectionName = 'contactList_test'
   
-  const friendIndex = 'test-1' 
-
-  const friendInfo = {
-    id: 'test-1',
-    nickname : 'user',
-    imgae : 'https://ca.slack-edge.com/T6TPDPPSL-U019G7HDU81-371bb17a9475-512',
-  } 
+  async getRouteItems() {
   
-  const friendRef = firestore().collection(userIndex+collectionName)
-  
-  friendRef.doc(friendIndex).set(
-      { friendInfo }
-  );
-}
-
-  async getPreRouteItems() {
-
-    let preRouteItems = []
-    const userIndex = this.props.userInfo.id
-    const collectionName = 'user'+userIndex
-
-    const itemsRef = await firestore().collection(collectionName).doc('list').collection('routeItems').get()
-    itemsRef.docs.map(doc => preRouteItems.push(doc.data()));
-  
-    this.props.setPreRouteItems(preRouteItems)
+    const routeItems = await loadRouteItem(this.props.userInfo.id)
+     
+    this.props.setPreRouteItems(routeItems)
 }
   
- 
   _signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
@@ -93,7 +56,7 @@ async addContactList() {
 
       this.props.saveUserInfoGoogle(userInfo)
  
-      this.getPreRouteItems()
+      this.getRouteItems()
  
       this.getContactList()
 
