@@ -34,6 +34,9 @@ class ContactTap extends Component {
     this.props.navigation.navigate('SearchScreen')
   }
  
+  /**
+   * google 또는 kakao 로그아웃인지 구별해야함.
+   */
   async logout() {
     try {
       GoogleSignin.revokeAccess();
