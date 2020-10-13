@@ -3,9 +3,6 @@ import { StyleSheet, View, Image } from 'react-native';
 
 import KakaoLogins, { KAKAO_AUTH_TYPES } from '@react-native-seoul/kakao-login';
 
-import { connect } from 'react-redux'
-import { saveUserInfoKakao, setPreRouteItems } from '../../actions/Actions'
-import { bindActionCreators } from 'redux'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 if (!KakaoLogins) {
@@ -17,42 +14,17 @@ class KakaLoginButton extends React.Component {
     constructor(props) {
         super(props);
     }
- 
-    async getPreRouteItems() {
-
-        console.log('getMarker called')
-    
-        const userIndex = this.props.userInfo.id
-        const collectionName = 'routeItemCollection'
-    
-        const snapshot = await firestore().collection(userIndex+collectionName).get()
-      
-        snapshot.docs.map(doc => doc.data());
-    
-        let preRouteItems = []
-        
-        snapshot.docs.map(doc => preRouteItems.push(doc.data()));
-    
-        console.log('preRouteItems', preRouteItems)
-    
-        this.props.setPreRouteItems(preRouteItems)
-    }
-
+  
     kakaoLogin = () => {
         KakaoLogins.login([KAKAO_AUTH_TYPES.Talk, KAKAO_AUTH_TYPES.Account])
             .then(result => {
                 KakaoLogins.getProfile()
                     .then(result => {
-                        this.props.saveUserInfoKakao(result)
-                        
-                        this.getPreRouteItems()
-
-
-                        this.props.navigation.navigate('BottomTapNavigator')
+                        this.props.initSetting(result, 'kakao')                        
                     })
                     .catch(err => {
                         console.log(err)
-                    });
+                    })
             })
             .catch(err => {
                 if (err.code === 'E_CANCELLED_OPERATION') {
@@ -60,8 +32,8 @@ class KakaLoginButton extends React.Component {
                 } else {
                     console.log('Login Failed')
                 }
-            });
-    };
+            })
+    }
 
     render() {
         return (
@@ -73,21 +45,10 @@ class KakaLoginButton extends React.Component {
                         source={require('../../res/kakao_login.png')} />
                 </TouchableOpacity>
             </View>
-        );
+        )
     }
 }
-
-const mapStateToProps = (state) => {
-    const { userInfo } = state
-    return { userInfo }
-};
-
-const mapDispatchToProps = dispatch => (
-    bindActionCreators({
-        saveUserInfoKakao,
-    }, dispatch)
-);
-
+  
 const styles = StyleSheet.create({
     btnKakaoLogin: {
         height: 48,
@@ -99,4 +60,4 @@ const styles = StyleSheet.create({
     }, 
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(KakaLoginButton);
+export default KakaLoginButton
