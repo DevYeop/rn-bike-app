@@ -26,6 +26,7 @@ class ContactTap extends Component {
     super(props)
   }
 
+  // 프로필화면으로 이동하는 거 다시 달아야 됨.
   goToProfileScreen = item => {
     this.props.navigation.navigate('UserProfile', item)
   }
